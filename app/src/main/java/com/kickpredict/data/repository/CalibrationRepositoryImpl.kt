@@ -1,0 +1,81 @@
+package com.kickpredict.data.repository
+
+import com.kickpredict.data.local.dao.MatchResultDao
+import com.kickpredict.data.local.dao.PredictionLogDao
+import com.kickpredict.data.local.entity.MatchResultEntity
+import com.kickpredict.data.local.entity.PredictionLogEntity
+import com.kickpredict.domain.calibration.HistoricalMatch
+import com.kickpredict.domain.calibration.PredictionRecord
+import com.kickpredict.domain.model.ActualResult
+import com.kickpredict.domain.model.Match
+import com.kickpredict.domain.model.PredictedOutcome
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+class CalibrationRepositoryImpl(
+    private val predictionLogDao: PredictionLogDao,
+    private val matchResultDao: MatchResultDao,
+) : com.kickpredict.domain.repository.CalibrationRepository {
+
+    override suspend fun recordPredictions(matches: List<Match>) = withContext(Dispatchers.IO) {
+        val logs = matches.mapNotNull { match ->
+            val p = match.predictedResult ?: return@mapNotNull null
+            PredictionLogEntity(
+                matchId = match.id,
+                league = match.league,
+                predictedOutcome = p.predictedOutcome.name,
+                confidence = p.confidenceScore,
+                homeWinPercent = p.homeWinPercent,
+                drawPercent = p.drawPercent,
+                awayWinPercent = p.awayWinPercent,
+                expectedHomeGoals = p.expectedHomeGoals,
+                expectedAwayGoals = p.expectedAwayGoals,
+                predictedAt = System.currentTimeMillis(),
+            )
+        }
+        if (logs.isNotEmpty()) predictionLogDao.upsertAll(logs)
+    }
+
+    override suspend fun recordResult(matchId: String, homeGoals: Int, awayGoals: Int) =
+        withContext(Dispatchers.IO) {
+            matchResultDao.upsert(
+                MatchResultEntity(matchId, homeGoals, awayGoals, System.currentTimeMillis()),
+            )
+        }
+
+    override suspend fun getResult(matchId: String): ActualResult? = withContext(Dispatchers.IO) {
+        matchResultDao.getById(matchId)?.let {
+            ActualResult(it.matchId, it.homeGoals, it.awayGoals, it.recordedAt)
+        }
+    }
+
+    override suspend fun recordedResultCount(): Int = withContext(Dispatchers.IO) {
+        matchResultDao.count()
+    }
+
+    override suspend fun predictionRecords(): List<PredictionRecord> = withContext(Dispatchers.IO) {
+        val logs = predictionLogDao.getAll().associateBy { it.matchId }
+        matchResultDao.getAll().mapNotNull { result ->
+            val log = logs[result.matchId] ?: return@mapNotNull null
+            val actual = outcomeOf(result.homeGoals, result.awayGoals)
+            PredictionRecord(
+                confidence = log.confidence,
+                wasCorrect = log.predictedOutcome == actual.name,
+            )
+        }
+    }
+
+    override suspend fun history(): List<HistoricalMatch> = withContext(Dispatchers.IO) {
+        val logs = predictionLogDao.getAll().associateBy { it.matchId }
+        matchResultDao.getAll().mapNotNull { result ->
+            val league = logs[result.matchId]?.league ?: return@mapNotNull null
+            HistoricalMatch(league, result.homeGoals, result.awayGoals)
+        }
+    }
+
+    private fun outcomeOf(home: Int, away: Int): PredictedOutcome = when {
+        home > away -> PredictedOutcome.HOME_WIN
+        home < away -> PredictedOutcome.AWAY_WIN
+        else -> PredictedOutcome.DRAW
+    }
+}
