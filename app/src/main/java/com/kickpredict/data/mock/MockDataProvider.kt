@@ -79,14 +79,20 @@ object MockDataProvider {
 
     // ---- Deterministic multi-round schedule -----------------------------------------------------
 
-    private const val ROUNDS = 3
+    private const val ROUNDS = 5
 
     private fun generatedSchedule(): List<Match> = buildList {
         Teams.byLeague.forEach { (league, seeds) ->
-            roundRobin(seeds.size, ROUNDS).forEachIndexed { roundIndex, pairs ->
-                pairs.forEachIndexed { matchIndex, (h, a) ->
-                    add(fixture(league, seeds[h], seeds[a], roundIndex + 1, matchIndex))
-                }
+            addAll(leagueSchedule(league, ROUNDS))
+        }
+    }
+
+    /** Generates [rounds] rounds of fixtures for a single [league] (used for focused simulations). */
+    internal fun leagueSchedule(league: LeagueType, rounds: Int): List<Match> {
+        val seeds = Teams.byLeague.getValue(league)
+        return roundRobin(seeds.size, rounds).flatMapIndexed { roundIndex, pairs ->
+            pairs.mapIndexed { matchIndex, (h, a) ->
+                fixture(league, seeds[h], seeds[a], roundIndex + 1, matchIndex)
             }
         }
     }

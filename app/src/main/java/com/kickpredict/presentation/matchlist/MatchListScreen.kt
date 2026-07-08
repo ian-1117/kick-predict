@@ -63,6 +63,7 @@ import com.kickpredict.presentation.theme.LossColor
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
 
 private val kickoffFormatter = DateTimeFormatter.ofPattern("EEE d MMM · HH:mm")
 private val rangeFormatter = DateTimeFormatter.ofPattern("M.d")
@@ -232,12 +233,10 @@ private fun CalibrationStatusBar(state: MatchListUiState) {
     val status = state.calibration ?: return
     val applied = status.confidenceApplied || status.leaguesCalibrated.isNotEmpty()
     val color = if (applied) LimeGreen else MaterialTheme.colorScheme.onSurfaceVariant
-    val detail = when {
-        applied -> "신뢰도 보정 ${if (status.confidenceApplied) "적용" else "대기"} · 리그 ${status.leaguesCalibrated.size}개 보정"
-        else -> "표본 축적 중"
-    }
+    val accuracy = status.overallHitRate?.let { " · 예측 정확도 ${(it * 100).roundToInt()}%" } ?: ""
+    val detail = if (applied) "신뢰도 보정 ${if (status.confidenceApplied) "적용" else "대기"} · 리그 ${status.leaguesCalibrated.size}개" else "표본 축적 중"
     Text(
-        text = "AI 보정 · 결과 ${status.recordedResults}건 반영 · $detail",
+        text = "AI 보정 · 결과 ${status.recordedResults}건$accuracy · $detail",
         style = MaterialTheme.typography.labelSmall,
         color = color,
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),

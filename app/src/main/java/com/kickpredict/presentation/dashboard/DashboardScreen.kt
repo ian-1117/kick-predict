@@ -11,11 +11,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AutoFixHigh
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -63,6 +67,15 @@ fun DashboardScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
+                actions = {
+                    if (state.isSeeding) {
+                        CircularProgressIndicator(color = LimeGreen, strokeWidth = 2.dp, modifier = Modifier.size(22.dp))
+                    } else {
+                        IconButton(onClick = viewModel::seedSampleResults) {
+                            Icon(Icons.Filled.AutoFixHigh, contentDescription = "샘플 결과 채우기", tint = LimeGreen)
+                        }
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             )
         },
@@ -71,7 +84,11 @@ fun DashboardScreen(
             val dash = state.dashboard
             when {
                 state.isLoading -> CircularProgressIndicator(color = LimeGreen, modifier = Modifier.align(Alignment.Center))
-                dash == null || dash.totalResults == 0 -> EmptyState(Modifier.align(Alignment.Center))
+                dash == null || dash.totalResults == 0 -> EmptyState(
+                    modifier = Modifier.align(Alignment.Center),
+                    isSeeding = state.isSeeding,
+                    onSeed = viewModel::seedSampleResults,
+                )
                 else -> DashboardContent(dash)
             }
         }
@@ -79,10 +96,18 @@ fun DashboardScreen(
 }
 
 @Composable
-private fun EmptyState(modifier: Modifier) {
-    Column(modifier.padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+private fun EmptyState(modifier: Modifier, isSeeding: Boolean, onSeed: () -> Unit) {
+    Column(modifier.padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text("아직 기록된 결과가 없습니다", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onBackground)
-        Text("경기 상세 화면에서 실제 결과를 입력하면\n적중률과 보정 현황이 여기에 쌓입니다.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text("경기 상세에서 실제 결과를 입력하거나,\n5개 리그·5라운드 샘플 결과를 채워\n예측 정확도와 보정을 바로 확인해 보세요.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Button(
+            onClick = onSeed,
+            enabled = !isSeeding,
+            colors = ButtonDefaults.buttonColors(containerColor = LimeGreen, contentColor = MaterialTheme.colorScheme.background),
+        ) {
+            if (isSeeding) CircularProgressIndicator(color = MaterialTheme.colorScheme.background, strokeWidth = 2.dp, modifier = Modifier.size(18.dp))
+            else Text("5라운드 샘플 결과 채우기", fontWeight = FontWeight.Bold)
+        }
     }
 }
 
@@ -108,7 +133,7 @@ private fun SummaryCard(dash: CalibrationDashboard) {
     Card {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Stat("기록", "${dash.totalResults}건", MaterialTheme.colorScheme.onSurface)
-            Stat("전체 적중률", "${(dash.overallHitRate * 100).roundToInt()}%", LimeGreen)
+            Stat("예측 정확도", "${(dash.overallHitRate * 100).roundToInt()}%", LimeGreen)
             val applied = dash.status.confidenceApplied || dash.status.leaguesCalibrated.isNotEmpty()
             Stat("AI 보정", if (applied) "적용" else "대기", if (applied) LimeGreen else DrawColor)
         }

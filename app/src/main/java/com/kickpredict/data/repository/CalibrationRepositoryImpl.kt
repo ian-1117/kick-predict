@@ -24,6 +24,8 @@ class CalibrationRepositoryImpl(
             PredictionLogEntity(
                 matchId = match.id,
                 league = match.league,
+                homeTeamId = match.homeTeam.id,
+                awayTeamId = match.awayTeam.id,
                 homeTeam = match.homeTeam.displayName,
                 awayTeam = match.awayTeam.displayName,
                 predictedOutcome = p.predictedOutcome.name,
@@ -75,6 +77,8 @@ class CalibrationRepositoryImpl(
             RecordedResult(
                 matchId = result.matchId,
                 league = log.league,
+                homeTeamId = log.homeTeamId,
+                awayTeamId = log.awayTeamId,
                 homeTeam = log.homeTeam,
                 awayTeam = log.awayTeam,
                 predictedOutcome = runCatching { PredictedOutcome.valueOf(log.predictedOutcome) }

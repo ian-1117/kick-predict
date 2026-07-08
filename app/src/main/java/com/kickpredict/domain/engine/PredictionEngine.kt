@@ -10,10 +10,12 @@ import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.MatchContext
 import com.kickpredict.domain.model.PredictionResult
 import com.kickpredict.domain.model.TeamProfile
+import com.kickpredict.domain.rating.MutableEloProvider
 import kotlin.math.abs
 import kotlin.math.exp
 import kotlin.math.pow
 import kotlin.math.roundToInt
+import kotlin.math.tanh
 
 /**
  * Pure-Kotlin, dependency-free prediction engine.
@@ -38,11 +40,13 @@ import kotlin.math.roundToInt
 class PredictionEngine(
     private val calibration: CalibrationProvider = CalibrationDefaults,
     private val confidenceCalibration: ConfidenceCalibration = IdentityConfidenceCalibration,
+    private val eloProvider: MutableEloProvider = MutableEloProvider(),
 ) {
 
     private companion object {
         const val GOAL_RATIO_EXPONENT = 0.6 // <1 dampens extreme attack/defence ratios
         const val QUALITY_STRENGTH = 0.32 // how much rating/position/form swings the goal ratio
+        const val ELO_STRENGTH = 0.30 // how much learned Elo (from real results) skews the goal ratio
         const val LALIGA_QUALITY_AMP = 1.25
         const val BUNDESLIGA_HOME_BOOST = 1.10
         const val FATIGUE_PENALTY = 0.88
@@ -101,7 +105,7 @@ class PredictionEngine(
             lambdaHome *= BUNDESLIGA_HOME_BOOST
             rationale += "Bundesliga home boost applied to ${home.shortName}."
         }
-        if (league == LeagueType.EPL || league == LeagueType.K_LEAGUE) {
+        if (league == LeagueType.EPL || league == LeagueType.K_LEAGUE || league == LeagueType.K_LEAGUE_2) {
             if (home.isFatigued) {
                 lambdaHome *= FATIGUE_PENALTY
                 rationale += "${home.shortName} fatigued (${home.daysSinceLastMatch}d rest)."
@@ -118,6 +122,15 @@ class PredictionEngine(
             lambdaHome *= (1.0 + MATCHUP_STRENGTH * matchupBias)
             lambdaAway *= (1.0 - MATCHUP_STRENGTH * matchupBias)
             rationale += matchupNote(home, away, matchupBias)
+        }
+
+        // --- 4a. Learned Elo (from accumulated real results) ------------------------------------
+        val eloDiff = eloProvider.ratingDiff(home.id, away.id)
+        if (eloDiff != 0.0) {
+            val eloSkew = tanh(eloDiff / 400.0) // -1..1
+            lambdaHome *= (1.0 + ELO_STRENGTH * eloSkew)
+            lambdaAway *= (1.0 - ELO_STRENGTH * eloSkew)
+            rationale += "Elo(학습 레이팅) 반영: Δ${eloDiff.roundToInt()}."
         }
 
         // --- 4b. Context variables: injuries / lineup strength / weather ------------------------

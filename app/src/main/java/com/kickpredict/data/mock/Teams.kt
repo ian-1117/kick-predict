@@ -72,5 +72,15 @@ object Teams {
             TeamSeed("kor_swn", "Suwon FC", "수원 FC", "SWN", 74.0, 0xFF0072BC, 0xFFED1C24),
             TeamSeed("kor_dae", "Daejeon Hana", "대전 하나", "DAE", 74.0, 0xFF6A2C91, 0xFFFFFFFF),
         ),
+        LeagueType.K_LEAGUE_2 to listOf(
+            TeamSeed("k2_bus", "Busan IPark", "부산 아이파크", "BUS", 73.0, 0xFFE3002B, 0xFF003876),
+            TeamSeed("k2_sws", "Suwon Samsung", "수원 삼성", "SWS", 72.0, 0xFF0067AC, 0xFFFFFFFF),
+            TeamSeed("k2_sel", "Seoul E-Land", "서울 이랜드", "SEL", 71.0, 0xFF20214F, 0xFFC8102E),
+            TeamSeed("k2_jns", "Jeonnam Dragons", "전남 드래곤즈", "JNS", 70.0, 0xFFF9A01B, 0xFF000000),
+            TeamSeed("k2_bcn", "Bucheon FC 1995", "부천 FC", "BCN", 69.0, 0xFFE4032E, 0xFF7A0019),
+            TeamSeed("k2_gpo", "Gimpo FC", "김포 FC", "GPO", 68.0, 0xFFE2231A, 0xFFFDB913),
+            TeamSeed("k2_gyn", "Gyeongnam FC", "경남 FC", "GYN", 68.0, 0xFFDA1A32, 0xFF002B5C),
+            TeamSeed("k2_snm", "Seongnam FC", "성남 FC", "SNM", 67.0, 0xFF000000, 0xFFF7A800),
+        ),
     )
 }

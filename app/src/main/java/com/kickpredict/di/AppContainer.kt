@@ -9,6 +9,7 @@ import com.kickpredict.data.repository.MatchRepositoryImpl
 import com.kickpredict.domain.calibration.MutableCalibrationProvider
 import com.kickpredict.domain.calibration.MutableConfidenceCalibration
 import com.kickpredict.domain.engine.PredictionEngine
+import com.kickpredict.domain.rating.MutableEloProvider
 import com.kickpredict.domain.repository.CalibrationRepository
 import com.kickpredict.domain.repository.MatchRepository
 import com.kickpredict.domain.usecase.GetCalibrationDashboardUseCase
@@ -16,6 +17,7 @@ import com.kickpredict.domain.usecase.GetPredictedMatchUseCase
 import com.kickpredict.domain.usecase.GetPredictedMatchesUseCase
 import com.kickpredict.domain.usecase.RecalibrateUseCase
 import com.kickpredict.domain.usecase.RecordMatchResultUseCase
+import com.kickpredict.domain.usecase.SeedSampleResultsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -40,10 +42,12 @@ class AppContainer(context: Context) {
     // Live calibration holders — refit from accumulated results and read by the engine each call.
     private val confidenceCalibration = MutableConfidenceCalibration()
     private val calibrationProvider = MutableCalibrationProvider()
+    private val eloProvider = MutableEloProvider()
 
     private val engine = PredictionEngine(
         calibration = calibrationProvider,
         confidenceCalibration = confidenceCalibration,
+        eloProvider = eloProvider,
     )
 
     private val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
@@ -69,8 +73,10 @@ class AppContainer(context: Context) {
         calibrationRepository = calibrationRepository,
         confidenceCalibration = confidenceCalibration,
         calibrationProvider = calibrationProvider,
+        eloProvider = eloProvider,
     )
     val getCalibrationDashboard = GetCalibrationDashboardUseCase(calibrationRepository, recalibrate)
+    val seedSampleResults = SeedSampleResultsUseCase(getPredictedMatches, calibrationRepository)
 
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 

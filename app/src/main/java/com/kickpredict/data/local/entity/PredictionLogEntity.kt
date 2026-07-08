@@ -12,6 +12,8 @@ import com.kickpredict.domain.model.LeagueType
 data class PredictionLogEntity(
     @PrimaryKey val matchId: String,
     val league: LeagueType,
+    val homeTeamId: String,
+    val awayTeamId: String,
     val homeTeam: String,
     val awayTeam: String,
     val predictedOutcome: String, // PredictedOutcome.name

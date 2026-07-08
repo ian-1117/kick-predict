@@ -65,6 +65,7 @@ object CalibrationDefaults : CalibrationProvider {
         LeagueType.SERIE_A to LeagueCalibration(1.25, 1.12, 1.28),
         LeagueType.LALIGA to LeagueCalibration(1.44, 1.12, 1.05),
         LeagueType.K_LEAGUE to LeagueCalibration(1.45, 1.20, 1.03),
+        LeagueType.K_LEAGUE_2 to LeagueCalibration(1.40, 1.18, 1.04),
     )
 
     override fun forLeague(league: LeagueType): LeagueCalibration = table.getValue(league)

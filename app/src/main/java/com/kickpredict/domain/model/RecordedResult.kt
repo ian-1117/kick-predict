@@ -7,6 +7,8 @@ package com.kickpredict.domain.model
 data class RecordedResult(
     val matchId: String,
     val league: LeagueType,
+    val homeTeamId: String,
+    val awayTeamId: String,
     val homeTeam: String,
     val awayTeam: String,
     val predictedOutcome: PredictedOutcome,
