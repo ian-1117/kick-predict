@@ -1,0 +1,13 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#0B0F0A"
+        android:pathData="M0,0h108v108h-108z" />
+    <!-- Stylised soccer ball / target in lime green -->
+    <path
+        android:fillColor="#B6FF3A"
+        android:pathData="M54,26a28,28 0,1 0,0.1 0zM54,34a20,20 0,1 1,-0.1 0zM54,44l6,4.4 -2.3,7.1h-7.4l-2.3,-7.1z" />
+</vector>
