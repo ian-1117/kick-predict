@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DateRangePicker
@@ -27,6 +28,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -69,6 +71,7 @@ private val rangeFormatter = DateTimeFormatter.ofPattern("M.d")
 @Composable
 fun MatchListScreen(
     onMatchClick: (String) -> Unit,
+    onDashboard: () -> Unit,
     viewModel: MatchListViewModel = viewModel(factory = MatchListViewModel.Factory),
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -86,6 +89,11 @@ fun MatchListScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("KICK", fontWeight = FontWeight.Black, color = MaterialTheme.colorScheme.onBackground)
                         Text("PREDICT", fontWeight = FontWeight.Black, color = LimeGreen)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onDashboard) {
+                        Icon(Icons.Filled.Insights, contentDescription = "적중·보정 대시보드", tint = LimeGreen)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),

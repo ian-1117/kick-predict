@@ -78,4 +78,22 @@ class CalibrationRepositoryTest {
         assertTrue(repo.history().isEmpty())
         assertEquals(1, repo.recordedResultCount())
     }
+
+    @Test
+    fun `recordedResults joins the prediction with team names and correctness`() = runBlocking {
+        val repo = repo()
+        val match = matchWith(prediction(home = 70, draw = 20, away = 10, confidence = 82))
+
+        repo.recordPredictions(listOf(match))
+        repo.recordResult(match.id, homeGoals = 2, awayGoals = 0)
+
+        val results = repo.recordedResults()
+        assertEquals(1, results.size)
+        val r = results[0]
+        assertEquals(match.homeTeam.displayName, r.homeTeam)
+        assertEquals(match.awayTeam.displayName, r.awayTeam)
+        assertEquals(82, r.confidence)
+        assertTrue(r.wasCorrect)
+        assertEquals("2 – 0", r.scoreline)
+    }
 }

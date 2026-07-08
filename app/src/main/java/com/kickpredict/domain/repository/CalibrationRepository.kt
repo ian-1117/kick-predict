@@ -4,6 +4,7 @@ import com.kickpredict.domain.calibration.HistoricalMatch
 import com.kickpredict.domain.calibration.PredictionRecord
 import com.kickpredict.domain.model.ActualResult
 import com.kickpredict.domain.model.Match
+import com.kickpredict.domain.model.RecordedResult
 
 /**
  * Persists prediction snapshots + user-entered results and turns the accumulated data into
@@ -21,6 +22,9 @@ interface CalibrationRepository {
     suspend fun getResult(matchId: String): ActualResult?
 
     suspend fun recordedResultCount(): Int
+
+    /** All recorded results joined with their predictions, most recent first (for the dashboard). */
+    suspend fun recordedResults(): List<RecordedResult>
 
     /** Confidence-vs-hit-rate pairs for [com.kickpredict.domain.calibration.ConfidenceCalibrator]. */
     suspend fun predictionRecords(): List<PredictionRecord>

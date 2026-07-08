@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.kickpredict.presentation.dashboard.DashboardScreen
 import com.kickpredict.presentation.detail.PredictionDetailScreen
 import com.kickpredict.presentation.matchlist.MatchListScreen
 
@@ -14,6 +15,7 @@ object Routes {
     const val MATCH_DETAIL = "matches/{matchId}"
     fun detail(matchId: String) = "matches/$matchId"
     const val ARG_MATCH_ID = "matchId"
+    const val DASHBOARD = "dashboard"
 }
 
 @Composable
@@ -23,7 +25,11 @@ fun KickPredictNavHost() {
         composable(Routes.MATCH_LIST) {
             MatchListScreen(
                 onMatchClick = { matchId -> navController.navigate(Routes.detail(matchId)) },
+                onDashboard = { navController.navigate(Routes.DASHBOARD) },
             )
+        }
+        composable(Routes.DASHBOARD) {
+            DashboardScreen(onBack = { navController.popBackStack() })
         }
         composable(
             route = Routes.MATCH_DETAIL,

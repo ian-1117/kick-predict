@@ -9,6 +9,7 @@ import com.kickpredict.domain.calibration.PredictionRecord
 import com.kickpredict.domain.model.ActualResult
 import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.PredictedOutcome
+import com.kickpredict.domain.model.RecordedResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -23,6 +24,8 @@ class CalibrationRepositoryImpl(
             PredictionLogEntity(
                 matchId = match.id,
                 league = match.league,
+                homeTeam = match.homeTeam.displayName,
+                awayTeam = match.awayTeam.displayName,
                 predictedOutcome = p.predictedOutcome.name,
                 confidence = p.confidenceScore,
                 homeWinPercent = p.homeWinPercent,
@@ -63,6 +66,25 @@ class CalibrationRepositoryImpl(
                 wasCorrect = log.predictedOutcome == actual.name,
             )
         }
+    }
+
+    override suspend fun recordedResults(): List<RecordedResult> = withContext(Dispatchers.IO) {
+        val logs = predictionLogDao.getAll().associateBy { it.matchId }
+        matchResultDao.getAll().mapNotNull { result ->
+            val log = logs[result.matchId] ?: return@mapNotNull null
+            RecordedResult(
+                matchId = result.matchId,
+                league = log.league,
+                homeTeam = log.homeTeam,
+                awayTeam = log.awayTeam,
+                predictedOutcome = runCatching { PredictedOutcome.valueOf(log.predictedOutcome) }
+                    .getOrDefault(PredictedOutcome.DRAW),
+                confidence = log.confidence,
+                homeGoals = result.homeGoals,
+                awayGoals = result.awayGoals,
+                recordedAt = result.recordedAt,
+            )
+        }.sortedByDescending { it.recordedAt }
     }
 
     override suspend fun history(): List<HistoricalMatch> = withContext(Dispatchers.IO) {

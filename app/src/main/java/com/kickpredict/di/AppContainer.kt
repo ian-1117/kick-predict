@@ -11,6 +11,7 @@ import com.kickpredict.domain.calibration.MutableConfidenceCalibration
 import com.kickpredict.domain.engine.PredictionEngine
 import com.kickpredict.domain.repository.CalibrationRepository
 import com.kickpredict.domain.repository.MatchRepository
+import com.kickpredict.domain.usecase.GetCalibrationDashboardUseCase
 import com.kickpredict.domain.usecase.GetPredictedMatchUseCase
 import com.kickpredict.domain.usecase.GetPredictedMatchesUseCase
 import com.kickpredict.domain.usecase.RecalibrateUseCase
@@ -69,6 +70,7 @@ class AppContainer(context: Context) {
         confidenceCalibration = confidenceCalibration,
         calibrationProvider = calibrationProvider,
     )
+    val getCalibrationDashboard = GetCalibrationDashboardUseCase(calibrationRepository, recalibrate)
 
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
