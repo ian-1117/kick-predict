@@ -33,6 +33,9 @@ class RecalibrateUseCase(
     private val poissonProvider: MutablePoissonProvider = MutablePoissonProvider(),
     // Historical results (e.g. past real seasons) used to pre-train the models before user results.
     private val priorResults: () -> List<com.kickpredict.domain.model.PriorResult> = { emptyList() },
+    // When false, recorded results feed calibration/standings but NOT the strength models — used with
+    // real data so predictions for the displayed season stay genuinely out-of-sample.
+    private val trainModelsOnRecordedResults: Boolean = true,
     private val minConfidenceSamples: Int = 20,
     private val minLeagueSamples: Int = 10,
 ) {
@@ -49,13 +52,15 @@ class RecalibrateUseCase(
             poisson.update(r.homeTeamId, r.awayTeamId, r.homeGoals, r.awayGoals)
             teams += r.homeTeamId; teams += r.awayTeamId
         }
-        calibrationRepository.recordedResults()
-            .sortedBy { it.recordedAt }
-            .forEach { r ->
-                elo.update(r.homeTeamId, r.awayTeamId, r.homeGoals, r.awayGoals)
-                poisson.update(r.homeTeamId, r.awayTeamId, r.homeGoals, r.awayGoals)
-                teams += r.homeTeamId; teams += r.awayTeamId
-            }
+        if (trainModelsOnRecordedResults) {
+            calibrationRepository.recordedResults()
+                .sortedBy { it.recordedAt }
+                .forEach { r ->
+                    elo.update(r.homeTeamId, r.awayTeamId, r.homeGoals, r.awayGoals)
+                    poisson.update(r.homeTeamId, r.awayTeamId, r.homeGoals, r.awayGoals)
+                    teams += r.homeTeamId; teams += r.awayTeamId
+                }
+        }
         eloProvider.update(elo)
         poissonProvider.update(poisson, teams)
 

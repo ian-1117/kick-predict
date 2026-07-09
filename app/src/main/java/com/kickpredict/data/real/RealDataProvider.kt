@@ -40,7 +40,8 @@ class RealDataProvider(private val assets: AssetManager) {
         leagueCodes.keys.associateWith { code -> seasons.associateWith { parse(code, it) } }
     }
 
-    val hasData: Boolean by lazy { data.values.sumOf { s -> s.values.sumOf { it.size } } > 500 }
+    // Cheap check (no full parse): are the bundled assets present at all?
+    val hasData: Boolean by lazy { runCatching { assets.open("realdata/E0_$displaySeason.csv").close(); true }.getOrDefault(false) }
 
     fun priorResults(): List<PriorResult> = leagueCodes.flatMap { (code, _) ->
         seasons.filter { it != displaySeason }.flatMap { season ->
@@ -50,13 +51,16 @@ class RealDataProvider(private val assets: AssetManager) {
         }
     }
 
-    private val cachedMatches: List<Match> by lazy {
+    private val built: List<Triple<Match, Int, Int>> by lazy {
         leagueCodes.flatMap { (code, league) -> buildLeague(code, league) }
     }
 
-    fun matches(): List<Match> = cachedMatches
+    fun matches(): List<Match> = built.map { it.first }
 
-    private fun buildLeague(code: String, league: LeagueType): List<Match> {
+    /** Real final scorelines for the display season, keyed by match id (for seeding standings/accuracy). */
+    fun displayResults(): Map<String, Pair<Int, Int>> = built.associate { it.first.id to (it.second to it.third) }
+
+    private fun buildLeague(code: String, league: LeagueType): List<Triple<Match, Int, Int>> {
         val rows = data.getValue(code).getValue(displaySeason).sortedWith(compareBy({ it.date }, { it.time ?: LocalTime.MIDNIGHT }))
         if (rows.isEmpty()) return emptyList()
         val allHistory = seasons.flatMap { data.getValue(code).getValue(it) }
@@ -66,11 +70,11 @@ class RealDataProvider(private val assets: AssetManager) {
         val position = ranked.withIndex().associate { (i, name) -> name to i + 1 }
         val perRound = (teams.size / 2).coerceAtLeast(1)
 
-        return rows.mapIndexedNotNull { index, r ->
+        return rows.mapIndexed { index, r ->
             val round = index / perRound + 1
             val home = profile(code, league, r.home, stats.getValue(r.home), position.getValue(r.home))
             val away = profile(code, league, r.away, stats.getValue(r.away), position.getValue(r.away))
-            Match(
+            val match = Match(
                 id = "${code}_${displaySeason}_${slug(r.home)}_${slug(r.away)}_r$round",
                 league = league,
                 homeTeam = home,
@@ -80,6 +84,7 @@ class RealDataProvider(private val assets: AssetManager) {
                 headToHead = headToHead(r.home, r.away, allHistory),
                 round = round,
             )
+            Triple(match, r.hg, r.ag)
         }
     }
 

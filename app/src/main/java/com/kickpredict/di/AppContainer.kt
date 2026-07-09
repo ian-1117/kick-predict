@@ -86,6 +86,9 @@ class AppContainer(context: Context) {
         eloProvider = eloProvider,
         poissonProvider = poissonProvider,
         priorResults = { if (realData.hasData) realData.priorResults() else emptyList() },
+        // With real data, recorded (2023-24) results drive standings/accuracy but not the models,
+        // so the displayed predictions stay out-of-sample against those seasons.
+        trainModelsOnRecordedResults = !realData.hasData,
     )
     val getCalibrationDashboard = GetCalibrationDashboardUseCase(calibrationRepository, recalibrate)
     val getStandings = GetStandingsUseCase(calibrationRepository)
@@ -95,7 +98,22 @@ class AppContainer(context: Context) {
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     init {
-        // Apply any calibration learned from previously recorded results on startup.
-        applicationScope.launch { runCatching { recalibrate() } }
+        applicationScope.launch {
+            runCatching {
+                // Pre-train the models (on prior real seasons) so predictions are ready.
+                recalibrate()
+                // First launch with real data: seed the real display-season results so standings,
+                // the accuracy dashboard and team pages are populated with real football. Predictions
+                // are logged first (out-of-sample) and then scored against the real outcomes.
+                if (realData.hasData && calibrationRepository.recordedResultCount() == 0) {
+                    val matches = getPredictedMatches()
+                    val results = realData.displayResults()
+                    matches.forEach { m ->
+                        results[m.id]?.let { (home, away) -> calibrationRepository.recordResult(m.id, home, away) }
+                    }
+                    recalibrate() // refit confidence/league calibration against the real outcomes
+                }
+            }
+        }
     }
 }
