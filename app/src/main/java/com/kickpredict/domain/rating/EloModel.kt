@@ -1,6 +1,7 @@
 package com.kickpredict.domain.rating
 
 import kotlin.math.abs
+import kotlin.math.ln
 import kotlin.math.pow
 
 /**
@@ -20,6 +21,7 @@ class EloModel(
     private val homeAdvantage: Double = 60.0,
     private val drawBase: Double = 0.30,
     private val baseRating: Double = 1500.0,
+    private val marginOfVictory: Boolean = false,
     initial: Map<String, Double> = emptyMap(),
 ) {
     private val ratings: MutableMap<String, Double> = initial.toMutableMap()
@@ -50,9 +52,29 @@ class EloModel(
             homeGoals < awayGoals -> 0.0
             else -> 0.5
         }
-        val delta = kFactor * (actual - expected)
+        val delta = kFactor * marginMultiplier(homeId, awayId, homeGoals, awayGoals) * (actual - expected)
         ratings[homeId] = rating(homeId) + delta
         ratings[awayId] = rating(awayId) - delta
+    }
+
+    /** Regress every rating toward the base (call between seasons for roster turnover). */
+    fun regressToMean(carryOver: Double) {
+        ratings.keys.toList().forEach { id ->
+            ratings[id] = baseRating + (rating(id) - baseRating) * carryOver
+        }
+    }
+
+    /**
+     * FiveThirtyEight-style margin-of-victory multiplier: bigger wins move ratings more, damped when
+     * the winner was already the favourite (avoids autocorrelation). 1.0 when disabled or on a draw.
+     */
+    private fun marginMultiplier(homeId: String, awayId: String, homeGoals: Int, awayGoals: Int): Double {
+        if (!marginOfVictory) return 1.0
+        val margin = abs(homeGoals - awayGoals)
+        if (margin == 0) return 1.0
+        val homeDiff = rating(homeId) + homeAdvantage - rating(awayId)
+        val winnerDiff = if (homeGoals > awayGoals) homeDiff else -homeDiff
+        return ln(margin + 1.0) * (2.2 / (winnerDiff * 0.001 + 2.2))
     }
 }
 
@@ -67,6 +89,9 @@ class MutableEloProvider(initial: EloModel = EloModel()) {
 
     /** Learned rating gap (home − away); 0 while untrained, so predictions are unchanged. */
     fun ratingDiff(homeId: String, awayId: String): Double = model.rating(homeId) - model.rating(awayId)
+
+    /** Current learned rating for a team (base rating until trained). */
+    fun rating(teamId: String): Double = model.rating(teamId)
 
     fun update(trained: EloModel) {
         model = trained

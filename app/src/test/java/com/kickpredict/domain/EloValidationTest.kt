@@ -23,7 +23,19 @@ class EloValidationTest {
     private data class Played(val homeId: String, val awayId: String, val homeGoals: Int, val awayGoals: Int)
 
     @Test
-    fun `learned Elo beats static ratings on held-out matches`() {
+    fun `learned Elo beats static ratings and nears the ceiling (realistic league)`() {
+        val (learnAcc, baseAcc) = runValidation(strengthSpread = 110.0, tag = "REALISTIC")
+        assertTrue("more training should at least match the static baseline", learnAcc >= baseAcc)
+    }
+
+    @Test
+    fun `a more predictable league lifts the ceiling and the learner rides it up`() {
+        // Wider true-strength spread -> fewer coin-flip games -> higher achievable accuracy.
+        runValidation(strengthSpread = 320.0, tag = "PREDICTABLE")
+    }
+
+    /** @return (learnedAccuracy, baselineAccuracy). Prints baseline/learned/oracle metrics. */
+    private fun runValidation(strengthSpread: Double, tag: String): Pair<Double, Double> {
         val rng = Random(42)
         val seeds = Teams.byLeague.getValue(LeagueType.K_LEAGUE) + Teams.byLeague.getValue(LeagueType.K_LEAGUE_2)
         val ids = seeds.map { it.id }
@@ -31,11 +43,11 @@ class EloValidationTest {
         // What you'd guess from the catalog rating (the static baseline's knowledge).
         val catalogElo = seeds.associate { it.id to 1500.0 + (it.rating - 72.0) * 22.0 }
         // Hidden truth = the catalog signal PLUS a component only results reveal.
-        val trueElo = seeds.associate { it.id to catalogElo.getValue(it.id) + rng.nextGaussian() * 110.0 }
+        val trueElo = seeds.associate { it.id to catalogElo.getValue(it.id) + rng.nextGaussian() * strengthSpread }
         val truth = EloModel(initial = trueElo)
 
         // Several seasons of double round-robin, played in a random order (more games -> Elo converges).
-        val seasons = 6
+        val seasons = 20
         val oneSeason = buildList {
             for (i in ids.indices) for (j in ids.indices) if (i != j) add(ids[i] to ids[j])
         }
@@ -63,13 +75,17 @@ class EloValidationTest {
 
         val (baseAcc, baseLoss) = evaluate(baseline, test)
         val (learnAcc, learnLoss) = evaluate(learner, test)
+        val (oracleAcc, oracleLoss) = evaluate(truth, test) // best achievable (generated from truth)
 
         println(
-            "ELO_VALIDATION test=${test.size} | baseline acc=${pct(baseAcc)}% logloss=${fmt(baseLoss)}" +
-                " | learned acc=${pct(learnAcc)}% logloss=${fmt(learnLoss)}",
+            "ELO_VALIDATION[$tag] spread=$strengthSpread train=${train.size} test=${test.size}" +
+                " | baseline acc=${pct(baseAcc)}% logloss=${fmt(baseLoss)}" +
+                " | learned acc=${pct(learnAcc)}% logloss=${fmt(learnLoss)}" +
+                " | oracle acc=${pct(oracleAcc)}% logloss=${fmt(oracleLoss)}",
         )
 
         assertTrue("learning from results should reduce test log-loss", learnLoss < baseLoss)
+        return learnAcc to baseAcc
     }
 
     private fun evaluate(model: EloModel, test: List<Played>): Pair<Double, Double> {

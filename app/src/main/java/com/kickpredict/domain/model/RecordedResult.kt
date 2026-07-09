@@ -16,6 +16,7 @@ data class RecordedResult(
     val homeGoals: Int,
     val awayGoals: Int,
     val recordedAt: Long,
+    val round: Int = 0,
 ) {
     val actualOutcome: PredictedOutcome
         get() = when {

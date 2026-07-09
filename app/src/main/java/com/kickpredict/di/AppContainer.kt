@@ -10,10 +10,13 @@ import com.kickpredict.domain.calibration.MutableCalibrationProvider
 import com.kickpredict.domain.calibration.MutableConfidenceCalibration
 import com.kickpredict.domain.engine.PredictionEngine
 import com.kickpredict.domain.rating.MutableEloProvider
+import com.kickpredict.domain.rating.MutablePoissonProvider
 import com.kickpredict.domain.repository.CalibrationRepository
 import com.kickpredict.domain.repository.MatchRepository
 import com.kickpredict.domain.usecase.GetCalibrationDashboardUseCase
 import com.kickpredict.domain.usecase.GetPredictedMatchUseCase
+import com.kickpredict.domain.usecase.GetStandingsUseCase
+import com.kickpredict.domain.usecase.GetTeamUseCase
 import com.kickpredict.domain.usecase.GetPredictedMatchesUseCase
 import com.kickpredict.domain.usecase.RecalibrateUseCase
 import com.kickpredict.domain.usecase.RecordMatchResultUseCase
@@ -43,11 +46,13 @@ class AppContainer(context: Context) {
     private val confidenceCalibration = MutableConfidenceCalibration()
     private val calibrationProvider = MutableCalibrationProvider()
     private val eloProvider = MutableEloProvider()
+    private val poissonProvider = MutablePoissonProvider()
 
     private val engine = PredictionEngine(
         calibration = calibrationProvider,
         confidenceCalibration = confidenceCalibration,
         eloProvider = eloProvider,
+        poissonProvider = poissonProvider,
     )
 
     private val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
@@ -74,8 +79,11 @@ class AppContainer(context: Context) {
         confidenceCalibration = confidenceCalibration,
         calibrationProvider = calibrationProvider,
         eloProvider = eloProvider,
+        poissonProvider = poissonProvider,
     )
     val getCalibrationDashboard = GetCalibrationDashboardUseCase(calibrationRepository, recalibrate)
+    val getStandings = GetStandingsUseCase(calibrationRepository)
+    val getTeam = GetTeamUseCase(getPredictedMatches, getStandings, calibrationRepository, eloProvider)
     val seedSampleResults = SeedSampleResultsUseCase(getPredictedMatches, calibrationRepository)
 
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)

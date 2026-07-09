@@ -24,6 +24,7 @@ class CalibrationRepositoryImpl(
             PredictionLogEntity(
                 matchId = match.id,
                 league = match.league,
+                round = match.round,
                 homeTeamId = match.homeTeam.id,
                 awayTeamId = match.awayTeam.id,
                 homeTeam = match.homeTeam.displayName,
@@ -87,6 +88,7 @@ class CalibrationRepositoryImpl(
                 homeGoals = result.homeGoals,
                 awayGoals = result.awayGoals,
                 recordedAt = result.recordedAt,
+                round = log.round,
             )
         }.sortedByDescending { it.recordedAt }
     }

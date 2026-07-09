@@ -41,7 +41,16 @@ data class PredictionResult(
     val matchupBias: Double = 0.0,
     val expectedHomeGoals: Double = 0.0,
     val expectedAwayGoals: Double = 0.0,
+    /** P(total goals ≥ 3), i.e. Over 2.5, in whole percent. */
+    val overProbabilityPercent: Int = 0,
+    /** P(both teams score) in whole percent. */
+    val bttsProbabilityPercent: Int = 0,
+    /** Most-likely exact scorelines, highest probability first. */
+    val topScorelines: List<ScoreLine> = emptyList(),
 ) {
+    val underProbabilityPercent: Int get() = 100 - overProbabilityPercent
+    val noBttsProbabilityPercent: Int get() = 100 - bttsProbabilityPercent
+
     /** Most-likely integer scoreline from the goal expectations, e.g. "2 – 1". */
     val expectedScoreline: String
         get() = "${kotlin.math.round(expectedHomeGoals).toInt()} – ${kotlin.math.round(expectedAwayGoals).toInt()}"

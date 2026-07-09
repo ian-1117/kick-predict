@@ -167,6 +167,10 @@ private fun ResponsivePredictionContent(
                     PredictionDonutChart(prediction, modifier = Modifier.fillMaxWidth(0.8f))
                     Spacer(Modifier.height(24.dp))
                     ProbabilityGauges(prediction, match.homeTeam.shortName, match.awayTeam.shortName)
+                    Spacer(Modifier.height(16.dp))
+                    MarketSummary(prediction)
+                    Spacer(Modifier.height(16.dp))
+                    ScorelineDistribution(prediction)
                     Spacer(Modifier.height(20.dp))
                     ResultEntrySection(match, prediction, actualResult, recordedCount, onSaveResult)
                 }
@@ -185,6 +189,8 @@ private fun ResponsivePredictionContent(
                 ConfidenceBadge(prediction.confidenceScore, prediction.confidenceTier)
                 PredictionDonutChart(prediction, modifier = Modifier.fillMaxWidth(0.7f))
                 ProbabilityGauges(prediction, match.homeTeam.shortName, match.awayTeam.shortName)
+                MarketSummary(prediction)
+                ScorelineDistribution(prediction)
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -305,6 +311,76 @@ private fun GoalStepper(label: String, value: Int, onChange: (Int) -> Unit) {
             )
             IconButton(onClick = { onChange(value + 1) }) {
                 Icon(Icons.Filled.Add, contentDescription = "증가", tint = LimeGreen)
+            }
+        }
+    }
+}
+
+@Composable
+private fun MarketSummary(prediction: PredictionResult) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
+        Text("추가 마켓", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+        MarketRow("오버 2.5", prediction.overProbabilityPercent, "언더 2.5", prediction.underProbabilityPercent)
+        MarketRow("양팀 득점", prediction.bttsProbabilityPercent, "노골", prediction.noBttsProbabilityPercent)
+    }
+}
+
+@Composable
+private fun MarketRow(yesLabel: String, yesPercent: Int, noLabel: String, noPercent: Int) {
+    Column(Modifier.fillMaxWidth()) {
+        Row(Modifier.fillMaxWidth().padding(bottom = 4.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text("$yesLabel $yesPercent%", style = MaterialTheme.typography.labelLarge, color = LimeGreen, fontWeight = FontWeight.Bold)
+            Text("$noLabel $noPercent%", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        Box(Modifier.fillMaxWidth().height(10.dp).clip(RoundedCornerShape(50)).background(androidx.compose.ui.graphics.Color(0xFF2A3320))) {
+            Box(Modifier.fillMaxWidth((yesPercent / 100f).coerceIn(0f, 1f)).height(10.dp).clip(RoundedCornerShape(50)).background(LimeGreen))
+        }
+    }
+}
+
+@Composable
+private fun ScorelineDistribution(prediction: PredictionResult) {
+    val lines = prediction.topScorelines
+    if (lines.isEmpty()) return
+    val maxPercent = lines.maxOf { it.probabilityPercent }.coerceAtLeast(1)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        Text("스코어 확률", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+        lines.forEach { s ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    s.label,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.width(56.dp),
+                )
+                Box(
+                    Modifier.weight(1f).height(10.dp).clip(RoundedCornerShape(50)).background(androidx.compose.ui.graphics.Color(0xFF2A3320)),
+                ) {
+                    Box(Modifier.fillMaxWidth((s.probabilityPercent.toFloat() / maxPercent).coerceIn(0f, 1f)).height(10.dp).clip(RoundedCornerShape(50)).background(LimeGreen))
+                }
+                Text(
+                    "${s.probabilityPercent}%",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = LimeGreen,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.width(44.dp).padding(start = 8.dp),
+                )
             }
         }
     }

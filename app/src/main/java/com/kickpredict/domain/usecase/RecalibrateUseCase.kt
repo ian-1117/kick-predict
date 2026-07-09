@@ -7,6 +7,8 @@ import com.kickpredict.domain.calibration.MutableConfidenceCalibration
 import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.rating.EloModel
 import com.kickpredict.domain.rating.MutableEloProvider
+import com.kickpredict.domain.rating.MutablePoissonProvider
+import com.kickpredict.domain.rating.PoissonRatings
 import com.kickpredict.domain.repository.CalibrationRepository
 
 /** Summary of the last recalibration, for surfacing "보정 현황" in the UI. */
@@ -28,18 +30,26 @@ class RecalibrateUseCase(
     private val confidenceCalibration: MutableConfidenceCalibration,
     private val calibrationProvider: MutableCalibrationProvider,
     private val eloProvider: MutableEloProvider = MutableEloProvider(),
+    private val poissonProvider: MutablePoissonProvider = MutablePoissonProvider(),
     private val minConfidenceSamples: Int = 20,
     private val minLeagueSamples: Int = 10,
 ) {
     suspend operator fun invoke(): CalibrationStatus {
         val records = calibrationRepository.predictionRecords()
 
-        // Retrain Elo from all recorded results (chronological) and inject into the live engine.
+        // Retrain the learned goal models (Elo + Dixon-Coles) from all recorded results, chronologically.
         val elo = EloModel()
+        val poisson = PoissonRatings()
+        val teams = HashSet<String>()
         calibrationRepository.recordedResults()
             .sortedBy { it.recordedAt }
-            .forEach { elo.update(it.homeTeamId, it.awayTeamId, it.homeGoals, it.awayGoals) }
+            .forEach { r ->
+                elo.update(r.homeTeamId, r.awayTeamId, r.homeGoals, r.awayGoals)
+                poisson.update(r.homeTeamId, r.awayTeamId, r.homeGoals, r.awayGoals)
+                teams += r.homeTeamId; teams += r.awayTeamId
+            }
         eloProvider.update(elo)
+        poissonProvider.update(poisson, teams)
 
         val overallHitRate = if (records.isEmpty()) null
         else records.count { it.wasCorrect }.toDouble() / records.size

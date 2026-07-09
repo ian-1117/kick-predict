@@ -9,8 +9,10 @@ import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.MatchContext
 import com.kickpredict.domain.model.PredictionResult
+import com.kickpredict.domain.model.ScoreLine
 import com.kickpredict.domain.model.TeamProfile
 import com.kickpredict.domain.rating.MutableEloProvider
+import com.kickpredict.domain.rating.MutablePoissonProvider
 import kotlin.math.abs
 import kotlin.math.exp
 import kotlin.math.pow
@@ -41,12 +43,14 @@ class PredictionEngine(
     private val calibration: CalibrationProvider = CalibrationDefaults,
     private val confidenceCalibration: ConfidenceCalibration = IdentityConfidenceCalibration,
     private val eloProvider: MutableEloProvider = MutableEloProvider(),
+    private val poissonProvider: MutablePoissonProvider = MutablePoissonProvider(),
 ) {
 
     private companion object {
         const val GOAL_RATIO_EXPONENT = 0.6 // <1 dampens extreme attack/defence ratios
         const val QUALITY_STRENGTH = 0.32 // how much rating/position/form swings the goal ratio
         const val ELO_STRENGTH = 0.30 // how much learned Elo (from real results) skews the goal ratio
+        const val POISSON_STRENGTH = 0.45 // blend weight for the learned Dixon-Coles goal model
         const val LALIGA_QUALITY_AMP = 1.25
         const val BUNDESLIGA_HOME_BOOST = 1.10
         const val FATIGUE_PENALTY = 0.88
@@ -59,6 +63,7 @@ class PredictionEngine(
         const val LAMBDA_MIN = 0.2
         const val LAMBDA_MAX = 3.2
         const val MAX_GOALS = 8
+        const val SCORE_CELLS = (MAX_GOALS + 1) * (MAX_GOALS + 1)
 
         // Quality index weights (rating/position/form), sums to 1.0.
         const val Q_RATING = 0.45
@@ -133,6 +138,13 @@ class PredictionEngine(
             rationale += "Elo(학습 레이팅) 반영: Δ${eloDiff.roundToInt()}."
         }
 
+        // --- 4a-2. Learned Dixon-Coles attack/defence goal model (from real results) ------------
+        poissonProvider.lambdas(home.id, away.id)?.let { (poissonHome, poissonAway) ->
+            lambdaHome = (1.0 - POISSON_STRENGTH) * lambdaHome + POISSON_STRENGTH * poissonHome
+            lambdaAway = (1.0 - POISSON_STRENGTH) * lambdaAway + POISSON_STRENGTH * poissonAway
+            rationale += "실데이터 공수 레이팅(Dixon-Coles) 반영: λ ${fmt(poissonHome)} / ${fmt(poissonAway)}."
+        }
+
         // --- 4b. Context variables: injuries / lineup strength / weather ------------------------
         val context = match.context
         lambdaHome *= context.homeAvailability.availabilityFactor
@@ -156,19 +168,27 @@ class PredictionEngine(
         var pHome = 0.0
         var pDraw = 0.0
         var pAway = 0.0
+        val cells = ArrayList<Triple<Int, Int, Double>>(SCORE_CELLS)
         for (i in 0..MAX_GOALS) {
             for (j in 0..MAX_GOALS) {
-                val p = poisson(i, lambdaHome) * poisson(j, lambdaAway)
+                val base = poisson(i, lambdaHome) * poisson(j, lambdaAway)
+                val effective = if (i == j) base * cal.drawInflation else base // league draw tendency
+                cells += Triple(i, j, effective)
                 when {
-                    i > j -> pHome += p
-                    i == j -> pDraw += p * cal.drawInflation // league draw tendency
-                    else -> pAway += p
+                    i > j -> pHome += base
+                    i == j -> pDraw += effective
+                    else -> pAway += base
                 }
             }
         }
         val norm = pHome + pDraw + pAway
         pHome /= norm; pDraw /= norm; pAway /= norm
         val (homePct, drawPct, awayPct) = toWholePercents(pHome, pDraw, pAway)
+
+        val topScorelines = cells.sortedByDescending { it.third }
+            .take(6)
+            .map { (i, j, p) -> ScoreLine(i, j, (p / norm * 100).roundToInt()) }
+            .filter { it.probabilityPercent > 0 }
 
         // --- 6. Confidence score ----------------------------------------------------------------
         val formSamples = home.recentForm.take(5).size + away.recentForm.take(5).size
@@ -199,6 +219,12 @@ class PredictionEngine(
         val confidenceScore = confidenceCalibration.calibrate(rawConfidence).coerceIn(5, 97)
         rationale += "예상 스코어 ${lambdaHome.roundToInt()}–${lambdaAway.roundToInt()} (λ ${fmt(lambdaHome)} / ${fmt(lambdaAway)})."
 
+        // Extra markets from the (independent-Poisson) goal expectations.
+        val totalLambda = lambdaHome + lambdaAway
+        val pUnder = exp(-totalLambda) * (1.0 + totalLambda + totalLambda * totalLambda / 2.0)
+        val overPercent = ((1.0 - pUnder) * 100).roundToInt().coerceIn(0, 100)
+        val bttsPercent = ((1.0 - exp(-lambdaHome)) * (1.0 - exp(-lambdaAway)) * 100).roundToInt().coerceIn(0, 100)
+
         return PredictionResult(
             homeWinPercent = homePct,
             drawPercent = drawPct,
@@ -208,6 +234,9 @@ class PredictionEngine(
             matchupBias = matchupBias,
             expectedHomeGoals = lambdaHome,
             expectedAwayGoals = lambdaAway,
+            overProbabilityPercent = overPercent,
+            bttsProbabilityPercent = bttsPercent,
+            topScorelines = topScorelines,
         )
     }
 

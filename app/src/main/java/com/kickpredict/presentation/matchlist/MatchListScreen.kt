@@ -20,7 +20,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Insights
+import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DatePickerDialog
@@ -30,6 +32,8 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -73,6 +77,7 @@ private val rangeFormatter = DateTimeFormatter.ofPattern("M.d")
 fun MatchListScreen(
     onMatchClick: (String) -> Unit,
     onDashboard: () -> Unit,
+    onStandings: () -> Unit,
     viewModel: MatchListViewModel = viewModel(factory = MatchListViewModel.Factory),
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -93,6 +98,9 @@ fun MatchListScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = onStandings) {
+                        Icon(Icons.Filled.Leaderboard, contentDescription = "리그 순위", tint = LimeGreen)
+                    }
                     IconButton(onClick = onDashboard) {
                         Icon(Icons.Filled.Insights, contentDescription = "적중·보정 대시보드", tint = LimeGreen)
                     }
@@ -109,6 +117,7 @@ fun MatchListScreen(
                     FilterBar(
                         state = state,
                         onLeague = viewModel::setLeague,
+                        onSearch = viewModel::setSearchQuery,
                         onGroup = viewModel::setGroupMode,
                         onOpenDatePicker = { showDatePicker = true },
                         onClearDate = viewModel::clearDateRange,
@@ -158,11 +167,31 @@ fun MatchListScreen(
 private fun FilterBar(
     state: MatchListUiState,
     onLeague: (LeagueType?) -> Unit,
+    onSearch: (String) -> Unit,
     onGroup: (GroupMode) -> Unit,
     onOpenDatePicker: () -> Unit,
     onClearDate: () -> Unit,
 ) {
     Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        // Team search.
+        OutlinedTextField(
+            value = state.searchQuery,
+            onValueChange = onSearch,
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            placeholder = { Text("팀 검색 (한글·영문·약칭)") },
+            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+            trailingIcon = {
+                if (state.searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { onSearch("") }) { Icon(Icons.Filled.Close, contentDescription = "검색 지우기") }
+                }
+            },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = LimeGreen,
+                focusedLeadingIconColor = LimeGreen,
+                cursorColor = LimeGreen,
+            ),
+        )
         // League filter row (scrollable chips).
         Row(
             modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),

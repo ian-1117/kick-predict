@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,12 +38,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.RecordedResult
 import com.kickpredict.domain.usecase.CalibrationDashboard
+import com.kickpredict.domain.usecase.ModelScore
 import com.kickpredict.domain.usecase.ReliabilityBucket
+import com.kickpredict.domain.usecase.RoundAccuracy
 import com.kickpredict.presentation.theme.DrawColor
 import com.kickpredict.presentation.theme.LimeGreen
 import com.kickpredict.presentation.theme.LossColor
@@ -119,6 +123,14 @@ private fun DashboardContent(dash: CalibrationDashboard) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item { SummaryCard(dash) }
+        if (dash.accuracyByRound.isNotEmpty()) {
+            item { SectionTitle("라운드별 예측 정확도") }
+            item { AccuracyTrendCard(dash.accuracyByRound) }
+        }
+        if (dash.modelComparison.isNotEmpty()) {
+            item { SectionTitle("모델 비교") }
+            item { ModelComparisonCard(dash.modelComparison) }
+        }
         if (dash.reliability.isNotEmpty()) {
             item { SectionTitle("신뢰도 구간별 실제 적중률") }
             item { ReliabilityCard(dash.reliability) }
@@ -151,6 +163,71 @@ private fun Stat(label: String, value: String, valueColor: Color) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(value, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Black, color = valueColor)
         Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+@Composable
+private fun ModelComparisonCard(models: List<ModelScore>) {
+    val ranked = models.sortedByDescending { it.accuracy }
+    val maxAcc = ranked.firstOrNull()?.accuracy?.coerceAtLeast(0.01) ?: 1.0
+    Card {
+        Text(
+            "동일한 기록에 대한 모델별 정확도 · Elo는 walk-forward(예측 후 학습)로 정직하게 평가",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 12.dp),
+        )
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            ranked.forEachIndexed { index, m ->
+                val best = index == 0
+                Column(Modifier.fillMaxWidth()) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(m.name, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
+                        Text("${(m.accuracy * 100).roundToInt()}%", style = MaterialTheme.typography.labelLarge, color = if (best) LimeGreen else MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
+                    }
+                    Spacer(Modifier.height(4.dp))
+                    Box(Modifier.fillMaxWidth().height(12.dp).clip(RoundedCornerShape(50)).background(Color(0xFF2A3320))) {
+                        Box(Modifier.fillMaxWidth((m.accuracy / maxAcc).toFloat().coerceIn(0f, 1f)).height(12.dp).clip(RoundedCornerShape(50)).background(if (best) LimeGreen else LimeGreen.copy(alpha = 0.4f)))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AccuracyTrendCard(rounds: List<RoundAccuracy>) {
+    Card {
+        Text(
+            "막대 높이 = 라운드별 예측 정확도 (맞힌 예측 ÷ 경기 수)",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 12.dp),
+        )
+        Row(
+            Modifier.fillMaxWidth().height(130.dp),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            rounds.forEach { r ->
+                Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Bottom) {
+                    Text("${(r.accuracy * 100).roundToInt()}%", style = MaterialTheme.typography.labelSmall, color = LimeGreen, fontWeight = FontWeight.Bold)
+                    Spacer(Modifier.height(4.dp))
+                    Box(
+                        Modifier.fillMaxWidth(0.55f)
+                            .height((r.accuracy * 100).dp.coerceAtLeast(4.dp))
+                            .clip(RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp))
+                            .background(LimeGreen),
+                    )
+                }
+            }
+        }
+        Spacer(Modifier.height(6.dp))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            rounds.forEach { r ->
+                Text("R${r.round}", modifier = Modifier.weight(1f), textAlign = TextAlign.Center, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
     }
 }
 

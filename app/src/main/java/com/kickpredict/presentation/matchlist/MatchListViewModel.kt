@@ -23,12 +23,20 @@ import java.time.format.DateTimeFormatter
 /** How the fixtures list is grouped into sections. */
 enum class GroupMode(val label: String) { ROUND("라운드별"), WEEK("주별") }
 
+/** True if either team's Korean name, English name or short code contains the query. */
+private fun Match.matchesTeamQuery(query: String): Boolean =
+    listOf(
+        homeTeam.name, homeTeam.koreanName, homeTeam.shortName,
+        awayTeam.name, awayTeam.koreanName, awayTeam.shortName,
+    ).any { it.contains(query, ignoreCase = true) }
+
 data class MatchSection(val title: String, val matches: List<Match>)
 
 data class MatchListUiState(
     val isLoading: Boolean = true,
     val error: String? = null,
     val leagueFilter: LeagueType? = null, // null == all leagues
+    val searchQuery: String = "",
     val groupMode: GroupMode = GroupMode.ROUND,
     val fromDate: LocalDate? = null,
     val toDate: LocalDate? = null,
@@ -83,6 +91,11 @@ class MatchListViewModel(
         rebuild()
     }
 
+    fun setSearchQuery(query: String) {
+        _uiState.value = _uiState.value.copy(searchQuery = query)
+        rebuild()
+    }
+
     fun setGroupMode(mode: GroupMode) {
         _uiState.value = _uiState.value.copy(groupMode = mode)
         rebuild()
@@ -97,6 +110,7 @@ class MatchListViewModel(
 
     private fun rebuild() {
         val state = _uiState.value
+        val query = state.searchQuery.trim()
         val filtered = allMatches
             .filter { state.leagueFilter == null || it.league == state.leagueFilter }
             .filter { m ->
@@ -104,6 +118,7 @@ class MatchListViewModel(
                 (state.fromDate == null || !date.isBefore(state.fromDate)) &&
                     (state.toDate == null || !date.isAfter(state.toDate))
             }
+            .filter { m -> query.isEmpty() || m.matchesTeamQuery(query) }
             .sortedBy { it.kickoff }
 
         val sections = when (state.groupMode) {

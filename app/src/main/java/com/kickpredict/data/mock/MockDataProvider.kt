@@ -31,9 +31,9 @@ object MockDataProvider {
         // A — EPL: runaway leader vs bottom club -> dominant home win, very-high confidence.
         Match(
             id = "match_a", league = LeagueType.EPL, round = 1,
-            homeTeam = p("mci", "Manchester City", "맨체스터 시티", "MCI", 0xFF6CABDD, 0xFF1C2C5B,
+            homeTeam = p("epl_mci", "Manchester City", "맨체스터 시티", "MCI", 0xFF6CABDD, 0xFF1C2C5B,
                 pos = 1, rating = 90.0, form = "WWWWW", gs = 2.6, gc = 0.6, rest = 7),
-            awayTeam = p("shu", "Sheffield United", "셰필드 유나이티드", "SHU", 0xFFEE2737, 0xFFFFFFFF,
+            awayTeam = p("epl_shu", "Sheffield United", "셰필드 유나이티드", "SHU", 0xFFEE2737, 0xFFFFFFFF,
                 pos = 20, rating = 62.0, form = "LLLLL", gs = 0.8, gc = 2.4, rest = 6),
             kickoff = LocalDateTime.of(2026, 7, 11, 16, 30), venue = "Etihad Stadium",
             headToHead = HeadToHead(listOf(won(false), won(true), drew(false), won(true), won(false))),
@@ -41,9 +41,9 @@ object MockDataProvider {
         // B — Serie A: two even, draw-prone sides -> draw favoured, moderate confidence.
         Match(
             id = "match_b", league = LeagueType.SERIE_A, round = 1,
-            homeTeam = p("ver", "Hellas Verona", "엘라스 베로나", "VER", 0xFF1E2952, 0xFFFFD200,
+            homeTeam = p("ita_ver", "Hellas Verona", "엘라스 베로나", "VER", 0xFF1E2952, 0xFFFFD200,
                 pos = 10, rating = 73.0, form = "DD", gs = 1.0, gc = 1.0, rest = 5),
-            awayTeam = p("gen", "Genoa", "제노아", "GEN", 0xFFB01722, 0xFF12284B,
+            awayTeam = p("ita_gen", "Genoa", "제노아", "GEN", 0xFFB01722, 0xFF12284B,
                 pos = 9, rating = 73.0, form = "DD", gs = 1.0, gc = 1.0, rest = 6),
             kickoff = LocalDateTime.of(2026, 7, 12, 20, 45), venue = "Stadio Marc'Antonio Bentegodi",
             headToHead = HeadToHead(listOf(drew(false), drew(true), drew(false), drew(true))),
@@ -51,9 +51,9 @@ object MockDataProvider {
         // C — K League: rested home vs midweek-tired, injured away in the rain -> low confidence.
         Match(
             id = "match_c", league = LeagueType.K_LEAGUE, round = 1,
-            homeTeam = p("uls", "Ulsan HD", "울산 HD", "ULS", 0xFF002D62, 0xFFF7A800,
+            homeTeam = p("kor_uls", "Ulsan HD", "울산 HD", "ULS", 0xFF002D62, 0xFFF7A800,
                 pos = 6, rating = 75.0, form = "WDWL", gs = 1.4, gc = 1.25, rest = 7),
-            awayTeam = p("jbk", "Jeonbuk Hyundai", "전북 현대", "JBK", 0xFF00623C, 0xFFFFFFFF,
+            awayTeam = p("kor_jbk", "Jeonbuk Hyundai", "전북 현대", "JBK", 0xFF00623C, 0xFFFFFFFF,
                 pos = 4, rating = 77.0, form = "WWDL", gs = 1.55, gc = 1.2, rest = 3),
             kickoff = LocalDateTime.of(2026, 7, 11, 19, 0), venue = "Ulsan Munsu Football Stadium",
             headToHead = HeadToHead(listOf(lost(false), won(true), drew(false), lost(true), won(false))),
@@ -65,9 +65,9 @@ object MockDataProvider {
         // D — EPL: mid-table bogey home vs a title-chasing, injury-hit visitor -> 상성 swings it.
         Match(
             id = "match_d", league = LeagueType.EPL, round = 1,
-            homeTeam = p("cry", "Crystal Palace", "크리스탈 팰리스", "CRY", 0xFF1B458F, 0xFFC4122E,
+            homeTeam = p("epl_cry", "Crystal Palace", "크리스탈 팰리스", "CRY", 0xFF1B458F, 0xFFC4122E,
                 pos = 14, rating = 70.0, form = "WDLDL", gs = 1.1, gc = 1.4, rest = 7),
-            awayTeam = p("ars", "Arsenal", "아스날", "ARS", 0xFFEF0107, 0xFFFFFFFF,
+            awayTeam = p("epl_ars", "Arsenal", "아스날", "ARS", 0xFFEF0107, 0xFFFFFFFF,
                 pos = 2, rating = 85.0, form = "WWWDW", gs = 2.2, gc = 0.9, rest = 6),
             kickoff = LocalDateTime.of(2026, 7, 12, 17, 30), venue = "Selhurst Park",
             headToHead = HeadToHead(listOf(won(true), won(false), won(true), won(true), drew(false), won(true))),
@@ -194,7 +194,7 @@ object MockDataProvider {
         id: String, name: String, korean: String, short: String, primary: Long, secondary: Long,
         pos: Int, rating: Double, form: String, gs: Double, gc: Double, rest: Int,
     ) = TeamProfile(
-        id = "team_$id", name = name, shortName = short, leaguePosition = pos,
+        id = id, name = name, shortName = short, leaguePosition = pos,
         recentForm = form.map {
             when (it) {
                 'W' -> MatchOutcome.WIN

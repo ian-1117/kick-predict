@@ -47,6 +47,27 @@ class PredictionEngineTest {
     }
 
     @Test
+    fun `over-under and BTTS markets are well-formed`() {
+        matches.keys.forEach { id ->
+            val r = predict(id)
+            assertTrue("over in range for $id", r.overProbabilityPercent in 0..100)
+            assertTrue("btts in range for $id", r.bttsProbabilityPercent in 0..100)
+            assertEquals("over+under=100 for $id", 100, r.overProbabilityPercent + r.underProbabilityPercent)
+        }
+    }
+
+    @Test
+    fun `top scorelines are ranked and well-formed`() {
+        matches.keys.forEach { id ->
+            val r = predict(id)
+            assertTrue("scorelines present for $id", r.topScorelines.isNotEmpty())
+            val probs = r.topScorelines.map { it.probabilityPercent }
+            assertEquals("sorted desc for $id", probs.sortedDescending(), probs)
+            r.topScorelines.forEach { assertTrue("prob in range for $id", it.probabilityPercent in 1..100) }
+        }
+    }
+
+    @Test
     fun `scenario A - top vs bottom is a high-confidence home win`() {
         val r = predict("match_a")
         assertEquals(PredictedOutcome.HOME_WIN, r.predictedOutcome)

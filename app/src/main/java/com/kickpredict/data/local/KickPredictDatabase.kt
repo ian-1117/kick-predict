@@ -19,7 +19,7 @@ import com.kickpredict.data.local.entity.TeamEntity
         PredictionLogEntity::class,
         MatchResultEntity::class,
     ],
-    version = 5,
+    version = 6,
     exportSchema = false,
 )
 @TypeConverters(Converters::class)
