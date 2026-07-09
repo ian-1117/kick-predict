@@ -31,16 +31,24 @@ class RecalibrateUseCase(
     private val calibrationProvider: MutableCalibrationProvider,
     private val eloProvider: MutableEloProvider = MutableEloProvider(),
     private val poissonProvider: MutablePoissonProvider = MutablePoissonProvider(),
+    // Historical results (e.g. past real seasons) used to pre-train the models before user results.
+    private val priorResults: () -> List<com.kickpredict.domain.model.PriorResult> = { emptyList() },
     private val minConfidenceSamples: Int = 20,
     private val minLeagueSamples: Int = 10,
 ) {
     suspend operator fun invoke(): CalibrationStatus {
         val records = calibrationRepository.predictionRecords()
 
-        // Retrain the learned goal models (Elo + Dixon-Coles) from all recorded results, chronologically.
+        // Retrain the learned goal models (Elo + Dixon-Coles): first on prior history, then on
+        // accumulated user-recorded results, chronologically.
         val elo = EloModel()
         val poisson = PoissonRatings()
         val teams = HashSet<String>()
+        priorResults().forEach { r ->
+            elo.update(r.homeTeamId, r.awayTeamId, r.homeGoals, r.awayGoals)
+            poisson.update(r.homeTeamId, r.awayTeamId, r.homeGoals, r.awayGoals)
+            teams += r.homeTeamId; teams += r.awayTeamId
+        }
         calibrationRepository.recordedResults()
             .sortedBy { it.recordedAt }
             .forEach { r ->

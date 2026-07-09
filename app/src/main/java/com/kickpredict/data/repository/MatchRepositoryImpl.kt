@@ -28,6 +28,8 @@ class MatchRepositoryImpl(
     private val json: Json,
     private val fixtureCacheDao: FixtureCacheDao,
     private val teamDao: TeamDao,
+    // Offline seed source; defaults to bundled mock fixtures, overridden with real data when available.
+    private val offlineFallback: () -> List<Match> = { MockDataProvider.matches() },
 ) : MatchRepository {
 
     private val listSerializer = ListSerializer(MatchDto.serializer())
@@ -61,8 +63,8 @@ class MatchRepositoryImpl(
                     ?.takeIf { it.isNotEmpty() }
                     ?.let { return it }
             }
-            // Never leave the UI empty: seed from bundled mock fixtures.
-            return MockDataProvider.matches()
+            // Never leave the UI empty: seed from the offline source (real data if bundled, else mock).
+            return offlineFallback()
         }
     }
 

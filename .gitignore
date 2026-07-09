@@ -21,5 +21,3 @@ local.properties
 *.log
 captures/
 
-# Third-party historical results (football-data.co.uk) — fetched locally for RealData tests, not redistributed
-/app/src/test/resources/realdata/

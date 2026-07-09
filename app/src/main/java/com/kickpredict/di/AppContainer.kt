@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.kickpredict.data.local.KickPredictDatabase
 import com.kickpredict.data.remote.NetworkModule
+import com.kickpredict.data.real.RealDataProvider
 import com.kickpredict.data.repository.CalibrationRepositoryImpl
 import com.kickpredict.data.repository.MatchRepositoryImpl
 import com.kickpredict.domain.calibration.MutableCalibrationProvider
@@ -57,11 +58,15 @@ class AppContainer(context: Context) {
 
     private val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
 
+    // Bundled real historical data (football-data.co.uk). Falls back to mock if the assets are missing.
+    private val realData = RealDataProvider(context.applicationContext.assets)
+
     val repository: MatchRepository = MatchRepositoryImpl(
         api = NetworkModule.predictionApi(),
         json = json,
         fixtureCacheDao = database.fixtureCacheDao(),
         teamDao = database.teamDao(),
+        offlineFallback = { if (realData.hasData) realData.matches() else com.kickpredict.data.mock.MockDataProvider.matches() },
     )
 
     val calibrationRepository: CalibrationRepository = CalibrationRepositoryImpl(
@@ -80,6 +85,7 @@ class AppContainer(context: Context) {
         calibrationProvider = calibrationProvider,
         eloProvider = eloProvider,
         poissonProvider = poissonProvider,
+        priorResults = { if (realData.hasData) realData.priorResults() else emptyList() },
     )
     val getCalibrationDashboard = GetCalibrationDashboardUseCase(calibrationRepository, recalibrate)
     val getStandings = GetStandingsUseCase(calibrationRepository)

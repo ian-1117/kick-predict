@@ -125,8 +125,11 @@ class PoissonRatingsRealDataTest {
     }
 
     private fun load(code: String, season: String): List<Game> {
-        val stream = javaClass.classLoader.getResourceAsStream("realdata/${code}_$season.csv") ?: return emptyList()
-        val lines = stream.bufferedReader().readLines().filter { it.isNotBlank() }
+        val file = listOf(
+            java.io.File("src/main/assets/realdata/${code}_$season.csv"),
+            java.io.File("app/src/main/assets/realdata/${code}_$season.csv"),
+        ).firstOrNull { it.exists() } ?: return emptyList()
+        val lines = file.readLines().filter { it.isNotBlank() }
         if (lines.size < 2) return emptyList()
         val h = lines.first().split(",")
         val hi = h.indexOf("HomeTeam"); val ai = h.indexOf("AwayTeam"); val hgi = h.indexOf("FTHG"); val agi = h.indexOf("FTAG")
