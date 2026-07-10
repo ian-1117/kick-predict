@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.kickpredict.domain.model.PredictionResult
 import com.kickpredict.presentation.theme.DrawColor
 import com.kickpredict.presentation.theme.LossColor
+import com.kickpredict.presentation.theme.OutlineColor
 import com.kickpredict.presentation.theme.WinColor
 
 /**
@@ -53,6 +54,12 @@ fun PredictionDonutChart(
             .aspectRatio(1f),
         contentAlignment = Alignment.Center,
     ) {
+        // A Canvas draw lambda is not a composition, so the palette is read out here and captured.
+        val winColor = WinColor
+        val drawColor = DrawColor
+        val lossColor = LossColor
+        val trackColor = OutlineColor.copy(alpha = 0.45f)
+
         Canvas(modifier = Modifier.fillMaxWidth().aspectRatio(1f)) {
             val stroke = size.minDimension * 0.16f
             val inset = stroke / 2f
@@ -64,7 +71,7 @@ fun PredictionDonutChart(
 
             // Track
             drawArc(
-                color = Color(0xFF2A3320),
+                color = trackColor,
                 startAngle = 0f,
                 sweepAngle = 360f,
                 useCenter = false,
@@ -75,7 +82,7 @@ fun PredictionDonutChart(
 
             var start = -90f
             val gap = 4f
-            listOf(home to WinColor, draw to DrawColor, away to LossColor).forEach { (value, color) ->
+            listOf(home to winColor, draw to drawColor, away to lossColor).forEach { (value, color) ->
                 val sweep = (value / total) * 360f * sweepProgress
                 if (sweep > 0f) {
                     drawArc(

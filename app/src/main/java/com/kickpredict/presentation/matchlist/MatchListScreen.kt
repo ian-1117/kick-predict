@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Insights
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Search
@@ -62,7 +63,9 @@ import com.kickpredict.domain.model.MatchupEdge
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.presentation.components.TeamCrest
 import com.kickpredict.presentation.theme.DrawColor
-import com.kickpredict.presentation.theme.LimeGreen
+import com.kickpredict.presentation.theme.AccentPrimary
+import com.kickpredict.presentation.theme.AppTheme
+import com.kickpredict.presentation.theme.ThemePickerDialog
 import com.kickpredict.presentation.theme.LossColor
 import java.time.Instant
 import java.time.ZoneOffset
@@ -78,10 +81,21 @@ fun MatchListScreen(
     onMatchClick: (String) -> Unit,
     onDashboard: () -> Unit,
     onStandings: () -> Unit,
+    currentTheme: AppTheme,
+    onSelectTheme: (AppTheme) -> Unit,
     viewModel: MatchListViewModel = viewModel(factory = MatchListViewModel.Factory),
 ) {
     val state by viewModel.uiState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
+    var showThemePicker by remember { mutableStateOf(false) }
+
+    if (showThemePicker) {
+        ThemePickerDialog(
+            current = currentTheme,
+            onSelect = onSelectTheme,
+            onDismiss = { showThemePicker = false },
+        )
+    }
 
     // Load on first show; silently refresh when returning from the detail screen so newly entered
     // results and any recalibration they triggered are reflected.
@@ -94,15 +108,18 @@ fun MatchListScreen(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("KICK", fontWeight = FontWeight.Black, color = MaterialTheme.colorScheme.onBackground)
-                        Text("PREDICT", fontWeight = FontWeight.Black, color = LimeGreen)
+                        Text("PREDICT", fontWeight = FontWeight.Black, color = AccentPrimary)
                     }
                 },
                 actions = {
                     IconButton(onClick = onStandings) {
-                        Icon(Icons.Filled.Leaderboard, contentDescription = "리그 순위", tint = LimeGreen)
+                        Icon(Icons.Filled.Leaderboard, contentDescription = "리그 순위", tint = AccentPrimary)
                     }
                     IconButton(onClick = onDashboard) {
-                        Icon(Icons.Filled.Insights, contentDescription = "적중·보정 대시보드", tint = LimeGreen)
+                        Icon(Icons.Filled.Insights, contentDescription = "적중·보정 대시보드", tint = AccentPrimary)
+                    }
+                    IconButton(onClick = { showThemePicker = true }) {
+                        Icon(Icons.Filled.Palette, contentDescription = "테마", tint = AccentPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
@@ -111,7 +128,7 @@ fun MatchListScreen(
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize().padding(padding)) {
             when {
-                state.isLoading -> CircularProgressIndicator(color = LimeGreen, modifier = Modifier.align(Alignment.Center))
+                state.isLoading -> CircularProgressIndicator(color = AccentPrimary, modifier = Modifier.align(Alignment.Center))
                 state.error != null -> Text(state.error!!, color = MaterialTheme.colorScheme.error, modifier = Modifier.align(Alignment.Center))
                 else -> Column(Modifier.fillMaxSize()) {
                     FilterBar(
@@ -187,9 +204,9 @@ private fun FilterBar(
                 }
             },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = LimeGreen,
-                focusedLeadingIconColor = LimeGreen,
-                cursorColor = LimeGreen,
+                focusedBorderColor = AccentPrimary,
+                focusedLeadingIconColor = AccentPrimary,
+                cursorColor = AccentPrimary,
             ),
         )
         // League filter row (scrollable chips).
@@ -225,7 +242,7 @@ private fun FilterBar(
                 leadingIcon = {
                     Icon(if (hasRange) Icons.Filled.Close else Icons.Filled.CalendarMonth, contentDescription = null, modifier = Modifier.size(18.dp))
                 },
-                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = LimeGreen.copy(alpha = 0.2f)),
+                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = AccentPrimary.copy(alpha = 0.2f)),
             )
         }
     }
@@ -239,8 +256,8 @@ private fun LeagueChipFilter(label: String, selected: Boolean, onClick: () -> Un
         onClick = onClick,
         label = { Text(label) },
         colors = FilterChipDefaults.filterChipColors(
-            selectedContainerColor = LimeGreen.copy(alpha = 0.22f),
-            selectedLabelColor = LimeGreen,
+            selectedContainerColor = AccentPrimary.copy(alpha = 0.22f),
+            selectedLabelColor = AccentPrimary,
         ),
     )
 }
@@ -253,7 +270,7 @@ private fun SectionHeader(title: String, count: Int) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(title, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onBackground, fontWeight = FontWeight.Bold)
-        Text("$count", style = MaterialTheme.typography.labelSmall, color = LimeGreen)
+        Text("$count", style = MaterialTheme.typography.labelSmall, color = AccentPrimary)
     }
 }
 
@@ -261,7 +278,7 @@ private fun SectionHeader(title: String, count: Int) {
 private fun CalibrationStatusBar(state: MatchListUiState) {
     val status = state.calibration ?: return
     val applied = status.confidenceApplied || status.leaguesCalibrated.isNotEmpty()
-    val color = if (applied) LimeGreen else MaterialTheme.colorScheme.onSurfaceVariant
+    val color = if (applied) AccentPrimary else MaterialTheme.colorScheme.onSurfaceVariant
     val accuracy = status.overallHitRate?.let { " · 예측 정확도 ${(it * 100).roundToInt()}%" } ?: ""
     val detail = if (applied) "신뢰도 보정 ${if (status.confidenceApplied) "적용" else "대기"} · 리그 ${status.leaguesCalibrated.size}개" else "표본 축적 중"
     Text(
@@ -328,14 +345,14 @@ private fun outcomeLabel(match: Match, outcome: PredictedOutcome): String = when
 
 @Composable
 private fun LeagueChip(text: String) {
-    Box(Modifier.clip(RoundedCornerShape(50)).background(LimeGreen.copy(alpha = 0.14f)).padding(horizontal = 10.dp, vertical = 4.dp)) {
-        Text(text, style = MaterialTheme.typography.labelSmall, color = LimeGreen)
+    Box(Modifier.clip(RoundedCornerShape(50)).background(AccentPrimary.copy(alpha = 0.14f)).padding(horizontal = 10.dp, vertical = 4.dp)) {
+        Text(text, style = MaterialTheme.typography.labelSmall, color = AccentPrimary)
     }
 }
 
 @Composable
 private fun MatchupChip(isHome: Boolean) {
-    val color = if (isHome) LimeGreen else LossColor
+    val color = if (isHome) AccentPrimary else LossColor
     Row(
         modifier = Modifier.clip(RoundedCornerShape(50)).background(color.copy(alpha = 0.16f)).padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -349,7 +366,7 @@ private fun MatchupChip(isHome: Boolean) {
 @Composable
 private fun ConfidencePill(score: Int, tier: ConfidenceTier) {
     val color = when (tier) {
-        ConfidenceTier.VERY_HIGH, ConfidenceTier.HIGH -> LimeGreen
+        ConfidenceTier.VERY_HIGH, ConfidenceTier.HIGH -> AccentPrimary
         ConfidenceTier.MODERATE -> DrawColor
         ConfidenceTier.LOW, ConfidenceTier.VERY_LOW -> LossColor
     }

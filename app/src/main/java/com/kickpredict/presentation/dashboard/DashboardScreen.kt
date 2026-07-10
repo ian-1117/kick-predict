@@ -48,8 +48,9 @@ import com.kickpredict.domain.usecase.ModelScore
 import com.kickpredict.domain.usecase.ReliabilityBucket
 import com.kickpredict.domain.usecase.RoundAccuracy
 import com.kickpredict.presentation.theme.DrawColor
-import com.kickpredict.presentation.theme.LimeGreen
+import com.kickpredict.presentation.theme.AccentPrimary
 import com.kickpredict.presentation.theme.LossColor
+import com.kickpredict.presentation.theme.OutlineColor
 import com.kickpredict.presentation.theme.WinColor
 import kotlin.math.roundToInt
 
@@ -73,10 +74,10 @@ fun DashboardScreen(
                 },
                 actions = {
                     if (state.isSeeding) {
-                        CircularProgressIndicator(color = LimeGreen, strokeWidth = 2.dp, modifier = Modifier.size(22.dp))
+                        CircularProgressIndicator(color = AccentPrimary, strokeWidth = 2.dp, modifier = Modifier.size(22.dp))
                     } else {
                         IconButton(onClick = viewModel::seedSampleResults) {
-                            Icon(Icons.Filled.AutoFixHigh, contentDescription = "샘플 결과 채우기", tint = LimeGreen)
+                            Icon(Icons.Filled.AutoFixHigh, contentDescription = "샘플 결과 채우기", tint = AccentPrimary)
                         }
                     }
                 },
@@ -87,7 +88,7 @@ fun DashboardScreen(
         Box(Modifier.fillMaxSize().padding(padding)) {
             val dash = state.dashboard
             when {
-                state.isLoading -> CircularProgressIndicator(color = LimeGreen, modifier = Modifier.align(Alignment.Center))
+                state.isLoading -> CircularProgressIndicator(color = AccentPrimary, modifier = Modifier.align(Alignment.Center))
                 dash == null || dash.totalResults == 0 -> EmptyState(
                     modifier = Modifier.align(Alignment.Center),
                     isSeeding = state.isSeeding,
@@ -107,7 +108,7 @@ private fun EmptyState(modifier: Modifier, isSeeding: Boolean, onSeed: () -> Uni
         Button(
             onClick = onSeed,
             enabled = !isSeeding,
-            colors = ButtonDefaults.buttonColors(containerColor = LimeGreen, contentColor = MaterialTheme.colorScheme.background),
+            colors = ButtonDefaults.buttonColors(containerColor = AccentPrimary, contentColor = MaterialTheme.colorScheme.background),
         ) {
             if (isSeeding) CircularProgressIndicator(color = MaterialTheme.colorScheme.background, strokeWidth = 2.dp, modifier = Modifier.size(18.dp))
             else Text("5라운드 샘플 결과 채우기", fontWeight = FontWeight.Bold)
@@ -145,9 +146,9 @@ private fun SummaryCard(dash: CalibrationDashboard) {
     Card {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Stat("기록", "${dash.totalResults}건", MaterialTheme.colorScheme.onSurface)
-            Stat("예측 정확도", "${(dash.overallHitRate * 100).roundToInt()}%", LimeGreen)
+            Stat("예측 정확도", "${(dash.overallHitRate * 100).roundToInt()}%", AccentPrimary)
             val applied = dash.status.confidenceApplied || dash.status.leaguesCalibrated.isNotEmpty()
-            Stat("AI 보정", if (applied) "적용" else "대기", if (applied) LimeGreen else DrawColor)
+            Stat("AI 보정", if (applied) "적용" else "대기", if (applied) AccentPrimary else DrawColor)
         }
         Text(
             text = "신뢰도 보정 ${if (dash.status.confidenceApplied) "적용" else "대기"} · 리그 ${dash.status.leaguesCalibrated.size}개 보정",
@@ -183,11 +184,11 @@ private fun ModelComparisonCard(models: List<ModelScore>) {
                 Column(Modifier.fillMaxWidth()) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text(m.name, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
-                        Text("${(m.accuracy * 100).roundToInt()}%", style = MaterialTheme.typography.labelLarge, color = if (best) LimeGreen else MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
+                        Text("${(m.accuracy * 100).roundToInt()}%", style = MaterialTheme.typography.labelLarge, color = if (best) AccentPrimary else MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
                     }
                     Spacer(Modifier.height(4.dp))
-                    Box(Modifier.fillMaxWidth().height(12.dp).clip(RoundedCornerShape(50)).background(Color(0xFF2A3320))) {
-                        Box(Modifier.fillMaxWidth((m.accuracy / maxAcc).toFloat().coerceIn(0f, 1f)).height(12.dp).clip(RoundedCornerShape(50)).background(if (best) LimeGreen else LimeGreen.copy(alpha = 0.4f)))
+                    Box(Modifier.fillMaxWidth().height(12.dp).clip(RoundedCornerShape(50)).background(OutlineColor.copy(alpha = 0.45f))) {
+                        Box(Modifier.fillMaxWidth((m.accuracy / maxAcc).toFloat().coerceIn(0f, 1f)).height(12.dp).clip(RoundedCornerShape(50)).background(if (best) AccentPrimary else AccentPrimary.copy(alpha = 0.4f)))
                     }
                 }
             }
@@ -211,13 +212,13 @@ private fun AccuracyTrendCard(rounds: List<RoundAccuracy>) {
         ) {
             rounds.forEach { r ->
                 Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Bottom) {
-                    Text("${(r.accuracy * 100).roundToInt()}%", style = MaterialTheme.typography.labelSmall, color = LimeGreen, fontWeight = FontWeight.Bold)
+                    Text("${(r.accuracy * 100).roundToInt()}%", style = MaterialTheme.typography.labelSmall, color = AccentPrimary, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.height(4.dp))
                     Box(
                         Modifier.fillMaxWidth(0.55f)
                             .height((r.accuracy * 100).dp.coerceAtLeast(4.dp))
                             .clip(RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp))
-                            .background(LimeGreen),
+                            .background(AccentPrimary),
                     )
                 }
             }
@@ -248,11 +249,11 @@ private fun ReliabilityCard(buckets: List<ReliabilityBucket>) {
                 Column(Modifier.fillMaxWidth()) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text(b.rangeLabel, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
-                        Text("${(hit * 100).roundToInt()}% · ${b.count}건", style = MaterialTheme.typography.labelSmall, color = if (overconfident) LossColor else LimeGreen)
+                        Text("${(hit * 100).roundToInt()}% · ${b.count}건", style = MaterialTheme.typography.labelSmall, color = if (overconfident) LossColor else AccentPrimary)
                     }
                     // bar fill = actual hit rate; colour flags over-confidence vs predicted band
-                    Box(Modifier.fillMaxWidth().height(12.dp).clip(RoundedCornerShape(50)).background(Color(0xFF2A3320))) {
-                        Box(Modifier.fillMaxWidth(hit.toFloat().coerceIn(0f, 1f)).height(12.dp).clip(RoundedCornerShape(50)).background(if (overconfident) LossColor else LimeGreen))
+                    Box(Modifier.fillMaxWidth().height(12.dp).clip(RoundedCornerShape(50)).background(OutlineColor.copy(alpha = 0.45f))) {
+                        Box(Modifier.fillMaxWidth(hit.toFloat().coerceIn(0f, 1f)).height(12.dp).clip(RoundedCornerShape(50)).background(if (overconfident) LossColor else AccentPrimary))
                     }
                 }
             }

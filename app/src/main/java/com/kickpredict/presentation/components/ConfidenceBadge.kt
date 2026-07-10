@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.kickpredict.domain.model.ConfidenceTier
 import com.kickpredict.presentation.theme.DrawColor
-import com.kickpredict.presentation.theme.LimeGreen
+import com.kickpredict.presentation.theme.AccentPrimary
 import com.kickpredict.presentation.theme.LossColor
 
 /**
@@ -65,8 +66,10 @@ fun ConfidenceBadge(
     }
 }
 
+@Composable
+@ReadOnlyComposable
 private fun ConfidenceTier.accent(): Color = when (this) {
-    ConfidenceTier.VERY_HIGH, ConfidenceTier.HIGH -> LimeGreen
+    ConfidenceTier.VERY_HIGH, ConfidenceTier.HIGH -> AccentPrimary
     ConfidenceTier.MODERATE -> DrawColor
     ConfidenceTier.LOW, ConfidenceTier.VERY_LOW -> LossColor
 }

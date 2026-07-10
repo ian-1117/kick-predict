@@ -35,7 +35,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material3.Icon
 import com.kickpredict.presentation.theme.DrawColor
-import com.kickpredict.presentation.theme.LimeGreen
+import com.kickpredict.presentation.theme.AccentPrimary
 import com.kickpredict.presentation.theme.LossColor
 import com.kickpredict.presentation.theme.WinColor
 import kotlin.math.roundToInt
@@ -108,7 +108,7 @@ fun PowerComparisonReport(
             )
             rationale.forEach { note ->
                 Row(verticalAlignment = Alignment.Top) {
-                    Text("· ", color = LimeGreen, style = MaterialTheme.typography.bodyMedium)
+                    Text("· ", color = AccentPrimary, style = MaterialTheme.typography.bodyMedium)
                     Text(
                         text = note,
                         style = MaterialTheme.typography.bodyMedium,

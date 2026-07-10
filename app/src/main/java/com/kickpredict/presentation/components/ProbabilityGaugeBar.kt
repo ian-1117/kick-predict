@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.kickpredict.domain.model.PredictionResult
 import com.kickpredict.presentation.theme.DrawColor
 import com.kickpredict.presentation.theme.LossColor
+import com.kickpredict.presentation.theme.OutlineColor
 import com.kickpredict.presentation.theme.WinColor
 
 /**
@@ -77,7 +78,7 @@ private fun GaugeRow(label: String, percent: Int, color: Color) {
                 .fillMaxWidth()
                 .height(12.dp)
                 .clip(RoundedCornerShape(50))
-                .background(Color(0xFF2A3320)),
+                .background(OutlineColor.copy(alpha = 0.45f)),
         ) {
             Box(
                 modifier = Modifier

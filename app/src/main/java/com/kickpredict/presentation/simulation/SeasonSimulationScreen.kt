@@ -54,9 +54,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kickpredict.domain.simulation.SeasonProjection
 import com.kickpredict.domain.simulation.TeamProjection
 import com.kickpredict.presentation.theme.DrawColor
-import com.kickpredict.presentation.theme.LimeGreen
+import com.kickpredict.presentation.theme.AccentPrimary
 import com.kickpredict.presentation.theme.LossColor
-import com.kickpredict.presentation.theme.OutlineGrey
+import com.kickpredict.presentation.theme.OutlineColor
 import com.kickpredict.presentation.theme.Surface1
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +81,7 @@ fun SeasonSimulationScreen(
     ) { padding ->
         Box(Modifier.fillMaxSize().padding(padding)) {
             when {
-                state.isLoading -> CircularProgressIndicator(color = LimeGreen, modifier = Modifier.align(Alignment.Center))
+                state.isLoading -> CircularProgressIndicator(color = AccentPrimary, modifier = Modifier.align(Alignment.Center))
 
                 state.error != null -> Text(
                     state.error!!,
@@ -120,8 +120,8 @@ private fun LeagueChips(state: SeasonSimulationUiState, viewModel: SeasonSimulat
                 onClick = { viewModel.selectLeague(league) },
                 label = { Text(league.displayName) },
                 colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = LimeGreen.copy(alpha = 0.22f),
-                    selectedLabelColor = LimeGreen,
+                    selectedContainerColor = AccentPrimary.copy(alpha = 0.22f),
+                    selectedLabelColor = AccentPrimary,
                 ),
             )
         }
@@ -144,7 +144,7 @@ private fun CutoffCard(state: SeasonSimulationUiState, viewModel: SeasonSimulati
             Text(
                 "${state.cutoffRound}라운드",
                 style = MaterialTheme.typography.titleMedium,
-                color = LimeGreen,
+                color = AccentPrimary,
                 fontWeight = FontWeight.Black,
             )
         }
@@ -155,9 +155,9 @@ private fun CutoffCard(state: SeasonSimulationUiState, viewModel: SeasonSimulati
             valueRange = 1f..state.lastRound.toFloat().coerceAtLeast(2f),
             steps = (state.lastRound - 2).coerceAtLeast(0),
             colors = SliderDefaults.colors(
-                thumbColor = LimeGreen,
-                activeTrackColor = LimeGreen,
-                inactiveTrackColor = OutlineGrey,
+                thumbColor = AccentPrimary,
+                activeTrackColor = AccentPrimary,
+                inactiveTrackColor = OutlineColor,
             ),
         )
 
@@ -181,7 +181,7 @@ private fun CutoffCard(state: SeasonSimulationUiState, viewModel: SeasonSimulati
             Spacer(Modifier.height(8.dp))
             LinearProgressIndicator(
                 modifier = Modifier.fillMaxWidth().height(2.dp),
-                color = LimeGreen,
+                color = AccentPrimary,
                 trackColor = Color.Transparent,
             )
         }
@@ -301,7 +301,7 @@ private fun TeamRow(team: TeamProjection, metric: ProjectionMetric, projection: 
 @Composable
 private fun ProbabilityBar(fraction: Float, accent: Color) {
     Box(
-        Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)).background(OutlineGrey.copy(alpha = 0.5f)),
+        Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)).background(OutlineColor.copy(alpha = 0.5f)),
     ) {
         if (fraction > 0f) {
             Box(
@@ -329,7 +329,7 @@ private fun TeamProjection.actualOutcome(metric: ProjectionMetric, projection: S
 @Composable
 @ReadOnlyComposable
 private fun ProjectionMetric.accent(): Color = when (this) {
-    ProjectionMetric.TITLE -> LimeGreen
+    ProjectionMetric.TITLE -> AccentPrimary
     ProjectionMetric.CONTINENTAL -> DrawColor
     ProjectionMetric.RELEGATION -> LossColor
 }

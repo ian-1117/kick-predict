@@ -8,7 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import com.kickpredict.KickPredictApplication
 import com.kickpredict.presentation.navigation.KickPredictNavHost
 import com.kickpredict.presentation.theme.KickPredictTheme
 
@@ -22,12 +26,18 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun KickPredictApp() {
-    KickPredictTheme {
+    val container = (LocalContext.current.applicationContext as KickPredictApplication).container
+    val theme by container.themePreference.theme.collectAsState()
+
+    KickPredictTheme(theme = theme) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-            KickPredictNavHost()
+            KickPredictNavHost(
+                currentTheme = theme,
+                onSelectTheme = container.themePreference::select,
+            )
         }
     }
 }

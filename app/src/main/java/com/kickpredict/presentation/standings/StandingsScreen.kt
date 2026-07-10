@@ -42,7 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kickpredict.domain.model.Standing
-import com.kickpredict.presentation.theme.LimeGreen
+import com.kickpredict.presentation.theme.AccentPrimary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +64,7 @@ fun StandingsScreen(
                 },
                 actions = {
                     IconButton(onClick = onSimulate) {
-                        Icon(Icons.Filled.Timeline, contentDescription = "시즌 시뮬레이션", tint = LimeGreen)
+                        Icon(Icons.Filled.Timeline, contentDescription = "시즌 시뮬레이션", tint = AccentPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
@@ -73,7 +73,7 @@ fun StandingsScreen(
     ) { padding ->
         Box(Modifier.fillMaxSize().padding(padding)) {
             when {
-                state.isLoading -> CircularProgressIndicator(color = LimeGreen, modifier = Modifier.align(Alignment.Center))
+                state.isLoading -> CircularProgressIndicator(color = AccentPrimary, modifier = Modifier.align(Alignment.Center))
                 state.leaguesWithData.isEmpty() -> Text(
                     "아직 결과가 없습니다. 결과를 입력하거나 대시보드에서 샘플을 채우면\n순위표가 만들어집니다.",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -91,8 +91,8 @@ fun StandingsScreen(
                                 onClick = { viewModel.selectLeague(league) },
                                 label = { Text(league.displayName) },
                                 colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = LimeGreen.copy(alpha = 0.22f),
-                                    selectedLabelColor = LimeGreen,
+                                    selectedContainerColor = AccentPrimary.copy(alpha = 0.22f),
+                                    selectedLabelColor = AccentPrimary,
                                 ),
                             )
                         }
@@ -128,7 +128,7 @@ private fun StandingRow(rank: Int, s: Standing, onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val badge = when {
-            rank <= 3 -> LimeGreen
+            rank <= 3 -> AccentPrimary
             else -> MaterialTheme.colorScheme.onSurfaceVariant
         }
         Box(
@@ -146,7 +146,7 @@ private fun StandingRow(rank: Int, s: Standing, onClick: () -> Unit) {
             )
         }
         Text("${s.played}", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center, modifier = Modifier.size(width = 44.dp, height = 20.dp))
-        Text("${s.points}", style = MaterialTheme.typography.titleMedium, color = LimeGreen, fontWeight = FontWeight.Black, textAlign = TextAlign.Center, modifier = Modifier.size(width = 44.dp, height = 24.dp))
+        Text("${s.points}", style = MaterialTheme.typography.titleMedium, color = AccentPrimary, fontWeight = FontWeight.Black, textAlign = TextAlign.Center, modifier = Modifier.size(width = 44.dp, height = 24.dp))
     }
 }
 

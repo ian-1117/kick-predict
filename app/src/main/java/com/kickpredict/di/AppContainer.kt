@@ -24,6 +24,7 @@ import com.kickpredict.domain.usecase.RecalibrateUseCase
 import com.kickpredict.domain.usecase.RecordMatchResultUseCase
 import com.kickpredict.domain.usecase.SeedSampleResultsUseCase
 import com.kickpredict.domain.usecase.SimulateSeasonUseCase
+import com.kickpredict.presentation.theme.ThemePreference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -38,6 +39,9 @@ import kotlinx.serialization.json.Json
  * processing coupling beyond Room; it can be replaced by Hilt/Koin later without API changes.
  */
 class AppContainer(context: Context) {
+
+    /** Which palette the app paints with; read synchronously so the first frame is already right. */
+    val themePreference = ThemePreference(context)
 
     private val database: KickPredictDatabase = Room.databaseBuilder(
         context.applicationContext,

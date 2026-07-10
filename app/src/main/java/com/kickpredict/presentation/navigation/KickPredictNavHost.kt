@@ -12,6 +12,7 @@ import com.kickpredict.presentation.matchlist.MatchListScreen
 import com.kickpredict.presentation.simulation.SeasonSimulationScreen
 import com.kickpredict.presentation.standings.StandingsScreen
 import com.kickpredict.presentation.team.TeamScreen
+import com.kickpredict.presentation.theme.AppTheme
 
 object Routes {
     const val MATCH_LIST = "matches"
@@ -27,7 +28,10 @@ object Routes {
 }
 
 @Composable
-fun KickPredictNavHost() {
+fun KickPredictNavHost(
+    currentTheme: AppTheme,
+    onSelectTheme: (AppTheme) -> Unit,
+) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Routes.MATCH_LIST) {
         composable(Routes.MATCH_LIST) {
@@ -35,6 +39,8 @@ fun KickPredictNavHost() {
                 onMatchClick = { matchId -> navController.navigate(Routes.detail(matchId)) },
                 onDashboard = { navController.navigate(Routes.DASHBOARD) },
                 onStandings = { navController.navigate(Routes.STANDINGS) },
+                currentTheme = currentTheme,
+                onSelectTheme = onSelectTheme,
             )
         }
         composable(Routes.DASHBOARD) {

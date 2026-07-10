@@ -41,7 +41,7 @@ import com.kickpredict.domain.model.RecordedResult
 import com.kickpredict.domain.usecase.TeamDetail
 import com.kickpredict.presentation.components.TeamCrest
 import com.kickpredict.presentation.theme.DrawColor
-import com.kickpredict.presentation.theme.LimeGreen
+import com.kickpredict.presentation.theme.AccentPrimary
 import com.kickpredict.presentation.theme.LossColor
 import com.kickpredict.presentation.theme.WinColor
 import java.time.format.DateTimeFormatter
@@ -71,7 +71,7 @@ fun TeamScreen(
         Box(Modifier.fillMaxSize().padding(padding)) {
             val team = state.team
             when {
-                state.isLoading -> CircularProgressIndicator(color = LimeGreen, modifier = Modifier.align(Alignment.Center))
+                state.isLoading -> CircularProgressIndicator(color = AccentPrimary, modifier = Modifier.align(Alignment.Center))
                 team == null -> Text(state.error ?: "Team not found", color = MaterialTheme.colorScheme.error, modifier = Modifier.align(Alignment.Center))
                 else -> TeamContent(team, onMatchClick)
             }
@@ -104,7 +104,7 @@ private fun Header(team: TeamDetail) {
             TeamCrest(team.shortName, team.crestPrimary, team.crestSecondary, size = 48.dp)
             Column {
                 Text(team.name, style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
-                Text(team.league.displayName, style = MaterialTheme.typography.labelSmall, color = LimeGreen)
+                Text(team.league.displayName, style = MaterialTheme.typography.labelSmall, color = AccentPrimary)
             }
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -118,7 +118,7 @@ private fun Header(team: TeamDetail) {
 @Composable
 private fun Stat(label: String, value: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(value, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Black, color = LimeGreen)
+        Text(value, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Black, color = AccentPrimary)
         Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
@@ -149,7 +149,7 @@ private fun FixtureRow(match: Match, teamId: String, onClick: () -> Unit) {
             Text("$homeAway · ${opponent.displayName}", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface, maxLines = 1)
             Text("R${match.round} · ${match.kickoff.format(fixtureFormatter)}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        match.predictedResult?.let { Text("적중률 ${it.confidenceScore}%", style = MaterialTheme.typography.labelSmall, color = LimeGreen) }
+        match.predictedResult?.let { Text("적중률 ${it.confidenceScore}%", style = MaterialTheme.typography.labelSmall, color = AccentPrimary) }
     }
 }
 

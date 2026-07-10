@@ -53,8 +53,9 @@ import com.kickpredict.presentation.components.ConfidenceBadge
 import com.kickpredict.presentation.components.PowerComparisonReport
 import com.kickpredict.presentation.components.PredictionDonutChart
 import com.kickpredict.presentation.components.ProbabilityGauges
-import com.kickpredict.presentation.theme.LimeGreen
+import com.kickpredict.presentation.theme.AccentPrimary
 import com.kickpredict.presentation.theme.LossColor
+import com.kickpredict.presentation.theme.OutlineColor
 import com.kickpredict.presentation.theme.WinColor
 import java.time.format.DateTimeFormatter
 
@@ -255,7 +256,7 @@ private fun ResultEntrySection(
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Text("실제 결과 입력", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
-            Text("기록된 결과 ${recordedCount}건", style = MaterialTheme.typography.labelSmall, color = LimeGreen)
+            Text("기록된 결과 ${recordedCount}건", style = MaterialTheme.typography.labelSmall, color = AccentPrimary)
         }
 
         if (actualResult != null) {
@@ -286,7 +287,7 @@ private fun ResultEntrySection(
         Button(
             onClick = { onSave(home, away) },
             modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = LimeGreen, contentColor = MaterialTheme.colorScheme.background),
+            colors = ButtonDefaults.buttonColors(containerColor = AccentPrimary, contentColor = MaterialTheme.colorScheme.background),
         ) {
             Text(if (actualResult == null) "결과 저장" else "결과 수정", fontWeight = FontWeight.Bold)
         }
@@ -310,7 +311,7 @@ private fun GoalStepper(label: String, value: Int, onChange: (Int) -> Unit) {
                 modifier = Modifier.size(width = 44.dp, height = 40.dp).padding(top = 4.dp),
             )
             IconButton(onClick = { onChange(value + 1) }) {
-                Icon(Icons.Filled.Add, contentDescription = "증가", tint = LimeGreen)
+                Icon(Icons.Filled.Add, contentDescription = "증가", tint = AccentPrimary)
             }
         }
     }
@@ -336,11 +337,11 @@ private fun MarketSummary(prediction: PredictionResult) {
 private fun MarketRow(yesLabel: String, yesPercent: Int, noLabel: String, noPercent: Int) {
     Column(Modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth().padding(bottom = 4.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("$yesLabel $yesPercent%", style = MaterialTheme.typography.labelLarge, color = LimeGreen, fontWeight = FontWeight.Bold)
+            Text("$yesLabel $yesPercent%", style = MaterialTheme.typography.labelLarge, color = AccentPrimary, fontWeight = FontWeight.Bold)
             Text("$noLabel $noPercent%", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Box(Modifier.fillMaxWidth().height(10.dp).clip(RoundedCornerShape(50)).background(androidx.compose.ui.graphics.Color(0xFF2A3320))) {
-            Box(Modifier.fillMaxWidth((yesPercent / 100f).coerceIn(0f, 1f)).height(10.dp).clip(RoundedCornerShape(50)).background(LimeGreen))
+        Box(Modifier.fillMaxWidth().height(10.dp).clip(RoundedCornerShape(50)).background(OutlineColor.copy(alpha = 0.45f))) {
+            Box(Modifier.fillMaxWidth((yesPercent / 100f).coerceIn(0f, 1f)).height(10.dp).clip(RoundedCornerShape(50)).background(AccentPrimary))
         }
     }
 }
@@ -369,14 +370,14 @@ private fun ScorelineDistribution(prediction: PredictionResult) {
                     modifier = Modifier.width(56.dp),
                 )
                 Box(
-                    Modifier.weight(1f).height(10.dp).clip(RoundedCornerShape(50)).background(androidx.compose.ui.graphics.Color(0xFF2A3320)),
+                    Modifier.weight(1f).height(10.dp).clip(RoundedCornerShape(50)).background(OutlineColor.copy(alpha = 0.45f)),
                 ) {
-                    Box(Modifier.fillMaxWidth((s.probabilityPercent.toFloat() / maxPercent).coerceIn(0f, 1f)).height(10.dp).clip(RoundedCornerShape(50)).background(LimeGreen))
+                    Box(Modifier.fillMaxWidth((s.probabilityPercent.toFloat() / maxPercent).coerceIn(0f, 1f)).height(10.dp).clip(RoundedCornerShape(50)).background(AccentPrimary))
                 }
                 Text(
                     "${s.probabilityPercent}%",
                     style = MaterialTheme.typography.labelLarge,
-                    color = LimeGreen,
+                    color = AccentPrimary,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.End,
                     modifier = Modifier.width(44.dp).padding(start = 8.dp),
