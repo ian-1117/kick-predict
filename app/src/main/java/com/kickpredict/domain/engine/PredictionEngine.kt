@@ -212,6 +212,7 @@ class PredictionEngine(
             drawPercent = drawPct,
             awayWinPercent = awayPct,
             confidenceScore = confidenceScore,
+            rawConfidenceScore = rawConfidence,
             rationale = rationale,
             matchupBias = matchupBias,
             expectedHomeGoals = lambdaHome,

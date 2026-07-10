@@ -31,6 +31,7 @@ class CalibrationRepositoryImpl(
                 awayTeam = match.awayTeam.displayName,
                 predictedOutcome = p.predictedOutcome.name,
                 confidence = p.confidenceScore,
+                rawConfidence = p.rawConfidenceScore,
                 homeWinPercent = p.homeWinPercent,
                 drawPercent = p.drawPercent,
                 awayWinPercent = p.awayWinPercent,
@@ -59,13 +60,18 @@ class CalibrationRepositoryImpl(
         matchResultDao.count()
     }
 
+    /**
+     * Training pairs for the reliability curve. Deliberately reads [PredictionLogEntity.rawConfidence]
+     * rather than the displayed [PredictionLogEntity.confidence]: the curve maps raw → observed hit
+     * rate, so feeding it a score the curve has already touched makes each refit undo the last one.
+     */
     override suspend fun predictionRecords(): List<PredictionRecord> = withContext(Dispatchers.IO) {
         val logs = predictionLogDao.getAll().associateBy { it.matchId }
         matchResultDao.getAll().mapNotNull { result ->
             val log = logs[result.matchId] ?: return@mapNotNull null
             val actual = outcomeOf(result.homeGoals, result.awayGoals)
             PredictionRecord(
-                confidence = log.confidence,
+                confidence = log.rawConfidence,
                 wasCorrect = log.predictedOutcome == actual.name,
             )
         }

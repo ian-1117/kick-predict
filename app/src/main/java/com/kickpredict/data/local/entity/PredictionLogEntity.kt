@@ -18,7 +18,10 @@ data class PredictionLogEntity(
     val homeTeam: String,
     val awayTeam: String,
     val predictedOutcome: String, // PredictedOutcome.name
+    /** The score shown to the user (reliability curve already applied). */
     val confidence: Int,
+    /** The engine's pre-calibration score — the only sound training signal for the curve. */
+    val rawConfidence: Int,
     val homeWinPercent: Int,
     val drawPercent: Int,
     val awayWinPercent: Int,

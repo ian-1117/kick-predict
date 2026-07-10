@@ -37,6 +37,14 @@ data class PredictionResult(
     val drawPercent: Int,
     val awayWinPercent: Int,
     val confidenceScore: Int,
+    /**
+     * The confidence the engine computed *before* the reliability curve was applied.
+     *
+     * This, not [confidenceScore], is what the curve must be fitted against: fitting on an already
+     * calibrated score maps the correction back through itself, and the two values oscillate.
+     * Display uses [confidenceScore]; calibration uses this.
+     */
+    val rawConfidenceScore: Int = confidenceScore,
     val rationale: List<String>,
     val matchupBias: Double = 0.0,
     val expectedHomeGoals: Double = 0.0,
