@@ -5,7 +5,7 @@ Bundesliga, K League** — and visualises the result, with first-class support f
 (cover screen and unfolded main screen).
 
 Built with **Kotlin + Jetpack Compose**, **MVVM + Clean Architecture**, Compose Navigation, Retrofit/OkHttp
-(API-ready) and Room (team/form caching). Dark-first UI with a lime-green accent.
+(API-ready) and Room (team/form caching). Four switchable colour themes, defaulting to **Floodlight**.
 
 ## Architecture
 
@@ -17,8 +17,10 @@ com.kickpredict
 │   ├── model       # LeagueType, Match, TeamProfile, HeadToHead, PredictionResult …
 │   ├── engine      # PredictionEngine (Poisson win/draw/away % + Confidence + expected score)
 │   ├── calibration # Calibrator + CalibrationDefaults (real-data league scoring rates)
+│   ├── simulation  # ScoreGrid, SeasonSimulator, SeasonRules (Monte-Carlo season projection)
+│   ├── standings   # LeagueTable — shared table build + ranking rules
 │   ├── repository  # MatchRepository interface
-│   └── usecase     # GetPredictedMatch(es)UseCase
+│   └── usecase     # GetPredictedMatch(es)UseCase, SimulateSeasonUseCase
 ├── data
 │   ├── mock        # MockDataProvider — the 4 offline test scenarios
 │   ├── local       # Room: KickPredictDatabase, TeamDao, TeamEntity, Converters
@@ -26,10 +28,11 @@ com.kickpredict
 │   └── repository  # MatchRepositoryImpl
 ├── di              # AppContainer (manual DI)
 └── presentation
-    ├── theme       # dark + lime-green Material 3 theme
+    ├── theme       # AppPalette/AppTheme, LocalPalette, picker + persisted choice
     ├── navigation  # KickPredictNavHost
     ├── matchlist   # list screen + ViewModel
     ├── detail      # responsive prediction screen + ViewModel
+    ├── simulation  # season projection screen (cutoff slider) + ViewModel
     └── components  # ConfidenceBadge, PredictionDonutChart, ProbabilityGauges, PowerComparisonReport
 ```
 
@@ -93,6 +96,13 @@ also lowers the **Confidence Score** by one step. Shown as "경기 변수" chips
 systematically over-confident engine ("90% but right 60%") is pulled down to its true hit rate. The
 engine takes a `ConfidenceCalibration` (identity by default); swap in a fitted one to re-map scores.
 
+**The curve is fitted on `PredictionResult.rawConfidenceScore`, never on the displayed
+`confidenceScore`.** `PredictionEngine` reports both, and `prediction_log` stores both: `confidence` is
+what the user saw, `rawConfidence` is what the engine computed before the curve touched it. Training on
+the displayed score maps the correction back through itself — since `MatchListViewModel.load()` refits
+and then re-logs on every resume, the shown confidence flipped between two values (63% → 46% → 63% …)
+forever. `ConfidenceCalibrationLoopTest` pins both halves: the wiring, and that repeated refits settle.
+
 ### Offline-first data
 
 `MatchRepositoryImpl` is offline-first: try the live `PredictionApi`, cache the payload to Room
@@ -112,6 +122,66 @@ seed here.)
 - **Date-range (period) search:** a `DateRangePicker` dialog filters fixtures by kickoff date.
 - Data: the four tuned scenarios (A–D, now real clubs with identical stats) plus a deterministic
   multi-round schedule (`MockDataProvider`) so the filters have real data.
+
+## Season simulation — 우승 / 상위권 / 강등 확률
+
+Reachable from the standings screen (📈 in the top bar). A **matchday cutoff slider** splits the
+season: rounds before it use their real results, rounds from it on are replayed **10,000 times** by
+`domain/simulation/SeasonSimulator.kt`. Drag it to matchday 1 for a preseason projection.
+
+Each remaining fixture is drawn from its `ScoreGrid` — the same Poisson score distribution (with the
+league's Dixon-Coles draw inflation) that the engine sums into its win/draw/away percentages, so a
+simulated season comes from exactly the distribution the app displays, not an approximation. Counting
+finishing places across the samples gives each club its **우승 / 상위권(UCL·ACL) / 강등 확률**, plus
+expected points and mean finishing position. Fixtures are drawn independently — no result feeds back
+into the ratings — which keeps every fixture's marginal distribution honest but understates the tails
+(real title races are streakier).
+
+`SeasonRules` maps each league to its continental and automatic-relegation places; playoff spots
+(Bundesliga's 16th, K League 1's 11th) are not modelled. `LeagueTable` builds and ranks both the real
+and the simulated table, so a projection is ordered by the rules the displayed standing is.
+
+### Out-of-sample by construction
+
+`RealDataProvider.matchesAsOf(cutoffRound)` rebuilds each remaining fixture with **only what was known
+before that round**: table position, recent form, scoring rates and head-to-head all come from earlier
+matches, and `SimulateSeasonUseCase` re-runs the engine over those fixtures rather than the ones on the
+list screen (whose profiles legitimately use the whole season, since their results are already known).
+A round-19 projection is therefore made by a model that has seen rounds 1–18 and nothing else. The
+learned Elo / Dixon-Coles ratings were already clean — they train on prior seasons only.
+
+Thin early-season samples are handled by **empirical-Bayes shrinkage**: a team's rates are pulled toward
+its prior seasons with `PRIOR_WEIGHT = 6.0` pseudo-matches (toward the league average for a promoted side
+with no history), so a matchday-1 projection has real strength estimates instead of collapsing every λ to
+its floor.
+
+Because the bundled seasons are complete, the screen shows **what actually happened** next to each
+projection (`실제: 우승 ✓`). It is a reference, not a scorecard — one season is one sample, and a handful
+of hits is not evidence of skill. What it does show is that removing the lookahead makes the model
+properly less certain: at EPL matchday 19, Man City's title probability falls 41% → 30%, and the third
+relegation place turns from Luton 85% into a genuine Luton 42% / Nott'm Forest 40% coin flip.
+
+## Themes
+
+Four palettes, picked from the 🎨 button in the fixtures top bar and remembered across launches
+(`ThemePreference`, SharedPreferences — one enum name, read synchronously so the first frame is
+already painted correctly).
+
+| Theme | Ground | Win / Draw / Loss | Notes |
+|-------|--------|-------------------|-------|
+| **Floodlight** (default) | night blue | cyan / amber / magenta | avoids the red-green axis |
+| **Card** | pitch green | chalk / yellow card / red card | accent is chalk, so the cards mean only what they mean |
+| **Broadsheet** | newsprint | navy / ochre / crimson | the one light palette |
+| **Ember** | warm dark | copper / teal / crimson | |
+
+Colours live in `AppPalette` and reach the UI through `LocalPalette`; `Color.kt` exposes them as
+composable getters (`AccentPrimary`, `WinColor`, `OutlineColor`, …) so screens never name a hue. Two
+places can't read a composition and take the colour as a parameter instead: the `Canvas` draw lambda in
+`PredictionDonutChart`, and `ConfidenceTier.accent()`.
+
+> Floodlight replaced a lime-green accent whose **win colour was indistinguishable from its loss colour**
+> under red-green colour blindness — the two colours the donut chart and probability gauges use to tell
+> a home win from an away win. The theme a user picks is cosmetic; that fix was not.
 
 ## Foldable / responsive UI
 
