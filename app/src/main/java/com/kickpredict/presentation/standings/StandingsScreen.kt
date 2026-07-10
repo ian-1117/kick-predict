@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -48,6 +49,7 @@ import com.kickpredict.presentation.theme.LimeGreen
 fun StandingsScreen(
     onBack: () -> Unit,
     onTeamClick: (String) -> Unit,
+    onSimulate: () -> Unit,
     viewModel: StandingsViewModel = viewModel(factory = StandingsViewModel.Factory),
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -59,6 +61,11 @@ fun StandingsScreen(
                 title = { Text("리그 순위", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") }
+                },
+                actions = {
+                    IconButton(onClick = onSimulate) {
+                        Icon(Icons.Filled.Timeline, contentDescription = "시즌 시뮬레이션", tint = LimeGreen)
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             )

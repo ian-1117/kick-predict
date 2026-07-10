@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.kickpredict.presentation.dashboard.DashboardScreen
 import com.kickpredict.presentation.detail.PredictionDetailScreen
 import com.kickpredict.presentation.matchlist.MatchListScreen
+import com.kickpredict.presentation.simulation.SeasonSimulationScreen
 import com.kickpredict.presentation.standings.StandingsScreen
 import com.kickpredict.presentation.team.TeamScreen
 
@@ -19,6 +20,7 @@ object Routes {
     const val ARG_MATCH_ID = "matchId"
     const val DASHBOARD = "dashboard"
     const val STANDINGS = "standings"
+    const val SIMULATION = "simulation"
     const val TEAM = "team/{teamId}"
     fun team(teamId: String) = "team/$teamId"
     const val ARG_TEAM_ID = "teamId"
@@ -42,7 +44,11 @@ fun KickPredictNavHost() {
             StandingsScreen(
                 onBack = { navController.popBackStack() },
                 onTeamClick = { teamId -> navController.navigate(Routes.team(teamId)) },
+                onSimulate = { navController.navigate(Routes.SIMULATION) },
             )
+        }
+        composable(Routes.SIMULATION) {
+            SeasonSimulationScreen(onBack = { navController.popBackStack() })
         }
         composable(
             route = Routes.TEAM,

@@ -14,6 +14,7 @@ import com.kickpredict.domain.rating.MutableEloProvider
 import com.kickpredict.domain.rating.MutablePoissonProvider
 import com.kickpredict.domain.repository.CalibrationRepository
 import com.kickpredict.domain.repository.MatchRepository
+import com.kickpredict.domain.simulation.SeasonSimulator
 import com.kickpredict.domain.usecase.GetCalibrationDashboardUseCase
 import com.kickpredict.domain.usecase.GetPredictedMatchUseCase
 import com.kickpredict.domain.usecase.GetStandingsUseCase
@@ -22,6 +23,7 @@ import com.kickpredict.domain.usecase.GetPredictedMatchesUseCase
 import com.kickpredict.domain.usecase.RecalibrateUseCase
 import com.kickpredict.domain.usecase.RecordMatchResultUseCase
 import com.kickpredict.domain.usecase.SeedSampleResultsUseCase
+import com.kickpredict.domain.usecase.SimulateSeasonUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -94,6 +96,12 @@ class AppContainer(context: Context) {
     val getStandings = GetStandingsUseCase(calibrationRepository)
     val getTeam = GetTeamUseCase(getPredictedMatches, getStandings, calibrationRepository, eloProvider)
     val seedSampleResults = SeedSampleResultsUseCase(getPredictedMatches, calibrationRepository)
+    // Reads the live calibration, so a simulated season uses the same draw inflation the engine does.
+    val simulateSeason = SimulateSeasonUseCase(
+        getPredictedMatches = getPredictedMatches,
+        calibrationRepository = calibrationRepository,
+        simulator = SeasonSimulator(calibrationProvider),
+    )
 
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
