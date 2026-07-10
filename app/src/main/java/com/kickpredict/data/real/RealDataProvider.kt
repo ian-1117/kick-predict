@@ -9,6 +9,7 @@ import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.MatchOutcome
 import com.kickpredict.domain.model.PriorResult
 import com.kickpredict.domain.model.TeamProfile
+import java.io.InputStream
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -22,7 +23,14 @@ import kotlin.random.Random
  *  - [priorResults] — the earlier seasons, used to pre-train the learned Elo / Dixon-Coles models so
  *    the latest-season predictions are genuinely out-of-sample.
  */
-class RealDataProvider(private val assets: AssetManager) {
+class RealDataProvider(private val openAsset: (String) -> InputStream) {
+
+    constructor(assets: AssetManager) : this({ path -> assets.open(path) })
+
+    private companion object {
+        /** Pseudo-matches of prior-season evidence mixed into an in-season estimate; ~6 games of ballast. */
+        const val PRIOR_WEIGHT = 6.0
+    }
 
     private data class Row(val date: LocalDate, val time: LocalTime?, val home: String, val away: String, val hg: Int, val ag: Int)
 
@@ -41,7 +49,7 @@ class RealDataProvider(private val assets: AssetManager) {
     }
 
     // Cheap check (no full parse): are the bundled assets present at all?
-    val hasData: Boolean by lazy { runCatching { assets.open("realdata/E0_$displaySeason.csv").close(); true }.getOrDefault(false) }
+    val hasData: Boolean by lazy { runCatching { openAsset("realdata/E0_$displaySeason.csv").close(); true }.getOrDefault(false) }
 
     fun priorResults(): List<PriorResult> = leagueCodes.flatMap { (code, _) ->
         seasons.filter { it != displaySeason }.flatMap { season ->
@@ -60,8 +68,27 @@ class RealDataProvider(private val assets: AssetManager) {
     /** Real final scorelines for the display season, keyed by match id (for seeding standings/accuracy). */
     fun displayResults(): Map<String, Pair<Int, Int>> = built.associate { it.first.id to (it.second to it.third) }
 
+    /**
+     * Fixtures from [cutoffRound] onwards, with every team profile (table position, recent form,
+     * scoring rates, rating) and head-to-head derived **only from matches played before that round**.
+     *
+     * [matches] builds its profiles from the whole display season, which is fine for a list of games
+     * whose results are already known but would let a season projection peek at its own future. This
+     * is the out-of-sample view: at the cutoff the model knows exactly what a spectator knew.
+     *
+     * Match ids and round numbers are identical to [matches], so results still join up.
+     */
+    fun matchesAsOf(cutoffRound: Int): List<Match> =
+        leagueCodes.flatMap { (code, league) -> buildLeagueAsOf(code, league, cutoffRound) }
+
+    private fun displayRows(code: String): List<Row> =
+        data.getValue(code).getValue(displaySeason).sortedWith(compareBy({ it.date }, { it.time ?: LocalTime.MIDNIGHT }))
+
+    private fun priorRows(code: String): List<Row> =
+        seasons.filter { it != displaySeason }.flatMap { data.getValue(code).getValue(it) }
+
     private fun buildLeague(code: String, league: LeagueType): List<Triple<Match, Int, Int>> {
-        val rows = data.getValue(code).getValue(displaySeason).sortedWith(compareBy({ it.date }, { it.time ?: LocalTime.MIDNIGHT }))
+        val rows = displayRows(code)
         if (rows.isEmpty()) return emptyList()
         val allHistory = seasons.flatMap { data.getValue(code).getValue(it) }
         val teams = rows.flatMap { listOf(it.home, it.away) }.distinct()
@@ -75,7 +102,7 @@ class RealDataProvider(private val assets: AssetManager) {
             val home = profile(code, league, r.home, stats.getValue(r.home), position.getValue(r.home))
             val away = profile(code, league, r.away, stats.getValue(r.away), position.getValue(r.away))
             val match = Match(
-                id = "${code}_${displaySeason}_${slug(r.home)}_${slug(r.away)}_r$round",
+                id = matchId(code, r, round),
                 league = league,
                 homeTeam = home,
                 awayTeam = away,
@@ -86,6 +113,116 @@ class RealDataProvider(private val assets: AssetManager) {
             )
             Triple(match, r.hg, r.ag)
         }
+    }
+
+    private fun buildLeagueAsOf(code: String, league: LeagueType, cutoffRound: Int): List<Match> {
+        val rows = displayRows(code)
+        if (rows.isEmpty()) return emptyList()
+        val teams = rows.flatMap { listOf(it.home, it.away) }.distinct()
+        val perRound = (teams.size / 2).coerceAtLeast(1)
+        // Rounds are assigned as index/perRound + 1, so the cutoff falls on a clean row boundary.
+        val playedCount = ((cutoffRound - 1) * perRound).coerceIn(0, rows.size)
+        val before = rows.subList(0, playedCount)
+        val prior = priorRows(code)
+
+        // Everything a spectator standing at the cutoff could know: earlier seasons plus this one so far.
+        val history = prior + before
+        val leagueGoalRate = goalRate(prior)
+        val leaguePointRate = pointRate(prior)
+
+        val current = teams.associateWith { seasonStats(it, before) }
+        val form = teams.associateWith { recentForm(it, before, prior) }
+        val shrunk = teams.associateWith { shrink(current.getValue(it), seasonStats(it, prior), leagueGoalRate, leaguePointRate) }
+
+        // Early on, points separate almost nobody; fall back to prior-season strength so the table
+        // isn't ordered by CSV row order at matchday 1.
+        val ranked = teams.sortedWith(
+            compareByDescending<String> { current.getValue(it).points }
+                .thenByDescending { current.getValue(it).gd }
+                .thenByDescending { shrunk.getValue(it).rating },
+        )
+        val position = ranked.withIndex().associate { (i, name) -> name to i + 1 }
+
+        return rows.drop(playedCount).mapIndexed { offset, r ->
+            val round = (playedCount + offset) / perRound + 1
+            Match(
+                id = matchId(code, r, round),
+                league = league,
+                homeTeam = asOfProfile(code, league, r.home, shrunk.getValue(r.home), form.getValue(r.home), position.getValue(r.home)),
+                awayTeam = asOfProfile(code, league, r.away, shrunk.getValue(r.away), form.getValue(r.away), position.getValue(r.away)),
+                kickoff = LocalDateTime.of(r.date, r.time ?: LocalTime.of(15, 0)),
+                venue = r.home,
+                headToHead = headToHead(r.home, r.away, history),
+                round = round,
+            )
+        }
+    }
+
+    private fun matchId(code: String, r: Row, round: Int) =
+        "${code}_${displaySeason}_${slug(r.home)}_${slug(r.away)}_r$round"
+
+    /** A team's scoring/conceding/points rates once its thin early-season sample is pulled toward its prior seasons. */
+    private data class Shrunk(val goalsFor: Double, val goalsAgainst: Double, val rating: Double)
+
+    /**
+     * Empirical-Bayes shrinkage: a team with no matches this season is described entirely by its prior
+     * seasons (or, if it was just promoted and has none, by the league average); each match it plays
+     * pulls the estimate toward what it is actually doing now.
+     */
+    private fun shrink(current: Stats, prior: Stats, leagueGoalRate: Double, leaguePointRate: Double): Shrunk {
+        val priorGoalsFor = if (prior.played > 0) prior.gf.toDouble() / prior.played else leagueGoalRate
+        val priorGoalsAgainst = if (prior.played > 0) prior.ga.toDouble() / prior.played else leagueGoalRate
+        val priorPoints = if (prior.played > 0) prior.points.toDouble() / prior.played else leaguePointRate
+
+        val weight = current.played + PRIOR_WEIGHT
+        val goalsFor = (current.gf + PRIOR_WEIGHT * priorGoalsFor) / weight
+        val goalsAgainst = (current.ga + PRIOR_WEIGHT * priorGoalsAgainst) / weight
+        val pointsPerGame = (current.points + PRIOR_WEIGHT * priorPoints) / weight
+        return Shrunk(goalsFor, goalsAgainst, ratingFrom(pointsPerGame))
+    }
+
+    /** Most recent five results before the cutoff, backfilled from last season when the season is young. */
+    private fun recentForm(team: String, before: List<Row>, prior: List<Row>): List<MatchOutcome> {
+        val thisSeason = seasonStats(team, before).form
+        if (thisSeason.size >= 5) return thisSeason
+        return (thisSeason + seasonStats(team, prior).form).take(5)
+    }
+
+    private fun goalRate(rows: List<Row>): Double =
+        if (rows.isEmpty()) 1.35 else rows.sumOf { it.hg + it.ag }.toDouble() / (rows.size * 2)
+
+    private fun pointRate(rows: List<Row>): Double {
+        if (rows.isEmpty()) return 1.35
+        val points = rows.sumOf { r -> if (r.hg == r.ag) 2 else 3 }
+        return points.toDouble() / (rows.size * 2)
+    }
+
+    private fun ratingFrom(pointsPerGame: Double): Double =
+        (40.0 + pointsPerGame / 3.0 * 52.0).coerceIn(40.0, 95.0)
+
+    private fun asOfProfile(
+        code: String,
+        league: LeagueType,
+        name: String,
+        shrunk: Shrunk,
+        form: List<MatchOutcome>,
+        position: Int,
+    ): TeamProfile {
+        val (primary, secondary) = crest(teamId(code, name))
+        return TeamProfile(
+            id = teamId(code, name),
+            name = name,
+            shortName = shortCode(name),
+            leaguePosition = position,
+            recentForm = form,
+            overallRating = (shrunk.rating * 10).toInt() / 10.0,
+            goalsScoredAvg = (shrunk.goalsFor * 10).toInt() / 10.0,
+            goalsConcededAvg = (shrunk.goalsAgainst * 10).toInt() / 10.0,
+            daysSinceLastMatch = 7,
+            koreanName = "",
+            crestPrimary = primary,
+            crestSecondary = secondary,
+        )
     }
 
     private data class Stats(val played: Int, val gf: Int, val ga: Int, val points: Int, val form: List<MatchOutcome>) {
@@ -108,7 +245,7 @@ class RealDataProvider(private val assets: AssetManager) {
 
     private fun profile(code: String, league: LeagueType, name: String, s: Stats, position: Int): TeamProfile {
         val ppg = if (s.played == 0) 1.0 else s.points.toDouble() / s.played
-        val rating = (40.0 + ppg / 3.0 * 52.0).coerceIn(40.0, 95.0)
+        val rating = ratingFrom(ppg)
         val (primary, secondary) = crest(teamId(code, name))
         val games = s.played.coerceAtLeast(1)
         return TeamProfile(
@@ -148,7 +285,7 @@ class RealDataProvider(private val assets: AssetManager) {
     }
 
     private fun parse(code: String, season: String): List<Row> {
-        val text = runCatching { assets.open("realdata/${code}_$season.csv").bufferedReader().use { it.readText() } }.getOrNull() ?: return emptyList()
+        val text = runCatching { openAsset("realdata/${code}_$season.csv").bufferedReader().use { it.readText() } }.getOrNull() ?: return emptyList()
         val lines = text.split("\n").map { it.trim() }.filter { it.isNotEmpty() }
         if (lines.size < 2) return emptyList()
         val h = lines.first().split(",")

@@ -228,9 +228,9 @@ private fun ProjectionList(state: SeasonSimulationUiState) {
         if (projection.hasActualOutcome) {
             item {
                 Text(
-                    "‘실제’는 이 시즌이 실제로 끝난 순위입니다. 팀 능력치(순위·최근 폼·득실 평균)가 시즌 " +
-                        "전체 기록에서 나오므로, 모델은 컷오프 이후를 어느 정도 미리 알고 있습니다 — " +
-                        "적중을 예측력의 증거로 읽지 마세요.",
+                    "‘실제’는 이 시즌이 실제로 끝난 순위입니다. 컷오프 이후 경기는 그 시점까지 " +
+                        "알 수 있었던 기록만으로 예측하므로, 모델은 자신이 맞혀야 할 결과를 미리 보지 않습니다. " +
+                        "다만 표본은 한 시즌뿐입니다 — 몇 개 맞혔다고 예측력이 검증된 것은 아닙니다.",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
@@ -257,8 +257,9 @@ private fun TeamRow(team: TeamProjection, metric: ProjectionMetric, projection: 
             Modifier.size(24.dp).clip(CircleShape).background(accent.copy(alpha = 0.18f)),
             contentAlignment = Alignment.Center,
         ) {
+            // Before a ball is kicked nobody has a table position; showing one would invent an order.
             Text(
-                "${team.currentRank}",
+                if (projection.playedMatches == 0) "–" else "${team.currentRank}",
                 style = MaterialTheme.typography.labelSmall,
                 color = accent,
                 fontWeight = FontWeight.Bold,

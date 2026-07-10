@@ -69,6 +69,7 @@ class AppContainer(context: Context) {
         fixtureCacheDao = database.fixtureCacheDao(),
         teamDao = database.teamDao(),
         offlineFallback = { if (realData.hasData) realData.matches() else com.kickpredict.data.mock.MockDataProvider.matches() },
+        asOfFallback = if (realData.hasData) { round -> realData.matchesAsOf(round) } else null,
     )
 
     val calibrationRepository: CalibrationRepository = CalibrationRepositoryImpl(
@@ -98,7 +99,8 @@ class AppContainer(context: Context) {
     val seedSampleResults = SeedSampleResultsUseCase(getPredictedMatches, calibrationRepository)
     // Reads the live calibration, so a simulated season uses the same draw inflation the engine does.
     val simulateSeason = SimulateSeasonUseCase(
-        getPredictedMatches = getPredictedMatches,
+        repository = repository,
+        engine = engine,
         calibrationRepository = calibrationRepository,
         simulator = SeasonSimulator(calibrationProvider),
     )

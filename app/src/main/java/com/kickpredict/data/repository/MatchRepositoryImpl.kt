@@ -30,6 +30,8 @@ class MatchRepositoryImpl(
     private val teamDao: TeamDao,
     // Offline seed source; defaults to bundled mock fixtures, overridden with real data when available.
     private val offlineFallback: () -> List<Match> = { MockDataProvider.matches() },
+    // Rebuilds fixtures with profiles as of a matchday; only the bundled historical data can do this.
+    private val asOfFallback: ((Int) -> List<Match>)? = null,
 ) : MatchRepository {
 
     private val listSerializer = ListSerializer(MatchDto.serializer())
@@ -42,6 +44,10 @@ class MatchRepositoryImpl(
 
     override suspend fun getMatch(id: String): Match? =
         getMatches().firstOrNull { it.id == id }
+
+    override suspend fun getMatchesAsOf(round: Int): List<Match> = withContext(Dispatchers.IO) {
+        asOfFallback?.invoke(round) ?: getMatches().filter { it.round >= round }
+    }
 
     private suspend fun loadMatches(): List<Match> {
         try {

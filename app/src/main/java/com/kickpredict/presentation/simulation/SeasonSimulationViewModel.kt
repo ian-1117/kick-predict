@@ -132,6 +132,8 @@ class SeasonSimulationViewModel(
         val loaded = data ?: return
         _uiState.value = _uiState.value.copy(isSimulating = true)
         val result = runCatching {
+            // Rebuilding as-of profiles, predicting every remaining fixture and running 10k seasons —
+            // all of it stays off the main thread.
             withContext(Dispatchers.Default) { simulateSeason.project(loaded, league, cutoff) }
         }
         _uiState.value = result.fold(
