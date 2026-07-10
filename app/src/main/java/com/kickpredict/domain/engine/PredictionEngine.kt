@@ -9,10 +9,10 @@ import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.MatchContext
 import com.kickpredict.domain.model.PredictionResult
-import com.kickpredict.domain.model.ScoreLine
 import com.kickpredict.domain.model.TeamProfile
 import com.kickpredict.domain.rating.MutableEloProvider
 import com.kickpredict.domain.rating.MutablePoissonProvider
+import com.kickpredict.domain.simulation.ScoreGrid
 import kotlin.math.abs
 import kotlin.math.exp
 import kotlin.math.pow
@@ -62,8 +62,7 @@ class PredictionEngine(
 
         const val LAMBDA_MIN = 0.2
         const val LAMBDA_MAX = 3.2
-        const val MAX_GOALS = 8
-        const val SCORE_CELLS = (MAX_GOALS + 1) * (MAX_GOALS + 1)
+        const val TOP_SCORELINES = 6
 
         // Quality index weights (rating/position/form), sums to 1.0.
         const val Q_RATING = 0.45
@@ -165,30 +164,13 @@ class PredictionEngine(
         lambdaAway = lambdaAway.coerceIn(LAMBDA_MIN, LAMBDA_MAX)
 
         // --- 5. Poisson scoreline grid ----------------------------------------------------------
-        var pHome = 0.0
-        var pDraw = 0.0
-        var pAway = 0.0
-        val cells = ArrayList<Triple<Int, Int, Double>>(SCORE_CELLS)
-        for (i in 0..MAX_GOALS) {
-            for (j in 0..MAX_GOALS) {
-                val base = poisson(i, lambdaHome) * poisson(j, lambdaAway)
-                val effective = if (i == j) base * cal.drawInflation else base // league draw tendency
-                cells += Triple(i, j, effective)
-                when {
-                    i > j -> pHome += base
-                    i == j -> pDraw += effective
-                    else -> pAway += base
-                }
-            }
-        }
-        val norm = pHome + pDraw + pAway
-        pHome /= norm; pDraw /= norm; pAway /= norm
+        val grid = ScoreGrid(lambdaHome, lambdaAway, cal.drawInflation)
+        val pHome = grid.homeWinProbability
+        val pDraw = grid.drawProbability
+        val pAway = grid.awayWinProbability
         val (homePct, drawPct, awayPct) = toWholePercents(pHome, pDraw, pAway)
 
-        val topScorelines = cells.sortedByDescending { it.third }
-            .take(6)
-            .map { (i, j, p) -> ScoreLine(i, j, (p / norm * 100).roundToInt()) }
-            .filter { it.probabilityPercent > 0 }
+        val topScorelines = grid.topScorelines(TOP_SCORELINES)
 
         // --- 6. Confidence score ----------------------------------------------------------------
         val formSamples = home.recentForm.take(5).size + away.recentForm.take(5).size
@@ -259,12 +241,6 @@ class PredictionEngine(
         } else {
             "상성 우위: ${away.shortName} is a bogey team (+$pct% λ)."
         }
-    }
-
-    private fun poisson(k: Int, lambda: Double): Double {
-        var factorial = 1.0
-        for (i in 2..k) factorial *= i
-        return exp(-lambda) * lambda.pow(k) / factorial
     }
 
     private fun fmt(v: Double): String = ((v * 100).roundToInt() / 100.0).toString()
