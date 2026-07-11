@@ -1,0 +1,237 @@
+Date,Time,HomeTeam,AwayTeam,FTHG,FTAG
+01/03/2024,06:00,Ansan Greeners,Gyeongnam,1,2
+01/03/2024,06:00,Anyang,Seongnam,2,0
+02/03/2024,06:00,Bucheon 1995,Cheonan City,1,3
+02/03/2024,08:30,Chungbuk Cheongju,Jeonnam Dragons,1,0
+03/03/2024,06:00,Suwon Bluewings,Chungnam Asan,2,1
+03/03/2024,08:30,Busan IPark,Seoul E-Land,0,3
+09/03/2024,06:00,Gyeongnam,Busan IPark,1,4
+09/03/2024,08:30,Jeonnam Dragons,Gimpo Citizen,4,0
+09/03/2024,08:30,Chungnam Asan,Bucheon 1995,1,1
+10/03/2024,06:00,Seoul E-Land,Suwon Bluewings,2,1
+10/03/2024,06:00,Cheonan City,Chungbuk Cheongju,1,2
+10/03/2024,08:30,Seongnam,Ansan Greeners,1,3
+16/03/2024,06:00,Cheonan City,Seongnam,0,0
+16/03/2024,08:30,Gyeongnam,Chungnam Asan,1,2
+16/03/2024,08:30,Bucheon 1995,Seoul E-Land,1,0
+17/03/2024,06:00,Busan IPark,Gimpo Citizen,0,1
+17/03/2024,06:00,Chungbuk Cheongju,Anyang,1,1
+17/03/2024,08:30,Ansan Greeners,Suwon Bluewings,0,1
+30/03/2024,06:00,Chungnam Asan,Chungbuk Cheongju,4,1
+30/03/2024,08:30,Seongnam,Gimpo Citizen,2,1
+30/03/2024,08:30,Seoul E-Land,Anyang,1,2
+31/03/2024,07:00,Bucheon 1995,Gyeongnam,2,0
+31/03/2024,07:00,Jeonnam Dragons,Cheonan City,1,0
+31/03/2024,09:30,Suwon Bluewings,Busan IPark,0,1
+06/04/2024,07:00,Anyang,Ansan Greeners,1,0
+06/04/2024,09:30,Chungnam Asan,Seongnam,1,1
+06/04/2024,09:30,Seoul E-Land,Gimpo Citizen,1,1
+07/04/2024,07:00,Busan IPark,Jeonnam Dragons,0,1
+07/04/2024,07:00,Cheonan City,Gyeongnam,2,2
+07/04/2024,09:30,Chungbuk Cheongju,Suwon Bluewings,0,1
+10/04/2024,07:00,Suwon Bluewings,Jeonnam Dragons,5,1
+10/04/2024,07:00,Chungbuk Cheongju,Gimpo Citizen,0,0
+10/04/2024,07:00,Seongnam,Seoul E-Land,2,2
+10/04/2024,07:00,Anyang,Bucheon 1995,3,0
+10/04/2024,09:30,Ansan Greeners,Chungnam Asan,1,0
+10/04/2024,09:30,Cheonan City,Busan IPark,2,4
+13/04/2024,07:00,Gyeongnam,Chungbuk Cheongju,1,1
+13/04/2024,09:30,Busan IPark,Anyang,3,4
+13/04/2024,09:30,Bucheon 1995,Seongnam,1,1
+14/04/2024,07:00,Jeonnam Dragons,Ansan Greeners,1,1
+14/04/2024,09:30,Suwon Bluewings,Gimpo Citizen,2,1
+14/04/2024,09:30,Chungnam Asan,Cheonan City,2,2
+20/04/2024,07:00,Bucheon 1995,Busan IPark,1,3
+20/04/2024,09:30,Seongnam,Chungbuk Cheongju,1,2
+21/04/2024,07:00,Anyang,Suwon Bluewings,1,3
+21/04/2024,07:00,Ansan Greeners,Gimpo Citizen,1,2
+21/04/2024,09:30,Gyeongnam,Seoul E-Land,2,1
+21/04/2024,09:30,Chungnam Asan,Jeonnam Dragons,1,1
+27/04/2024,07:00,Seoul E-Land,Chungnam Asan,5,0
+27/04/2024,09:30,Busan IPark,Ansan Greeners,2,1
+27/04/2024,09:30,Cheonan City,Gimpo Citizen,1,2
+28/04/2024,07:00,Suwon Bluewings,Gyeongnam,1,1
+28/04/2024,07:00,Jeonnam Dragons,Anyang,1,2
+28/04/2024,09:30,Chungbuk Cheongju,Bucheon 1995,0,0
+04/05/2024,07:00,Gimpo Citizen,Bucheon 1995,0,1
+04/05/2024,09:30,Chungnam Asan,Anyang,1,1
+05/05/2024,07:00,Seongnam,Suwon Bluewings,2,1
+05/05/2024,09:30,Jeonnam Dragons,Gyeongnam,1,3
+06/05/2024,07:00,Cheonan City,Ansan Greeners,1,1
+06/05/2024,09:30,Seoul E-Land,Chungbuk Cheongju,1,1
+11/05/2024,09:30,Busan IPark,Chungnam Asan,2,3
+11/05/2024,12:00,Suwon Bluewings,Cheonan City,0,1
+11/05/2024,12:00,Ansan Greeners,Seoul E-Land,0,3
+12/05/2024,09:30,Gyeongnam,Seongnam,1,2
+12/05/2024,09:30,Anyang,Gimpo Citizen,0,0
+12/05/2024,12:00,Bucheon 1995,Jeonnam Dragons,3,4
+15/05/2024,09:30,Bucheon 1995,Ansan Greeners,0,0
+15/05/2024,09:30,Jeonnam Dragons,Seongnam,2,0
+15/05/2024,09:30,Chungnam Asan,Gimpo Citizen,1,2
+15/05/2024,12:00,Anyang,Gyeongnam,1,0
+15/05/2024,12:00,Chungbuk Cheongju,Busan IPark,0,0
+15/05/2024,12:00,Cheonan City,Seoul E-Land,0,4
+18/05/2024,09:30,Ansan Greeners,Chungbuk Cheongju,0,0
+18/05/2024,12:00,Suwon Bluewings,Bucheon 1995,0,1
+18/05/2024,12:00,Seoul E-Land,Jeonnam Dragons,1,2
+19/05/2024,09:30,Seongnam,Busan IPark,0,1
+19/05/2024,09:30,Cheonan City,Anyang,0,1
+19/05/2024,12:00,Gyeongnam,Gimpo Citizen,1,3
+21/05/2024,12:30,Jeonnam Dragons,Chungbuk Cheongju,1,1
+21/05/2024,12:30,Chungnam Asan,Suwon Bluewings,1,0
+21/05/2024,12:30,Seoul E-Land,Bucheon 1995,1,1
+22/05/2024,12:30,Busan IPark,Cheonan City,2,3
+22/05/2024,12:30,Gimpo Citizen,Seongnam,2,1
+22/05/2024,12:30,Gyeongnam,Ansan Greeners,2,0
+25/05/2024,12:00,Suwon Bluewings,Seoul E-Land,1,3
+26/05/2024,09:30,Chungbuk Cheongju,Gyeongnam,1,0
+26/05/2024,09:30,Anyang,Jeonnam Dragons,2,3
+26/05/2024,12:00,Seongnam,Cheonan City,0,2
+27/05/2024,12:30,Bucheon 1995,Chungnam Asan,3,0
+27/05/2024,12:30,Ansan Greeners,Busan IPark,1,0
+01/06/2024,09:30,Gimpo Citizen,Jeonnam Dragons,1,2
+01/06/2024,12:00,Seoul E-Land,Gyeongnam,2,1
+01/06/2024,12:00,Ansan Greeners,Seongnam,0,1
+02/06/2024,09:30,Busan IPark,Suwon Bluewings,1,1
+02/06/2024,09:30,Anyang,Chungbuk Cheongju,2,0
+02/06/2024,12:00,Cheonan City,Chungnam Asan,0,1
+15/06/2024,12:00,Gyeongnam,Suwon Bluewings,0,0
+15/06/2024,12:00,Jeonnam Dragons,Bucheon 1995,1,1
+15/06/2024,12:30,Seongnam,Anyang,3,1
+16/06/2024,12:00,Gimpo Citizen,Ansan Greeners,1,0
+16/06/2024,12:00,Chungbuk Cheongju,Cheonan City,1,1
+16/06/2024,12:00,Chungnam Asan,Busan IPark,0,0
+22/06/2024,12:00,Chungnam Asan,Gyeongnam,4,0
+22/06/2024,12:30,Suwon Bluewings,Seongnam,3,0
+22/06/2024,12:30,Anyang,Seoul E-Land,2,1
+23/06/2024,12:00,Gimpo Citizen,Busan IPark,1,0
+23/06/2024,12:00,Bucheon 1995,Chungbuk Cheongju,0,4
+23/06/2024,12:00,Ansan Greeners,Cheonan City,1,2
+25/06/2024,12:30,Gyeongnam,Anyang,0,0
+25/06/2024,12:30,Jeonnam Dragons,Suwon Bluewings,1,1
+25/06/2024,12:30,Seongnam,Chungnam Asan,0,4
+26/06/2024,12:30,Gimpo Citizen,Chungbuk Cheongju,1,1
+26/06/2024,12:30,Seoul E-Land,Ansan Greeners,0,3
+26/06/2024,12:30,Cheonan City,Bucheon 1995,1,2
+29/06/2024,12:00,Gimpo Citizen,Cheonan City,1,1
+29/06/2024,12:30,Busan IPark,Seongnam,2,2
+30/06/2024,12:00,Suwon Bluewings,Ansan Greeners,1,1
+30/06/2024,12:00,Bucheon 1995,Anyang,1,2
+01/07/2024,12:30,Gyeongnam,Jeonnam Dragons,2,4
+01/07/2024,12:30,Chungnam Asan,Seoul E-Land,2,0
+06/07/2024,12:00,Gimpo Citizen,Chungnam Asan,3,3
+06/07/2024,12:30,Busan IPark,Bucheon 1995,2,2
+07/07/2024,12:00,Chungbuk Cheongju,Seoul E-Land,2,3
+07/07/2024,12:00,Ansan Greeners,Jeonnam Dragons,1,2
+08/07/2024,12:30,Anyang,Cheonan City,3,0
+08/07/2024,12:30,Seongnam,Gyeongnam,1,4
+13/07/2024,12:00,Jeonnam Dragons,Chungnam Asan,3,2
+13/07/2024,12:30,Chungbuk Cheongju,Ansan Greeners,2,1
+13/07/2024,12:30,Cheonan City,Suwon Bluewings,1,2
+14/07/2024,12:00,Bucheon 1995,Gimpo Citizen,1,0
+14/07/2024,12:00,Anyang,Busan IPark,0,2
+14/07/2024,12:00,Seoul E-Land,Seongnam,3,1
+20/07/2024,12:00,Gyeongnam,Bucheon 1995,2,2
+20/07/2024,12:00,Jeonnam Dragons,Busan IPark,2,3
+20/07/2024,12:30,Suwon Bluewings,Chungbuk Cheongju,0,0
+21/07/2024,12:00,Gimpo Citizen,Anyang,0,1
+21/07/2024,12:00,Chungnam Asan,Ansan Greeners,2,0
+21/07/2024,12:00,Seoul E-Land,Cheonan City,3,4
+23/07/2024,12:30,Busan IPark,Gyeongnam,2,1
+23/07/2024,12:30,Bucheon 1995,Suwon Bluewings,0,3
+23/07/2024,12:30,Seongnam,Jeonnam Dragons,1,2
+24/07/2024,12:30,Gimpo Citizen,Seoul E-Land,2,5
+24/07/2024,12:30,Chungbuk Cheongju,Chungnam Asan,0,3
+24/07/2024,12:30,Ansan Greeners,Anyang,3,2
+27/07/2024,12:00,Anyang,Chungnam Asan,1,0
+27/07/2024,12:30,Seongnam,Bucheon 1995,0,1
+28/07/2024,12:00,Gyeongnam,Cheonan City,3,3
+28/07/2024,12:00,Jeonnam Dragons,Seoul E-Land,2,2
+29/07/2024,12:30,Busan IPark,Chungbuk Cheongju,0,2
+29/07/2024,12:30,Gimpo Citizen,Suwon Bluewings,1,1
+10/08/2024,12:00,Ansan Greeners,Bucheon 1995,2,1
+10/08/2024,12:30,Seoul E-Land,Busan IPark,2,1
+11/08/2024,12:00,Gimpo Citizen,Gyeongnam,2,2
+11/08/2024,12:00,Cheonan City,Jeonnam Dragons,1,0
+12/08/2024,12:30,Suwon Bluewings,Anyang,2,1
+12/08/2024,12:30,Chungbuk Cheongju,Seongnam,1,1
+17/08/2024,12:00,Gyeongnam,Chungbuk Cheongju,0,0
+17/08/2024,12:30,Gimpo Citizen,Ansan Greeners,1,0
+17/08/2024,12:30,Seongnam,Cheonan City,2,2
+18/08/2024,12:00,Suwon Bluewings,Jeonnam Dragons,2,1
+18/08/2024,12:00,Bucheon 1995,Seoul E-Land,2,0
+18/08/2024,12:00,Chungnam Asan,Busan IPark,0,1
+24/08/2024,12:00,Jeonnam Dragons,Gyeongnam,0,0
+24/08/2024,12:30,Busan IPark,Gimpo Citizen,0,0
+24/08/2024,12:30,Chungnam Asan,Bucheon 1995,2,2
+25/08/2024,12:00,Seongnam,Anyang,1,1
+25/08/2024,12:00,Seoul E-Land,Suwon Bluewings,2,0
+26/08/2024,12:30,Cheonan City,Ansan Greeners,2,3
+31/08/2024,12:00,Chungbuk Cheongju,Suwon Bluewings,2,2
+31/08/2024,12:30,Anyang,Cheonan City,1,1
+31/08/2024,12:30,Ansan Greeners,Seoul E-Land,0,0
+01/09/2024,12:00,Busan IPark,Seongnam,3,1
+01/09/2024,12:00,Gimpo Citizen,Jeonnam Dragons,4,3
+01/09/2024,12:00,Chungnam Asan,Gyeongnam,3,0
+14/09/2024,09:30,Chungbuk Cheongju,Seoul E-Land,1,2
+14/09/2024,12:00,Suwon Bluewings,Cheonan City,1,2
+14/09/2024,12:00,Chungnam Asan,Ansan Greeners,1,1
+15/09/2024,09:30,Gyeongnam,Bucheon 1995,1,4
+15/09/2024,09:30,Jeonnam Dragons,Busan IPark,1,2
+15/09/2024,12:00,Gimpo Citizen,Anyang,1,2
+21/09/2024,09:30,Chungnam Asan,Jeonnam Dragons,2,1
+21/09/2024,12:00,Anyang,Ansan Greeners,2,1
+21/09/2024,12:00,Cheonan City,Chungbuk Cheongju,1,0
+22/09/2024,09:30,Bucheon 1995,Gimpo Citizen,2,0
+22/09/2024,09:30,Seongnam,Suwon Bluewings,1,2
+22/09/2024,12:00,Busan IPark,Gyeongnam,1,1
+24/09/2024,12:30,Chungnam Asan,Cheonan City,2,0
+24/09/2024,12:30,Seoul E-Land,Anyang,1,0
+24/09/2024,12:30,Ansan Greeners,Chungbuk Cheongju,3,2
+25/09/2024,12:30,Suwon Bluewings,Busan IPark,0,1
+25/09/2024,12:30,Gyeongnam,Gimpo Citizen,1,1
+25/09/2024,12:30,Bucheon 1995,Seongnam,3,0
+28/09/2024,09:30,Anyang,Chungnam Asan,0,1
+28/09/2024,12:00,Gyeongnam,Suwon Bluewings,1,1
+29/09/2024,09:30,Ansan Greeners,Busan IPark,0,5
+29/09/2024,12:00,Chungbuk Cheongju,Seongnam,1,1
+30/09/2024,12:30,Jeonnam Dragons,Bucheon 1995,3,1
+30/09/2024,12:30,Seoul E-Land,Gimpo Citizen,0,2
+05/10/2024,09:30,Busan IPark,Seoul E-Land,0,0
+05/10/2024,09:30,Gimpo Citizen,Chungnam Asan,3,0
+05/10/2024,09:30,Cheonan City,Gyeongnam,3,1
+05/10/2024,12:00,Bucheon 1995,Chungbuk Cheongju,0,0
+05/10/2024,12:00,Seongnam,Jeonnam Dragons,0,1
+06/10/2024,10:30,Suwon Bluewings,Anyang,1,0
+19/10/2024,07:00,Bucheon 1995,Suwon Bluewings,1,1
+19/10/2024,09:30,Jeonnam Dragons,Ansan Greeners,1,1
+19/10/2024,09:30,Chungbuk Cheongju,Gimpo Citizen,0,1
+20/10/2024,07:00,Seongnam,Chungnam Asan,2,3
+20/10/2024,07:00,Cheonan City,Seoul E-Land,0,3
+20/10/2024,09:30,Anyang,Busan IPark,4,1
+26/10/2024,07:00,Jeonnam Dragons,Cheonan City,0,2
+26/10/2024,09:30,Chungbuk Cheongju,Anyang,0,2
+26/10/2024,09:30,Ansan Greeners,Bucheon 1995,1,0
+27/10/2024,06:00,Gimpo Citizen,Suwon Bluewings,0,0
+27/10/2024,06:00,Seoul E-Land,Chungnam Asan,1,2
+27/10/2024,08:30,Gyeongnam,Seongnam,5,1
+29/10/2024,11:30,Busan IPark,Chungbuk Cheongju,0,1
+29/10/2024,11:30,Anyang,Jeonnam Dragons,1,1
+29/10/2024,11:30,Cheonan City,Bucheon 1995,1,1
+30/10/2024,11:30,Suwon Bluewings,Chungnam Asan,2,1
+30/10/2024,11:30,Seoul E-Land,Seongnam,1,0
+30/10/2024,11:30,Ansan Greeners,Gyeongnam,1,1
+02/11/2024,06:00,Bucheon 1995,Anyang,0,0
+02/11/2024,08:30,Cheonan City,Busan IPark,2,3
+03/11/2024,06:00,Gyeongnam,Seoul E-Land,0,3
+03/11/2024,06:00,Jeonnam Dragons,Chungbuk Cheongju,3,0
+03/11/2024,08:30,Suwon Bluewings,Ansan Greeners,2,1
+03/11/2024,08:30,Seongnam,Gimpo Citizen,1,1
+09/11/2024,06:00,Busan IPark,Bucheon 1995,3,1
+09/11/2024,06:00,Gimpo Citizen,Cheonan City,1,0
+09/11/2024,06:00,Anyang,Gyeongnam,2,2
+09/11/2024,06:00,Chungbuk Cheongju,Chungnam Asan,1,4
+09/11/2024,06:00,Seoul E-Land,Jeonnam Dragons,0,4
+09/11/2024,06:00,Ansan Greeners,Seongnam,1,1
+21/11/2024,11:00,Jeonnam Dragons,Busan IPark,0,0
+24/11/2024,08:30,Seoul E-Land,Jeonnam Dragons,2,2

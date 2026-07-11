@@ -39,9 +39,19 @@ class RealDataProvider(private val openAsset: (String) -> InputStream) {
         "SP1" to LeagueType.LALIGA,
         "I1" to LeagueType.SERIE_A,
         "D1" to LeagueType.BUNDESLIGA,
+        // K League runs Feb–Nov in a single calendar year, so its files reuse the four shared season
+        // slots as opaque keys: 2223→2022, 2324→2023, 2425→2024, 2526→2025 (the display season).
+        "K1" to LeagueType.K_LEAGUE,
+        "K2" to LeagueType.K_LEAGUE_2,
     )
-    private val seasons = listOf("2021", "2122", "2223", "2324")
-    private val displaySeason = "2324"
+    private val seasons = listOf("2223", "2324", "2425", "2526")
+    private val displaySeason = "2526"
+
+    // Display-name overrides keyed by canonical team name, for cases where the data's name is
+    // ambiguous on its own. Everything else falls back to the raw name via TeamProfile.displayName.
+    private val displayNameOverrides = mapOf(
+        "Suwon" to "Suwon FC", // the data calls Suwon FC just "Suwon"; the Bluewings keep "Suwon Bluewings"
+    )
 
     // code -> season -> rows
     private val data: Map<String, Map<String, List<Row>>> by lazy {
@@ -219,7 +229,7 @@ class RealDataProvider(private val openAsset: (String) -> InputStream) {
             goalsScoredAvg = (shrunk.goalsFor * 10).toInt() / 10.0,
             goalsConcededAvg = (shrunk.goalsAgainst * 10).toInt() / 10.0,
             daysSinceLastMatch = 7,
-            koreanName = "",
+            koreanName = displayNameOverrides[name].orEmpty(),
             crestPrimary = primary,
             crestSecondary = secondary,
         )
@@ -258,7 +268,7 @@ class RealDataProvider(private val openAsset: (String) -> InputStream) {
             goalsScoredAvg = (s.gf.toDouble() / games * 10).toInt() / 10.0,
             goalsConcededAvg = (s.ga.toDouble() / games * 10).toInt() / 10.0,
             daysSinceLastMatch = 7,
-            koreanName = "",
+            koreanName = displayNameOverrides[name].orEmpty(),
             crestPrimary = primary,
             crestSecondary = secondary,
         )

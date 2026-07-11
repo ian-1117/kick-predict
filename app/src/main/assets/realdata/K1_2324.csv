@@ -1,0 +1,229 @@
+Date,Time,HomeTeam,AwayTeam,FTHG,FTAG
+25/02/2023,06:00,Ulsan,Jeonbuk Motors,2,1
+25/02/2023,08:30,Seoul,Incheon United,2,1
+25/02/2023,08:30,Suwon Bluewings,Gwangju,0,1
+26/02/2023,06:00,Pohang Steelers,Daegu,3,2
+26/02/2023,06:00,Jeju United,Suwon,0,0
+26/02/2023,08:30,Daejeon Hana Citizen,Gangwon,2,0
+04/03/2023,06:00,Incheon United,Daejeon Hana Citizen,3,3
+04/03/2023,06:00,Suwon,Pohang Steelers,1,2
+04/03/2023,08:30,Daegu,Jeju United,1,1
+05/03/2023,06:00,Jeonbuk Motors,Suwon Bluewings,1,1
+05/03/2023,06:00,Gangwon,Ulsan,0,1
+05/03/2023,08:30,Gwangju,Seoul,0,2
+11/03/2023,06:00,Suwon,Suwon Bluewings,2,1
+11/03/2023,06:00,Daejeon Hana Citizen,Pohang Steelers,0,0
+11/03/2023,08:30,Gangwon,Daegu,1,1
+12/03/2023,06:00,Seoul,Ulsan,1,2
+12/03/2023,08:30,Jeonbuk Motors,Gwangju,2,0
+12/03/2023,08:30,Incheon United,Jeju United,1,0
+18/03/2023,06:00,Pohang Steelers,Gangwon,1,1
+18/03/2023,06:00,Gwangju,Incheon United,5,0
+18/03/2023,08:30,Jeju United,Seoul,1,2
+19/03/2023,06:00,Daegu,Jeonbuk Motors,2,0
+19/03/2023,06:00,Suwon Bluewings,Daejeon Hana Citizen,1,3
+19/03/2023,08:30,Ulsan,Suwon,3,0
+01/04/2023,07:00,Jeonbuk Motors,Pohang Steelers,1,2
+01/04/2023,09:30,Incheon United,Daegu,0,0
+01/04/2023,09:30,Gwangju,Suwon,2,0
+01/04/2023,12:00,Daejeon Hana Citizen,Seoul,3,2
+02/04/2023,07:00,Jeju United,Ulsan,1,3
+02/04/2023,09:30,Suwon Bluewings,Gangwon,1,1
+08/04/2023,07:00,Ulsan,Suwon Bluewings,2,1
+08/04/2023,09:30,Seoul,Daegu,3,0
+08/04/2023,12:00,Pohang Steelers,Gwangju,2,0
+09/04/2023,08:00,Suwon,Daejeon Hana Citizen,5,3
+09/04/2023,09:30,Jeonbuk Motors,Incheon United,2,0
+09/04/2023,12:00,Gangwon,Jeju United,0,1
+15/04/2023,07:00,Suwon Bluewings,Jeju United,2,3
+15/04/2023,09:30,Pohang Steelers,Seoul,1,1
+15/04/2023,12:00,Suwon,Jeonbuk Motors,1,0
+16/04/2023,07:00,Gangwon,Incheon United,0,2
+16/04/2023,09:30,Daejeon Hana Citizen,Ulsan,2,1
+16/04/2023,12:00,Daegu,Gwangju,3,4
+22/04/2023,07:00,Seoul,Suwon Bluewings,3,1
+22/04/2023,09:30,Daegu,Daejeon Hana Citizen,1,0
+22/04/2023,09:30,Ulsan,Pohang Steelers,2,2
+22/04/2023,12:00,Incheon United,Suwon,2,2
+23/04/2023,07:00,Gwangju,Gangwon,0,0
+23/04/2023,09:30,Jeju United,Jeonbuk Motors,0,2
+25/04/2023,12:30,Pohang Steelers,Suwon Bluewings,1,0
+25/04/2023,12:30,Incheon United,Ulsan,0,1
+26/04/2023,12:00,Gwangju,Jeju United,0,1
+26/04/2023,12:00,Gangwon,Seoul,3,2
+26/04/2023,12:30,Jeonbuk Motors,Daejeon Hana Citizen,1,2
+26/04/2023,12:30,Suwon,Daegu,1,1
+29/04/2023,07:00,Suwon,Seoul,0,3
+29/04/2023,09:30,Jeonbuk Motors,Gangwon,0,1
+30/04/2023,07:00,Daejeon Hana Citizen,Jeju United,0,3
+30/04/2023,08:00,Pohang Steelers,Incheon United,0,2
+30/04/2023,09:30,Suwon Bluewings,Daegu,0,1
+30/04/2023,12:00,Ulsan,Gwangju,2,1
+05/05/2023,07:00,Seoul,Jeonbuk Motors,1,1
+05/05/2023,07:00,Daegu,Ulsan,0,3
+05/05/2023,09:30,Incheon United,Suwon Bluewings,0,1
+06/05/2023,07:00,Jeju United,Pohang Steelers,2,1
+06/05/2023,09:30,Suwon,Gangwon,2,0
+06/05/2023,12:00,Gwangju,Daejeon Hana Citizen,0,0
+09/05/2023,12:00,Ulsan,Gangwon,1,0
+09/05/2023,12:30,Daegu,Pohang Steelers,1,1
+09/05/2023,12:30,Seoul,Gwangju,3,1
+10/05/2023,12:30,Jeju United,Incheon United,2,0
+10/05/2023,12:30,Suwon Bluewings,Jeonbuk Motors,0,3
+10/05/2023,12:30,Daejeon Hana Citizen,Suwon,2,1
+13/05/2023,07:00,Pohang Steelers,Daejeon Hana Citizen,3,2
+13/05/2023,09:30,Gwangju,Daegu,0,2
+13/05/2023,12:00,Gangwon,Suwon Bluewings,0,2
+14/05/2023,07:30,Ulsan,Seoul,3,2
+14/05/2023,09:30,Incheon United,Jeonbuk Motors,0,0
+14/05/2023,12:00,Suwon,Jeju United,0,5
+20/05/2023,09:30,Incheon United,Gwangju,1,1
+20/05/2023,11:00,Seoul,Jeju United,1,1
+20/05/2023,12:00,Daejeon Hana Citizen,Daegu,0,1
+21/05/2023,09:30,Gangwon,Pohang Steelers,0,0
+21/05/2023,11:00,Suwon Bluewings,Ulsan,2,3
+21/05/2023,12:00,Jeonbuk Motors,Suwon,3,1
+27/05/2023,09:30,Jeju United,Suwon Bluewings,2,1
+27/05/2023,12:00,Daegu,Incheon United,2,2
+28/05/2023,09:30,Seoul,Gangwon,1,0
+28/05/2023,11:00,Suwon,Gwangju,0,2
+28/05/2023,12:00,Ulsan,Daejeon Hana Citizen,3,3
+29/05/2023,09:30,Pohang Steelers,Jeonbuk Motors,1,0
+03/06/2023,09:30,Jeonbuk Motors,Ulsan,2,0
+03/06/2023,11:00,Suwon Bluewings,Suwon,1,2
+03/06/2023,12:00,Jeju United,Gangwon,2,2
+03/06/2023,12:30,Gwangju,Pohang Steelers,4,2
+04/06/2023,09:30,Daejeon Hana Citizen,Incheon United,1,3
+04/06/2023,12:00,Daegu,Seoul,1,0
+06/06/2023,09:30,Suwon,Ulsan,1,3
+06/06/2023,11:00,Pohang Steelers,Jeju United,2,1
+07/06/2023,12:00,Jeonbuk Motors,Daegu,1,0
+07/06/2023,12:00,Gwangju,Suwon Bluewings,2,1
+07/06/2023,12:30,Incheon United,Seoul,1,1
+07/06/2023,12:30,Gangwon,Daejeon Hana Citizen,1,2
+10/06/2023,09:30,Daegu,Suwon,3,1
+10/06/2023,11:00,Ulsan,Jeju United,5,1
+10/06/2023,13:00,Daejeon Hana Citizen,Gwangju,1,1
+11/06/2023,09:30,Gangwon,Jeonbuk Motors,1,2
+11/06/2023,11:00,Seoul,Pohang Steelers,1,1
+11/06/2023,12:00,Suwon Bluewings,Incheon United,0,0
+24/06/2023,09:30,Suwon Bluewings,Seoul,0,1
+24/06/2023,11:00,Jeju United,Daejeon Hana Citizen,1,1
+24/06/2023,12:00,Gwangju,Jeonbuk Motors,2,0
+24/06/2023,12:30,Ulsan,Daegu,3,1
+25/06/2023,09:30,Incheon United,Pohang Steelers,0,1
+25/06/2023,12:00,Suwon,Gangwon,1,1
+01/07/2023,11:00,Jeonbuk Motors,Jeju United,2,0
+01/07/2023,12:00,Daegu,Suwon Bluewings,1,1
+01/07/2023,12:30,Seoul,Daejeon Hana Citizen,0,0
+02/07/2023,11:00,Gwangju,Ulsan,0,1
+02/07/2023,12:00,Pohang Steelers,Suwon,3,1
+02/07/2023,13:00,Incheon United,Gangwon,1,0
+07/07/2023,12:30,Jeju United,Daegu,1,2
+07/07/2023,12:30,Gangwon,Gwangju,1,1
+08/07/2023,11:00,Pohang Steelers,Ulsan,0,1
+08/07/2023,12:00,Suwon,Incheon United,2,2
+08/07/2023,12:30,Jeonbuk Motors,Seoul,2,1
+09/07/2023,12:00,Daejeon Hana Citizen,Suwon Bluewings,2,2
+11/07/2023,12:00,Daegu,Gangwon,0,0
+11/07/2023,12:30,Jeju United,Gwangju,0,0
+12/07/2023,12:00,Ulsan,Incheon United,1,2
+12/07/2023,12:30,Suwon Bluewings,Pohang Steelers,1,1
+12/07/2023,12:30,Seoul,Suwon,7,2
+12/07/2023,12:30,Daejeon Hana Citizen,Jeonbuk Motors,2,2
+15/07/2023,12:00,Suwon Bluewings,Ulsan,3,1
+15/07/2023,12:30,Gangwon,Seoul,1,1
+15/07/2023,13:00,Gwangju,Daegu,1,1
+16/07/2023,12:00,Jeonbuk Motors,Suwon,1,0
+16/07/2023,12:30,Pohang Steelers,Jeju United,4,2
+16/07/2023,13:00,Incheon United,Daejeon Hana Citizen,2,0
+21/07/2023,12:30,Ulsan,Jeju United,2,1
+21/07/2023,12:30,Pohang Steelers,Jeonbuk Motors,2,1
+22/07/2023,12:00,Suwon,Gwangju,0,1
+22/07/2023,12:30,Gangwon,Suwon Bluewings,1,2
+22/07/2023,12:30,Seoul,Incheon United,0,1
+22/07/2023,13:00,Daejeon Hana Citizen,Daegu,1,0
+04/08/2023,12:30,Gwangju,Daejeon Hana Citizen,3,0
+04/08/2023,12:30,Seoul,Pohang Steelers,2,2
+05/08/2023,12:00,Suwon Bluewings,Suwon,0,2
+05/08/2023,12:30,Daegu,Ulsan,0,0
+06/08/2023,12:00,Jeonbuk Motors,Incheon United,2,0
+06/08/2023,12:30,Jeju United,Gangwon,1,1
+12/08/2023,12:00,Jeonbuk Motors,Suwon Bluewings,1,1
+12/08/2023,12:30,Gangwon,Ulsan,2,0
+12/08/2023,13:00,Jeju United,Suwon,3,0
+13/08/2023,12:00,Daejeon Hana Citizen,Seoul,4,3
+13/08/2023,12:30,Incheon United,Daegu,3,1
+13/08/2023,13:00,Pohang Steelers,Gwangju,1,1
+18/08/2023,12:30,Suwon Bluewings,Jeju United,1,0
+18/08/2023,12:30,Incheon United,Gwangju,2,2
+19/08/2023,12:00,Ulsan,Jeonbuk Motors,1,0
+19/08/2023,12:00,Gangwon,Suwon,1,2
+19/08/2023,12:30,Seoul,Daegu,2,2
+20/08/2023,12:00,Pohang Steelers,Daejeon Hana Citizen,4,3
+25/08/2023,12:00,Suwon,Incheon United,1,2
+25/08/2023,12:30,Jeonbuk Motors,Daejeon Hana Citizen,1,1
+26/08/2023,12:00,Daegu,Jeju United,1,0
+26/08/2023,12:30,Gangwon,Pohang Steelers,1,1
+27/08/2023,12:00,Seoul,Ulsan,2,2
+27/08/2023,12:30,Gwangju,Suwon Bluewings,4,0
+01/09/2023,12:00,Daejeon Hana Citizen,Suwon,0,1
+01/09/2023,12:30,Daegu,Gangwon,1,0
+02/09/2023,09:30,Suwon Bluewings,Seoul,0,1
+02/09/2023,12:00,Incheon United,Pohang Steelers,0,2
+03/09/2023,09:30,Ulsan,Gwangju,0,2
+03/09/2023,12:00,Jeju United,Jeonbuk Motors,0,0
+16/09/2023,07:00,Jeonbuk Motors,Gangwon,1,3
+16/09/2023,07:00,Incheon United,Jeju United,2,1
+16/09/2023,09:30,Pohang Steelers,Suwon,2,0
+16/09/2023,12:00,Ulsan,Daejeon Hana Citizen,1,1
+17/09/2023,07:00,Seoul,Gwangju,0,1
+17/09/2023,09:30,Suwon Bluewings,Daegu,0,1
+23/09/2023,07:00,Daejeon Hana Citizen,Suwon Bluewings,3,1
+23/09/2023,09:30,Jeju United,Seoul,1,3
+24/09/2023,07:00,Suwon,Ulsan,2,3
+24/09/2023,07:00,Gwangju,Jeonbuk Motors,0,1
+24/09/2023,09:30,Gangwon,Incheon United,1,1
+24/09/2023,12:00,Daegu,Pohang Steelers,0,0
+30/09/2023,07:00,Pohang Steelers,Ulsan,0,0
+30/09/2023,07:00,Suwon,Seoul,1,1
+30/09/2023,09:30,Jeonbuk Motors,Daegu,1,3
+30/09/2023,12:00,Incheon United,Suwon Bluewings,2,0
+01/10/2023,07:00,Gangwon,Daejeon Hana Citizen,1,1
+01/10/2023,09:30,Jeju United,Gwangju,1,2
+08/10/2023,08:00,Ulsan,Incheon United,0,0
+08/10/2023,08:00,Daegu,Suwon,2,2
+08/10/2023,08:00,Seoul,Jeonbuk Motors,0,2
+08/10/2023,08:00,Suwon Bluewings,Pohang Steelers,1,0
+08/10/2023,08:00,Gwangju,Gangwon,1,0
+08/10/2023,08:00,Daejeon Hana Citizen,Jeju United,1,0
+20/10/2023,12:30,Pohang Steelers,Incheon United,1,1
+21/10/2023,07:00,Gwangju,Ulsan,1,0
+21/10/2023,09:30,Daegu,Jeonbuk Motors,1,2
+22/10/2023,07:00,Seoul,Gangwon,2,1
+22/10/2023,07:00,Jeju United,Suwon Bluewings,2,0
+22/10/2023,09:40,Daejeon Hana Citizen,Suwon,1,1
+28/10/2023,07:00,Jeonbuk Motors,Pohang Steelers,1,1
+28/10/2023,09:30,Gangwon,Jeju United,1,1
+28/10/2023,09:30,Gwangju,Incheon United,0,2
+29/10/2023,06:00,Suwon Bluewings,Daejeon Hana Citizen,2,2
+29/10/2023,06:00,Ulsan,Daegu,2,0
+29/10/2023,08:30,Suwon,Seoul,3,4
+11/11/2023,06:00,Daejeon Hana Citizen,Gangwon,0,1
+11/11/2023,08:30,Jeju United,Seoul,0,0
+11/11/2023,08:30,Daegu,Gwangju,1,1
+12/11/2023,06:00,Suwon,Suwon Bluewings,2,3
+12/11/2023,06:00,Incheon United,Jeonbuk Motors,1,1
+12/11/2023,08:30,Ulsan,Pohang Steelers,3,2
+24/11/2023,11:30,Incheon United,Ulsan,3,1
+25/11/2023,06:00,Jeju United,Daejeon Hana Citizen,0,2
+25/11/2023,06:00,Jeonbuk Motors,Gwangju,2,0
+25/11/2023,08:30,Seoul,Suwon Bluewings,0,1
+25/11/2023,08:30,Gangwon,Suwon,2,0
+25/11/2023,08:30,Pohang Steelers,Daegu,1,0
+02/12/2023,06:00,Daejeon Hana Citizen,Seoul,2,2
+02/12/2023,06:00,Suwon,Jeju United,1,1
+02/12/2023,06:00,Suwon Bluewings,Gangwon,0,0
+03/12/2023,06:00,Ulsan,Jeonbuk Motors,1,0
+03/12/2023,06:00,Gwangju,Pohang Steelers,0,0
+03/12/2023,06:00,Daegu,Incheon United,2,1

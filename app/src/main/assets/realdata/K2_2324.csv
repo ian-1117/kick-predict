@@ -1,0 +1,237 @@
+Date,Time,HomeTeam,AwayTeam,FTHG,FTAG
+01/03/2023,05:30,Gyeongnam,Bucheon 1995,1,0
+01/03/2023,05:30,Cheonan City,Busan IPark,2,3
+01/03/2023,05:30,Jeonnam Dragons,Anyang,0,1
+01/03/2023,08:00,Seongnam,Ansan Greeners,2,1
+01/03/2023,08:00,Chungnam Asan,Gimcheon Sangmu,1,2
+01/03/2023,08:00,Seoul E-Land,Chungbuk Cheongju,2,3
+04/03/2023,05:30,Bucheon 1995,Seongnam,1,0
+04/03/2023,05:30,Chungbuk Cheongju,Gimcheon Sangmu,0,2
+04/03/2023,08:00,Ansan Greeners,Chungnam Asan,1,0
+05/03/2023,05:30,Gimpo Citizen,Cheonan City,4,0
+05/03/2023,08:00,Anyang,Seoul E-Land,1,1
+05/03/2023,08:00,Jeonnam Dragons,Gyeongnam,0,5
+11/03/2023,05:30,Seoul E-Land,Jeonnam Dragons,0,1
+11/03/2023,08:00,Gimpo Citizen,Gyeongnam,0,0
+11/03/2023,08:00,Chungbuk Cheongju,Busan IPark,1,1
+12/03/2023,05:30,Seongnam,Chungnam Asan,0,0
+12/03/2023,05:30,Ansan Greeners,Anyang,1,1
+12/03/2023,08:00,Cheonan City,Bucheon 1995,0,3
+18/03/2023,05:30,Chungnam Asan,Cheonan City,1,0
+18/03/2023,08:00,Gyeongnam,Chungbuk Cheongju,2,2
+18/03/2023,08:00,Bucheon 1995,Ansan Greeners,1,0
+19/03/2023,05:30,Busan IPark,Gimcheon Sangmu,3,1
+19/03/2023,08:00,Anyang,Seongnam,2,1
+19/03/2023,08:00,Jeonnam Dragons,Gimpo Citizen,0,2
+01/04/2023,06:30,Anyang,Chungnam Asan,3,0
+01/04/2023,09:00,Seongnam,Chungbuk Cheongju,3,2
+01/04/2023,11:30,Gimpo Citizen,Bucheon 1995,1,1
+02/04/2023,06:30,Gimcheon Sangmu,Gyeongnam,0,2
+02/04/2023,09:00,Busan IPark,Seoul E-Land,1,0
+02/04/2023,11:30,Cheonan City,Jeonnam Dragons,1,3
+08/04/2023,06:30,Cheonan City,Gimcheon Sangmu,0,2
+08/04/2023,09:00,Bucheon 1995,Anyang,2,4
+08/04/2023,11:30,Jeonnam Dragons,Seongnam,2,2
+09/04/2023,06:30,Chungbuk Cheongju,Gimpo Citizen,0,0
+09/04/2023,09:00,Seoul E-Land,Ansan Greeners,4,1
+09/04/2023,11:30,Chungnam Asan,Busan IPark,1,1
+15/04/2023,06:30,Jeonnam Dragons,Chungbuk Cheongju,3,0
+15/04/2023,09:00,Gimcheon Sangmu,Bucheon 1995,4,1
+15/04/2023,09:00,Chungnam Asan,Seoul E-Land,2,0
+15/04/2023,11:30,Busan IPark,Gyeongnam,0,0
+16/04/2023,06:30,Seongnam,Cheonan City,2,0
+16/04/2023,09:00,Ansan Greeners,Gimpo Citizen,2,3
+18/04/2023,12:00,Bucheon 1995,Seoul E-Land,0,1
+18/04/2023,12:00,Chungbuk Cheongju,Chungnam Asan,0,4
+18/04/2023,12:30,Gyeongnam,Anyang,3,2
+19/04/2023,12:00,Gimpo Citizen,Busan IPark,1,0
+19/04/2023,12:30,Gimcheon Sangmu,Jeonnam Dragons,2,1
+19/04/2023,12:30,Cheonan City,Ansan Greeners,1,1
+22/04/2023,06:30,Anyang,Gimpo Citizen,1,2
+22/04/2023,09:00,Seongnam,Busan IPark,1,3
+22/04/2023,11:30,Seoul E-Land,Gimcheon Sangmu,0,1
+23/04/2023,06:30,Chungnam Asan,Gyeongnam,2,2
+23/04/2023,09:00,Chungbuk Cheongju,Bucheon 1995,0,4
+23/04/2023,11:30,Ansan Greeners,Jeonnam Dragons,1,0
+29/04/2023,06:30,Jeonnam Dragons,Chungnam Asan,2,1
+29/04/2023,09:00,Gyeongnam,Cheonan City,2,1
+29/04/2023,09:00,Busan IPark,Ansan Greeners,0,0
+29/04/2023,11:30,Anyang,Chungbuk Cheongju,1,0
+30/04/2023,06:30,Gimcheon Sangmu,Gimpo Citizen,0,2
+30/04/2023,09:00,Seoul E-Land,Seongnam,1,2
+02/05/2023,12:00,Jeonnam Dragons,Busan IPark,1,1
+02/05/2023,12:00,Cheonan City,Anyang,0,4
+02/05/2023,12:30,Bucheon 1995,Chungnam Asan,2,1
+03/05/2023,12:00,Gyeongnam,Seoul E-Land,1,2
+03/05/2023,12:30,Gimpo Citizen,Seongnam,0,0
+03/05/2023,12:30,Ansan Greeners,Gimcheon Sangmu,2,3
+06/05/2023,06:30,Ansan Greeners,Gyeongnam,1,1
+06/05/2023,09:00,Gimpo Citizen,Seoul E-Land,0,0
+06/05/2023,09:00,Chungbuk Cheongju,Cheonan City,2,1
+07/05/2023,06:30,Bucheon 1995,Jeonnam Dragons,5,2
+07/05/2023,09:00,Anyang,Busan IPark,0,3
+07/05/2023,11:30,Seongnam,Gimcheon Sangmu,2,2
+13/05/2023,06:30,Seoul E-Land,Cheonan City,3,2
+13/05/2023,09:00,Gimcheon Sangmu,Anyang,0,0
+13/05/2023,11:30,Busan IPark,Bucheon 1995,0,1
+14/05/2023,06:30,Gyeongnam,Seongnam,2,2
+14/05/2023,09:00,Chungnam Asan,Gimpo Citizen,0,1
+14/05/2023,11:30,Chungbuk Cheongju,Ansan Greeners,3,0
+20/05/2023,09:00,Ansan Greeners,Seongnam,0,3
+20/05/2023,09:00,Cheonan City,Chungnam Asan,0,1
+20/05/2023,11:30,Anyang,Jeonnam Dragons,2,0
+20/05/2023,11:30,Seoul E-Land,Bucheon 1995,2,0
+21/05/2023,09:00,Gyeongnam,Busan IPark,1,2
+21/05/2023,11:30,Gimcheon Sangmu,Chungbuk Cheongju,0,0
+27/05/2023,09:00,Jeonnam Dragons,Cheonan City,2,0
+27/05/2023,09:00,Chungbuk Cheongju,Gyeongnam,0,2
+27/05/2023,11:30,Seongnam,Anyang,1,2
+28/05/2023,09:00,Busan IPark,Chungnam Asan,2,0
+28/05/2023,11:30,Ansan Greeners,Seoul E-Land,1,2
+29/05/2023,09:00,Bucheon 1995,Gimpo Citizen,2,0
+03/06/2023,09:00,Cheonan City,Gyeongnam,2,3
+03/06/2023,11:30,Chungnam Asan,Seongnam,2,0
+03/06/2023,13:00,Anyang,Bucheon 1995,2,2
+04/06/2023,09:00,Gimpo Citizen,Chungbuk Cheongju,1,2
+04/06/2023,11:30,Seoul E-Land,Busan IPark,1,2
+04/06/2023,13:00,Jeonnam Dragons,Gimcheon Sangmu,1,0
+10/06/2023,09:00,Gimcheon Sangmu,Ansan Greeners,3,2
+10/06/2023,11:30,Gyeongnam,Chungnam Asan,2,1
+10/06/2023,13:00,Busan IPark,Gimpo Citizen,0,0
+11/06/2023,09:00,Bucheon 1995,Cheonan City,1,1
+11/06/2023,09:00,Chungbuk Cheongju,Jeonnam Dragons,3,1
+11/06/2023,13:00,Seongnam,Seoul E-Land,1,2
+24/06/2023,09:00,Busan IPark,Chungbuk Cheongju,1,1
+24/06/2023,11:30,Seongnam,Bucheon 1995,0,1
+24/06/2023,13:03,Gimcheon Sangmu,Cheonan City,4,1
+25/06/2023,09:00,Chungnam Asan,Ansan Greeners,1,0
+25/06/2023,11:30,Gimpo Citizen,Jeonnam Dragons,1,2
+25/06/2023,11:30,Seoul E-Land,Anyang,1,2
+01/07/2023,11:30,Ansan Greeners,Busan IPark,1,2
+01/07/2023,12:30,Bucheon 1995,Gimcheon Sangmu,0,3
+02/07/2023,11:30,Anyang,Gyeongnam,2,4
+02/07/2023,12:30,Gimpo Citizen,Chungnam Asan,1,1
+03/07/2023,12:00,Chungbuk Cheongju,Seongnam,0,0
+03/07/2023,12:00,Jeonnam Dragons,Seoul E-Land,3,3
+08/07/2023,11:00,Chungbuk Cheongju,Anyang,2,1
+08/07/2023,11:00,Cheonan City,Seoul E-Land,0,0
+09/07/2023,11:30,Seongnam,Gimpo Citizen,0,0
+09/07/2023,11:30,Gyeongnam,Ansan Greeners,3,1
+10/07/2023,12:00,Chungnam Asan,Jeonnam Dragons,3,3
+10/07/2023,12:30,Gimcheon Sangmu,Busan IPark,2,1
+15/07/2023,12:00,Cheonan City,Chungbuk Cheongju,2,2
+15/07/2023,12:30,Gimpo Citizen,Gimcheon Sangmu,2,1
+15/07/2023,12:30,Ansan Greeners,Bucheon 1995,0,2
+15/07/2023,13:00,Chungnam Asan,Anyang,2,3
+16/07/2023,12:00,Busan IPark,Seongnam,2,3
+16/07/2023,13:00,Gyeongnam,Jeonnam Dragons,0,2
+18/07/2023,12:00,Bucheon 1995,Chungbuk Cheongju,0,0
+18/07/2023,12:00,Seoul E-Land,Gimpo Citizen,0,1
+18/07/2023,12:30,Anyang,Cheonan City,1,1
+19/07/2023,12:00,Seongnam,Gyeongnam,1,1
+19/07/2023,12:00,Jeonnam Dragons,Ansan Greeners,5,2
+19/07/2023,12:30,Gimcheon Sangmu,Chungnam Asan,3,2
+23/07/2023,12:00,Chungbuk Cheongju,Seoul E-Land,2,1
+23/07/2023,12:30,Gyeongnam,Gimcheon Sangmu,0,2
+23/07/2023,12:30,Chungnam Asan,Bucheon 1995,1,0
+23/07/2023,13:00,Cheonan City,Seongnam,3,2
+24/07/2023,12:00,Gimpo Citizen,Ansan Greeners,0,1
+24/07/2023,12:30,Busan IPark,Anyang,2,1
+29/07/2023,12:00,Gyeongnam,Gimpo Citizen,0,0
+29/07/2023,12:30,Seongnam,Jeonnam Dragons,2,1
+30/07/2023,12:00,Bucheon 1995,Busan IPark,0,0
+30/07/2023,12:30,Ansan Greeners,Cheonan City,2,1
+31/07/2023,12:00,Seoul E-Land,Chungnam Asan,0,0
+31/07/2023,12:30,Anyang,Gimcheon Sangmu,2,0
+05/08/2023,12:00,Jeonnam Dragons,Bucheon 1995,1,0
+05/08/2023,12:30,Busan IPark,Cheonan City,1,0
+05/08/2023,13:00,Gimpo Citizen,Anyang,1,0
+06/08/2023,12:00,Seoul E-Land,Gyeongnam,1,2
+06/08/2023,12:30,Gimcheon Sangmu,Seongnam,4,0
+08/08/2023,12:30,Ansan Greeners,Chungbuk Cheongju,0,2
+12/08/2023,12:00,Anyang,Ansan Greeners,1,1
+14/08/2023,12:00,Bucheon 1995,Gyeongnam,2,0
+14/08/2023,12:30,Cheonan City,Gimpo Citizen,0,2
+15/08/2023,12:00,Gimcheon Sangmu,Seoul E-Land,4,0
+15/08/2023,12:30,Busan IPark,Jeonnam Dragons,1,0
+19/08/2023,12:00,Ansan Greeners,Chungnam Asan,0,1
+19/08/2023,12:30,Chungbuk Cheongju,Gimpo Citizen,1,0
+20/08/2023,11:30,Seoul E-Land,Busan IPark,2,1
+20/08/2023,12:00,Jeonnam Dragons,Gimcheon Sangmu,2,1
+21/08/2023,12:00,Seongnam,Bucheon 1995,2,2
+21/08/2023,12:30,Gyeongnam,Cheonan City,1,1
+26/08/2023,12:00,Gimcheon Sangmu,Chungnam Asan,4,0
+26/08/2023,12:30,Gyeongnam,Seongnam,0,2
+26/08/2023,12:30,Gimpo Citizen,Busan IPark,2,3
+26/08/2023,13:00,Bucheon 1995,Seoul E-Land,1,0
+27/08/2023,12:00,Anyang,Jeonnam Dragons,3,1
+27/08/2023,12:30,Cheonan City,Chungbuk Cheongju,0,0
+29/08/2023,12:00,Chungnam Asan,Gyeongnam,0,1
+29/08/2023,12:30,Ansan Greeners,Bucheon 1995,1,2
+29/08/2023,12:30,Busan IPark,Gimcheon Sangmu,2,0
+30/08/2023,12:00,Seoul E-Land,Jeonnam Dragons,1,0
+30/08/2023,12:30,Seongnam,Gimpo Citizen,2,4
+30/08/2023,12:30,Chungbuk Cheongju,Anyang,2,1
+02/09/2023,09:00,Bucheon 1995,Chungnam Asan,1,0
+02/09/2023,11:30,Gimcheon Sangmu,Chungbuk Cheongju,0,0
+02/09/2023,13:00,Cheonan City,Ansan Greeners,1,1
+03/09/2023,09:00,Gimpo Citizen,Seoul E-Land,2,1
+03/09/2023,11:30,Jeonnam Dragons,Seongnam,0,0
+03/09/2023,13:00,Anyang,Busan IPark,0,1
+16/09/2023,09:00,Seoul E-Land,Cheonan City,0,3
+16/09/2023,09:00,Ansan Greeners,Chungbuk Cheongju,0,1
+16/09/2023,11:30,Busan IPark,Seongnam,3,0
+17/09/2023,06:30,Gyeongnam,Jeonnam Dragons,2,3
+17/09/2023,09:00,Chungnam Asan,Anyang,4,3
+17/09/2023,11:30,Bucheon 1995,Gimpo Citizen,0,0
+19/09/2023,12:00,Busan IPark,Ansan Greeners,2,0
+19/09/2023,12:30,Seongnam,Gimcheon Sangmu,1,0
+19/09/2023,12:30,Chungbuk Cheongju,Seoul E-Land,0,1
+20/09/2023,12:00,Anyang,Gyeongnam,1,1
+20/09/2023,12:30,Chungnam Asan,Jeonnam Dragons,0,1
+20/09/2023,12:30,Cheonan City,Bucheon 1995,1,0
+23/09/2023,06:30,Seongnam,Chungbuk Cheongju,0,1
+23/09/2023,09:00,Gimcheon Sangmu,Anyang,4,1
+23/09/2023,11:30,Jeonnam Dragons,Cheonan City,1,3
+24/09/2023,06:30,Gimpo Citizen,Chungnam Asan,1,0
+24/09/2023,09:00,Seoul E-Land,Ansan Greeners,3,4
+24/09/2023,11:30,Bucheon 1995,Gyeongnam,1,0
+30/09/2023,06:30,Anyang,Seongnam,1,1
+30/09/2023,09:00,Ansan Greeners,Gimpo Citizen,1,1
+30/09/2023,11:30,Chungnam Asan,Seoul E-Land,1,0
+01/10/2023,06:30,Chungbuk Cheongju,Bucheon 1995,0,0
+01/10/2023,09:00,Cheonan City,Gimcheon Sangmu,1,3
+01/10/2023,11:30,Gyeongnam,Busan IPark,0,1
+07/10/2023,06:30,Gimcheon Sangmu,Bucheon 1995,3,1
+07/10/2023,06:30,Busan IPark,Cheonan City,0,0
+07/10/2023,09:00,Seongnam,Chungnam Asan,2,0
+07/10/2023,09:00,Jeonnam Dragons,Ansan Greeners,3,2
+07/10/2023,11:30,Seoul E-Land,Gyeongnam,1,3
+07/10/2023,11:30,Gimpo Citizen,Anyang,3,0
+14/10/2023,09:00,Chungnam Asan,Chungbuk Cheongju,3,2
+21/10/2023,06:30,Cheonan City,Seongnam,3,1
+21/10/2023,09:00,Bucheon 1995,Anyang,1,1
+21/10/2023,11:30,Chungnam Asan,Busan IPark,1,2
+22/10/2023,06:30,Gimpo Citizen,Jeonnam Dragons,2,1
+22/10/2023,09:00,Chungbuk Cheongju,Gyeongnam,1,1
+22/10/2023,11:30,Ansan Greeners,Gimcheon Sangmu,3,7
+28/10/2023,06:30,Gyeongnam,Ansan Greeners,4,2
+28/10/2023,09:00,Chungnam Asan,Cheonan City,2,0
+28/10/2023,11:30,Anyang,Seoul E-Land,3,0
+29/10/2023,05:30,Jeonnam Dragons,Chungbuk Cheongju,3,0
+29/10/2023,08:00,Busan IPark,Bucheon 1995,2,1
+29/10/2023,10:30,Gimcheon Sangmu,Gimpo Citizen,2,0
+11/11/2023,05:30,Seoul E-Land,Seongnam,0,2
+11/11/2023,08:00,Chungbuk Cheongju,Chungnam Asan,1,0
+11/11/2023,10:30,Gyeongnam,Gimcheon Sangmu,1,1
+12/11/2023,05:30,Ansan Greeners,Anyang,2,3
+12/11/2023,08:00,Cheonan City,Gimpo Citizen,0,0
+12/11/2023,10:30,Jeonnam Dragons,Busan IPark,3,0
+26/11/2023,07:00,Gimcheon Sangmu,Seoul E-Land,1,0
+26/11/2023,07:00,Seongnam,Ansan Greeners,0,2
+26/11/2023,07:00,Anyang,Cheonan City,2,1
+26/11/2023,07:00,Bucheon 1995,Jeonnam Dragons,4,1
+26/11/2023,07:00,Gimpo Citizen,Gyeongnam,0,1
+26/11/2023,07:00,Busan IPark,Chungbuk Cheongju,1,1
+29/11/2023,11:00,Gyeongnam,Bucheon 1995,0,0
+02/12/2023,08:30,Gimpo Citizen,Gyeongnam,2,1

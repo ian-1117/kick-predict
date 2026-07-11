@@ -1,0 +1,276 @@
+Date,Time,HomeTeam,AwayTeam,FTHG,FTAG
+22/02/2025,06:00,Incheon United,Gyeongnam,2,0
+22/02/2025,06:00,Cheonan City,Jeonnam Dragons,0,2
+22/02/2025,08:30,Busan IPark,Gimpo Citizen,0,0
+22/02/2025,08:30,Ansan Greeners,Suwon Bluewings,0,1
+23/02/2025,06:00,Seongnam,Hwaseong,2,0
+23/02/2025,08:30,Seoul E-Land,Chungnam Asan,2,1
+23/02/2025,08:30,Bucheon 1995,Chungbuk Cheongju,3,1
+01/03/2025,06:00,Incheon United,Suwon Bluewings,2,0
+01/03/2025,08:30,Seoul E-Land,Jeonnam Dragons,1,1
+01/03/2025,08:30,Ansan Greeners,Gimpo Citizen,0,2
+02/03/2025,06:00,Hwaseong,Chungnam Asan,1,1
+02/03/2025,06:00,Busan IPark,Gyeongnam,0,1
+02/03/2025,08:30,Cheonan City,Bucheon 1995,1,2
+03/03/2025,06:00,Seongnam,Chungbuk Cheongju,1,1
+08/03/2025,06:00,Bucheon 1995,Busan IPark,0,2
+08/03/2025,06:00,Hwaseong,Gyeongnam,1,1
+08/03/2025,08:30,Gimpo Citizen,Chungbuk Cheongju,2,3
+08/03/2025,08:30,Ansan Greeners,Jeonnam Dragons,0,1
+09/03/2025,06:00,Seoul E-Land,Suwon Bluewings,4,2
+09/03/2025,06:00,Cheonan City,Chungnam Asan,1,0
+09/03/2025,08:30,Seongnam,Incheon United,2,1
+15/03/2025,06:00,Incheon United,Seoul E-Land,1,0
+15/03/2025,06:00,Hwaseong,Chungbuk Cheongju,2,1
+15/03/2025,08:30,Gimpo Citizen,Seongnam,0,0
+15/03/2025,08:30,Suwon Bluewings,Chungnam Asan,0,0
+16/03/2025,06:00,Busan IPark,Cheonan City,2,1
+16/03/2025,06:00,Gyeongnam,Jeonnam Dragons,2,2
+16/03/2025,08:30,Bucheon 1995,Ansan Greeners,3,1
+29/03/2025,06:00,Ansan Greeners,Hwaseong,3,3
+29/03/2025,06:00,Suwon Bluewings,Jeonnam Dragons,2,1
+29/03/2025,08:30,Gyeongnam,Chungbuk Cheongju,3,0
+29/03/2025,08:30,Incheon United,Busan IPark,1,1
+30/03/2025,07:00,Seoul E-Land,Bucheon 1995,3,2
+30/03/2025,07:00,Cheonan City,Gimpo Citizen,0,2
+30/03/2025,09:30,Chungnam Asan,Seongnam,1,1
+05/04/2025,07:00,Seoul E-Land,Cheonan City,3,0
+05/04/2025,07:00,Hwaseong,Incheon United,0,1
+05/04/2025,09:30,Busan IPark,Jeonnam Dragons,0,1
+06/04/2025,07:00,Suwon Bluewings,Gyeongnam,4,0
+06/04/2025,07:00,Gimpo Citizen,Bucheon 1995,1,2
+06/04/2025,09:30,Chungnam Asan,Chungbuk Cheongju,3,1
+06/04/2025,09:30,Seongnam,Ansan Greeners,1,0
+12/04/2025,07:00,Gimpo Citizen,Chungnam Asan,1,1
+12/04/2025,07:00,Hwaseong,Jeonnam Dragons,1,2
+12/04/2025,09:30,Bucheon 1995,Suwon Bluewings,1,1
+12/04/2025,09:30,Gyeongnam,Seongnam,0,1
+13/04/2025,07:00,Incheon United,Chungbuk Cheongju,2,1
+13/04/2025,09:30,Busan IPark,Seoul E-Land,2,2
+13/04/2025,09:30,Cheonan City,Ansan Greeners,0,1
+19/04/2025,07:00,Incheon United,Cheonan City,3,0
+19/04/2025,07:00,Seoul E-Land,Chungbuk Cheongju,0,2
+19/04/2025,09:30,Suwon Bluewings,Hwaseong,3,1
+19/04/2025,09:30,Seongnam,Bucheon 1995,0,0
+20/04/2025,07:00,Ansan Greeners,Busan IPark,1,3
+20/04/2025,09:30,Chungnam Asan,Jeonnam Dragons,0,0
+20/04/2025,09:30,Gyeongnam,Gimpo Citizen,2,1
+26/04/2025,07:00,Seoul E-Land,Gyeongnam,2,1
+26/04/2025,07:00,Cheonan City,Chungbuk Cheongju,0,1
+26/04/2025,09:30,Chungnam Asan,Ansan Greeners,3,0
+26/04/2025,09:30,Bucheon 1995,Incheon United,1,3
+27/04/2025,07:00,Suwon Bluewings,Seongnam,3,2
+27/04/2025,07:00,Gimpo Citizen,Jeonnam Dragons,0,1
+27/04/2025,09:30,Busan IPark,Hwaseong,3,2
+04/05/2025,07:00,Seongnam,Seoul E-Land,1,2
+04/05/2025,07:00,Bucheon 1995,Jeonnam Dragons,2,2
+04/05/2025,09:30,Incheon United,Gimpo Citizen,3,0
+04/05/2025,09:30,Chungbuk Cheongju,Suwon Bluewings,3,3
+04/05/2025,09:30,Ansan Greeners,Gyeongnam,1,0
+04/05/2025,12:00,Busan IPark,Chungnam Asan,2,0
+04/05/2025,12:00,Hwaseong,Cheonan City,2,1
+10/05/2025,09:30,Gimpo Citizen,Hwaseong,1,0
+10/05/2025,09:30,Gyeongnam,Bucheon 1995,0,3
+10/05/2025,12:00,Chungnam Asan,Incheon United,0,3
+10/05/2025,12:00,Seoul E-Land,Ansan Greeners,1,1
+11/05/2025,09:30,Jeonnam Dragons,Seongnam,2,1
+11/05/2025,09:30,Chungbuk Cheongju,Busan IPark,0,2
+11/05/2025,12:00,Suwon Bluewings,Cheonan City,2,0
+17/05/2025,09:30,Gyeongnam,Chungnam Asan,1,3
+17/05/2025,09:30,Bucheon 1995,Hwaseong,1,0
+17/05/2025,12:00,Cheonan City,Seongnam,1,1
+17/05/2025,12:00,Busan IPark,Suwon Bluewings,1,4
+18/05/2025,09:30,Ansan Greeners,Incheon United,0,2
+18/05/2025,09:30,Jeonnam Dragons,Chungbuk Cheongju,4,1
+18/05/2025,12:00,Gimpo Citizen,Seoul E-Land,1,2
+24/05/2025,09:30,Hwaseong,Seoul E-Land,0,1
+24/05/2025,09:30,Chungbuk Cheongju,Ansan Greeners,0,0
+24/05/2025,12:00,Seongnam,Busan IPark,0,0
+24/05/2025,12:00,Gyeongnam,Cheonan City,3,1
+25/05/2025,09:30,Chungnam Asan,Bucheon 1995,2,2
+25/05/2025,09:30,Incheon United,Jeonnam Dragons,2,0
+25/05/2025,12:00,Suwon Bluewings,Gimpo Citizen,1,1
+31/05/2025,09:30,Jeonnam Dragons,Hwaseong,3,2
+31/05/2025,09:30,Seoul E-Land,Busan IPark,1,4
+31/05/2025,12:00,Chungbuk Cheongju,Gyeongnam,1,2
+31/05/2025,12:00,Ansan Greeners,Seongnam,1,0
+01/06/2025,09:30,Chungnam Asan,Gimpo Citizen,2,0
+01/06/2025,12:00,Suwon Bluewings,Bucheon 1995,4,1
+01/06/2025,12:00,Cheonan City,Incheon United,3,3
+06/06/2025,12:00,Chungbuk Cheongju,Chungnam Asan,0,2
+06/06/2025,12:00,Seongnam,Suwon Bluewings,1,2
+07/06/2025,12:00,Busan IPark,Ansan Greeners,0,2
+07/06/2025,12:00,Jeonnam Dragons,Seoul E-Land,1,1
+07/06/2025,12:00,Gyeongnam,Hwaseong,0,1
+08/06/2025,12:00,Incheon United,Bucheon 1995,1,0
+08/06/2025,12:00,Gimpo Citizen,Cheonan City,1,0
+14/06/2025,12:00,Chungnam Asan,Cheonan City,0,1
+14/06/2025,12:00,Bucheon 1995,Seoul E-Land,3,1
+14/06/2025,12:00,Chungbuk Cheongju,Seongnam,0,1
+15/06/2025,12:00,Jeonnam Dragons,Busan IPark,0,1
+15/06/2025,12:00,Hwaseong,Ansan Greeners,0,0
+15/06/2025,12:00,Gimpo Citizen,Gyeongnam,3,0
+15/06/2025,12:00,Suwon Bluewings,Incheon United,1,2
+21/06/2025,12:00,Incheon United,Hwaseong,2,0
+21/06/2025,12:00,Cheonan City,Seoul E-Land,4,2
+21/06/2025,12:00,Ansan Greeners,Bucheon 1995,0,1
+21/06/2025,12:00,Seongnam,Chungnam Asan,0,2
+22/06/2025,12:00,Jeonnam Dragons,Gimpo Citizen,0,0
+22/06/2025,12:00,Busan IPark,Chungbuk Cheongju,2,2
+22/06/2025,12:00,Gyeongnam,Suwon Bluewings,1,3
+28/06/2025,12:00,Chungnam Asan,Seoul E-Land,1,1
+28/06/2025,12:00,Bucheon 1995,Gyeongnam,2,0
+28/06/2025,12:00,Ansan Greeners,Cheonan City,0,0
+28/06/2025,12:00,Hwaseong,Seongnam,1,0
+29/06/2025,12:00,Suwon Bluewings,Busan IPark,1,1
+29/06/2025,12:00,Chungbuk Cheongju,Jeonnam Dragons,2,2
+29/06/2025,12:00,Gimpo Citizen,Incheon United,1,1
+05/07/2025,12:00,Chungnam Asan,Suwon Bluewings,2,3
+05/07/2025,12:00,Jeonnam Dragons,Incheon United,2,1
+05/07/2025,12:00,Chungbuk Cheongju,Seoul E-Land,2,1
+05/07/2025,12:00,Gyeongnam,Ansan Greeners,1,1
+06/07/2025,12:00,Seongnam,Cheonan City,0,0
+06/07/2025,12:00,Hwaseong,Bucheon 1995,0,1
+06/07/2025,12:00,Gimpo Citizen,Busan IPark,3,0
+12/07/2025,12:00,Jeonnam Dragons,Gyeongnam,1,0
+12/07/2025,12:00,Busan IPark,Seongnam,0,0
+12/07/2025,12:00,Suwon Bluewings,Chungbuk Cheongju,1,0
+12/07/2025,12:00,Cheonan City,Hwaseong,2,3
+13/07/2025,12:00,Incheon United,Chungnam Asan,2,1
+13/07/2025,12:00,Bucheon 1995,Gimpo Citizen,1,1
+13/07/2025,12:00,Ansan Greeners,Seoul E-Land,2,2
+19/07/2025,12:00,Jeonnam Dragons,Suwon Bluewings,3,4
+19/07/2025,12:00,Seoul E-Land,Seongnam,0,1
+19/07/2025,12:00,Hwaseong,Busan IPark,1,0
+19/07/2025,12:00,Gimpo Citizen,Ansan Greeners,2,2
+20/07/2025,12:00,Bucheon 1995,Chungnam Asan,5,3
+20/07/2025,12:00,Chungbuk Cheongju,Cheonan City,2,1
+20/07/2025,12:00,Gyeongnam,Incheon United,0,2
+26/07/2025,12:00,Chungnam Asan,Hwaseong,1,1
+26/07/2025,12:00,Busan IPark,Bucheon 1995,4,2
+26/07/2025,12:00,Cheonan City,Gyeongnam,4,0
+26/07/2025,12:00,Chungbuk Cheongju,Gimpo Citizen,0,3
+27/07/2025,12:00,Incheon United,Ansan Greeners,4,2
+27/07/2025,12:00,Seongnam,Jeonnam Dragons,2,2
+27/07/2025,12:00,Suwon Bluewings,Seoul E-Land,0,2
+02/08/2025,12:00,Seoul E-Land,Incheon United,0,0
+02/08/2025,12:00,Hwaseong,Gimpo Citizen,0,1
+02/08/2025,12:00,Cheonan City,Suwon Bluewings,1,2
+02/08/2025,12:00,Ansan Greeners,Chungbuk Cheongju,1,2
+02/08/2025,12:00,Gyeongnam,Busan IPark,1,0
+02/08/2025,12:00,Bucheon 1995,Seongnam,2,3
+02/08/2025,12:00,Jeonnam Dragons,Chungnam Asan,2,2
+09/08/2025,12:00,Busan IPark,Incheon United,0,2
+09/08/2025,12:00,Chungnam Asan,Gyeongnam,2,2
+09/08/2025,12:00,Suwon Bluewings,Ansan Greeners,3,1
+09/08/2025,13:00,Seongnam,Gimpo Citizen,0,0
+10/08/2025,12:00,Seoul E-Land,Hwaseong,0,0
+10/08/2025,12:00,Jeonnam Dragons,Cheonan City,3,4
+10/08/2025,12:30,Chungbuk Cheongju,Bucheon 1995,0,1
+15/08/2025,12:00,Ansan Greeners,Chungnam Asan,0,2
+15/08/2025,12:00,Jeonnam Dragons,Bucheon 1995,2,1
+16/08/2025,12:00,Gimpo Citizen,Suwon Bluewings,3,1
+16/08/2025,12:00,Chungbuk Cheongju,Hwaseong,1,1
+16/08/2025,12:30,Gyeongnam,Seoul E-Land,1,1
+16/08/2025,13:00,Incheon United,Seongnam,1,2
+17/08/2025,12:00,Cheonan City,Busan IPark,0,1
+23/08/2025,12:00,Seoul E-Land,Gimpo Citizen,1,1
+23/08/2025,12:00,Jeonnam Dragons,Ansan Greeners,2,0
+23/08/2025,12:00,Seongnam,Gyeongnam,2,1
+23/08/2025,12:30,Bucheon 1995,Cheonan City,0,0
+24/08/2025,12:00,Chungnam Asan,Busan IPark,0,1
+24/08/2025,12:00,Chungbuk Cheongju,Incheon United,0,4
+24/08/2025,12:00,Hwaseong,Suwon Bluewings,1,1
+30/08/2025,12:00,Incheon United,Chungnam Asan,1,1
+30/08/2025,12:00,Ansan Greeners,Hwaseong,0,1
+30/08/2025,12:00,Busan IPark,Chungbuk Cheongju,2,2
+30/08/2025,12:00,Gimpo Citizen,Jeonnam Dragons,2,0
+30/08/2025,12:00,Suwon Bluewings,Seongnam,2,2
+31/08/2025,12:00,Gyeongnam,Bucheon 1995,1,2
+31/08/2025,12:00,Cheonan City,Seoul E-Land,2,5
+06/09/2025,12:00,Jeonnam Dragons,Seoul E-Land,1,2
+06/09/2025,12:00,Chungbuk Cheongju,Gyeongnam,0,1
+06/09/2025,12:00,Seongnam,Ansan Greeners,4,0
+06/09/2025,12:00,Busan IPark,Suwon Bluewings,1,0
+07/09/2025,12:00,Gimpo Citizen,Cheonan City,1,3
+07/09/2025,12:00,Bucheon 1995,Incheon United,1,0
+07/09/2025,12:00,Hwaseong,Chungnam Asan,1,1
+13/09/2025,09:30,Chungnam Asan,Bucheon 1995,3,0
+13/09/2025,12:00,Seoul E-Land,Suwon Bluewings,0,1
+13/09/2025,12:00,Cheonan City,Incheon United,3,4
+13/09/2025,12:00,Gyeongnam,Gimpo Citizen,0,2
+14/09/2025,12:00,Jeonnam Dragons,Hwaseong,1,2
+14/09/2025,12:00,Ansan Greeners,Busan IPark,2,3
+14/09/2025,12:00,Chungbuk Cheongju,Seongnam,0,1
+20/09/2025,09:30,Suwon Bluewings,Gyeongnam,1,2
+20/09/2025,09:30,Bucheon 1995,Seoul E-Land,2,2
+20/09/2025,12:00,Incheon United,Gimpo Citizen,1,2
+20/09/2025,12:00,Seongnam,Chungnam Asan,3,0
+21/09/2025,09:30,Ansan Greeners,Chungbuk Cheongju,0,0
+21/09/2025,09:30,Cheonan City,Hwaseong,2,2
+21/09/2025,12:00,Busan IPark,Jeonnam Dragons,1,1
+27/09/2025,07:00,Jeonnam Dragons,Bucheon 1995,3,2
+27/09/2025,09:30,Chungnam Asan,Suwon Bluewings,1,3
+27/09/2025,12:00,Chungbuk Cheongju,Cheonan City,0,1
+28/09/2025,09:30,Gyeongnam,Ansan Greeners,1,0
+28/09/2025,09:30,Hwaseong,Busan IPark,1,1
+28/09/2025,12:00,Gimpo Citizen,Seongnam,0,0
+28/09/2025,12:00,Seoul E-Land,Incheon United,0,0
+03/10/2025,07:00,Seongnam,Seoul E-Land,0,2
+04/10/2025,07:00,Gimpo Citizen,Ansan Greeners,1,1
+04/10/2025,07:00,Suwon Bluewings,Bucheon 1995,2,2
+04/10/2025,09:30,Hwaseong,Incheon United,0,1
+04/10/2025,09:30,Chungnam Asan,Chungbuk Cheongju,0,0
+05/10/2025,07:00,Jeonnam Dragons,Cheonan City,4,1
+05/10/2025,09:30,Busan IPark,Gyeongnam,1,1
+07/10/2025,07:00,Seoul E-Land,Hwaseong,1,1
+07/10/2025,09:30,Chungbuk Cheongju,Gimpo Citizen,0,2
+08/10/2025,07:00,Cheonan City,Busan IPark,0,0
+08/10/2025,07:00,Incheon United,Suwon Bluewings,1,1
+08/10/2025,07:00,Gyeongnam,Jeonnam Dragons,2,3
+08/10/2025,09:30,Ansan Greeners,Chungnam Asan,0,1
+08/10/2025,09:30,Bucheon 1995,Seongnam,1,0
+11/10/2025,07:00,Gimpo Citizen,Seoul E-Land,0,1
+11/10/2025,09:30,Hwaseong,Chungbuk Cheongju,1,0
+12/10/2025,07:00,Busan IPark,Bucheon 1995,1,2
+12/10/2025,07:00,Suwon Bluewings,Cheonan City,5,0
+12/10/2025,07:00,Jeonnam Dragons,Ansan Greeners,0,1
+12/10/2025,09:30,Seongnam,Incheon United,2,2
+12/10/2025,09:30,Chungnam Asan,Gyeongnam,1,0
+19/10/2025,07:00,Chungnam Asan,Gimpo Citizen,1,0
+19/10/2025,07:00,Seoul E-Land,Busan IPark,3,0
+19/10/2025,07:00,Ansan Greeners,Incheon United,0,1
+19/10/2025,07:00,Gyeongnam,Seongnam,0,1
+19/10/2025,09:30,Bucheon 1995,Cheonan City,2,1
+19/10/2025,09:30,Hwaseong,Suwon Bluewings,2,3
+19/10/2025,09:30,Chungbuk Cheongju,Jeonnam Dragons,0,3
+25/10/2025,07:00,Seongnam,Hwaseong,1,0
+25/10/2025,07:00,Suwon Bluewings,Jeonnam Dragons,2,2
+25/10/2025,09:30,Busan IPark,Gimpo Citizen,4,1
+25/10/2025,09:30,Chungbuk Cheongju,Bucheon 1995,0,0
+25/10/2025,09:30,Cheonan City,Ansan Greeners,0,0
+26/10/2025,06:00,Incheon United,Gyeongnam,3,0
+26/10/2025,08:30,Seoul E-Land,Chungnam Asan,4,1
+01/11/2025,06:00,Gyeongnam,Seoul E-Land,0,0
+01/11/2025,06:00,Suwon Bluewings,Chungbuk Cheongju,2,0
+01/11/2025,08:30,Bucheon 1995,Ansan Greeners,2,0
+01/11/2025,08:30,Gimpo Citizen,Hwaseong,5,1
+02/11/2025,06:00,Incheon United,Busan IPark,0,0
+02/11/2025,06:00,Jeonnam Dragons,Seongnam,0,2
+02/11/2025,08:30,Chungnam Asan,Cheonan City,1,1
+08/11/2025,06:00,Jeonnam Dragons,Incheon United,2,1
+08/11/2025,06:00,Hwaseong,Gyeongnam,0,1
+08/11/2025,08:30,Busan IPark,Chungnam Asan,0,3
+08/11/2025,08:30,Cheonan City,Seongnam,1,3
+09/11/2025,06:00,Chungbuk Cheongju,Seoul E-Land,0,2
+09/11/2025,06:00,Ansan Greeners,Suwon Bluewings,1,1
+09/11/2025,08:30,Gimpo Citizen,Bucheon 1995,0,1
+23/11/2025,06:00,Chungnam Asan,Jeonnam Dragons,2,1
+23/11/2025,06:00,Gyeongnam,Cheonan City,2,0
+23/11/2025,06:00,Seoul E-Land,Ansan Greeners,6,0
+23/11/2025,06:00,Incheon United,Chungbuk Cheongju,0,1
+23/11/2025,06:00,Suwon Bluewings,Gimpo Citizen,1,1
+23/11/2025,06:00,Bucheon 1995,Hwaseong,0,0
+23/11/2025,06:00,Seongnam,Busan IPark,2,1
+27/11/2025,11:00,Seoul E-Land,Seongnam,0,1
+30/11/2025,06:00,Bucheon 1995,Seongnam,0,0
