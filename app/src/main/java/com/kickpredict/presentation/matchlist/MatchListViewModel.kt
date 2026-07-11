@@ -43,6 +43,10 @@ data class MatchListUiState(
     val sections: List<MatchSection> = emptyList(),
     val totalCount: Int = 0,
     val calibration: CalibrationStatus? = null,
+    // Kickoff span of the bundled fixtures, so the date picker opens where data actually exists
+    // rather than on today's (empty, off-season/future) month.
+    val earliestDate: LocalDate? = null,
+    val latestDate: LocalDate? = null,
 )
 
 class MatchListViewModel(
@@ -75,9 +79,32 @@ class MatchListViewModel(
             val status = runCatching { recalibrate() }.getOrNull()
             runCatching { getPredictedMatches() }
                 .onSuccess { matches ->
+                    val isFirstLoad = !loadedOnce
                     allMatches = matches
                     loadedOnce = true
-                    _uiState.value = _uiState.value.copy(isLoading = false, calibration = status)
+                    val dates = matches.map { it.kickoff.toLocalDate() }
+                    val earliest = dates.minOrNull()
+                    val latest = dates.maxOrNull()
+                    // Open on the current round: on the first load, default the range to "today → end
+                    // of the loaded fixtures" so already-played rounds are hidden and the list starts
+                    // on what's coming. Only when there is something upcoming; the ✕ chip reveals all.
+                    val today = LocalDate.now()
+                    val current = _uiState.value
+                    val (from, to) = if (isFirstLoad && current.fromDate == null &&
+                        latest != null && !latest.isBefore(today)
+                    ) {
+                        maxOf(today, earliest ?: today) to latest
+                    } else {
+                        current.fromDate to current.toDate
+                    }
+                    _uiState.value = current.copy(
+                        isLoading = false,
+                        calibration = status,
+                        earliestDate = earliest,
+                        latestDate = latest,
+                        fromDate = from,
+                        toDate = to,
+                    )
                     rebuild()
                 }
                 .onFailure { t ->

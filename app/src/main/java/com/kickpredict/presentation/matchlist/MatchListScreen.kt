@@ -68,6 +68,7 @@ import com.kickpredict.presentation.theme.AppTheme
 import com.kickpredict.presentation.theme.ThemePickerDialog
 import com.kickpredict.presentation.theme.LossColor
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
@@ -161,7 +162,16 @@ fun MatchListScreen(
     }
 
     if (showDatePicker) {
-        val pickerState = rememberDateRangePickerState()
+        // Open on the month the list is currently showing — the active range start (the current
+        // round) when set, otherwise the first month fixtures exist in — and cap the year selector to
+        // the loaded seasons. Anchoring on today would land on an empty month between seasons.
+        val earliest = state.earliestDate ?: LocalDate.now()
+        val latest = state.latestDate ?: earliest
+        val anchor = state.fromDate ?: earliest
+        val pickerState = rememberDateRangePickerState(
+            initialDisplayedMonthMillis = anchor.withDayOfMonth(1).toEpochDay() * MILLIS_PER_DAY,
+            yearRange = earliest.year..latest.year,
+        )
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
             confirmButton = {
@@ -376,3 +386,5 @@ private fun ConfidencePill(score: Int, tier: ConfidenceTier) {
 }
 
 private fun millisToDate(millis: Long) = Instant.ofEpochMilli(millis).atZone(ZoneOffset.UTC).toLocalDate()
+
+private const val MILLIS_PER_DAY = 86_400_000L
