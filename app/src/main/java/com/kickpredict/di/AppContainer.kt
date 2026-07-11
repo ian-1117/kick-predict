@@ -2,9 +2,12 @@ package com.kickpredict.di
 
 import android.content.Context
 import androidx.room.Room
+import com.kickpredict.BuildConfig
 import com.kickpredict.data.local.KickPredictDatabase
 import com.kickpredict.data.remote.NetworkModule
+import com.kickpredict.data.remote.live.LiveFixtureRemoteSource
 import com.kickpredict.data.real.RealDataProvider
+import com.kickpredict.domain.model.Match
 import com.kickpredict.data.repository.CalibrationRepositoryImpl
 import com.kickpredict.data.repository.MatchRepositoryImpl
 import com.kickpredict.domain.calibration.MutableCalibrationProvider
@@ -29,7 +32,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 
 /**
  * Lightweight manual dependency-injection container. Constructed once in
@@ -62,17 +64,27 @@ class AppContainer(context: Context) {
         poissonProvider = poissonProvider,
     )
 
-    private val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
-
     // Bundled real historical data (football-data.co.uk). Falls back to mock if the assets are missing.
     private val realData = RealDataProvider(context.applicationContext.assets)
+    private val bundledMatches: List<Match> by lazy {
+        if (realData.hasData) realData.matches() else com.kickpredict.data.mock.MockDataProvider.matches()
+    }
+
+    // Live current-season fixtures: Europe via football-data.org, K League via API-Football. Keys
+    // come from BuildConfig (local.properties, git-ignored); an absent key makes that league fall
+    // back to the bundled historical data, so the app works with zero, one, or both keys set.
+    private val liveSource = LiveFixtureRemoteSource(
+        footballData = NetworkModule.footballDataApi(BuildConfig.FOOTBALL_DATA_KEY),
+        apiFootball = NetworkModule.apiFootballApi(BuildConfig.APIFOOTBALL_KEY),
+        footballDataKey = BuildConfig.FOOTBALL_DATA_KEY,
+        apiFootballKey = BuildConfig.APIFOOTBALL_KEY,
+        bundledByLeague = { league -> bundledMatches.filter { it.league == league } },
+    )
 
     val repository: MatchRepository = MatchRepositoryImpl(
-        api = NetworkModule.predictionApi(),
-        json = json,
-        fixtureCacheDao = database.fixtureCacheDao(),
+        liveSource = liveSource,
         teamDao = database.teamDao(),
-        offlineFallback = { if (realData.hasData) realData.matches() else com.kickpredict.data.mock.MockDataProvider.matches() },
+        offlineFallback = { bundledMatches },
         asOfFallback = if (realData.hasData) { round -> realData.matchesAsOf(round) } else null,
     )
 
