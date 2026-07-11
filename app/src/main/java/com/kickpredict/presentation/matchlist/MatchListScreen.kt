@@ -68,6 +68,7 @@ import com.kickpredict.presentation.theme.AppTheme
 import com.kickpredict.presentation.theme.ThemePickerDialog
 import com.kickpredict.presentation.theme.LossColor
 import com.kickpredict.presentation.theme.WinColor
+import com.kickpredict.presentation.theme.OnAccent
 import com.kickpredict.presentation.locale.AppLanguage
 import androidx.compose.ui.res.stringResource
 import com.kickpredict.R
@@ -378,14 +379,22 @@ private fun MatchCard(match: Match, onClick: () -> Unit) {
         }
 
         if (prediction != null) {
-            val predColor = if (prediction.predictedOutcome == PredictedOutcome.DRAW) DrawColor else winColor
+            // The prediction reads as its own emphasis block, in the brand accent (distinct from the
+            // win-coloured team name) with a solid fill and contrasting text so it stands out hardest.
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    stringResource(R.string.prediction_label, outcomeLabel(match, prediction.predictedOutcome)),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = predColor,
-                    fontWeight = FontWeight.Bold,
-                )
+                Box(
+                    Modifier
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(AccentPrimary)
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                ) {
+                    Text(
+                        stringResource(R.string.prediction_label, outcomeLabel(match, prediction.predictedOutcome)),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = OnAccent,
+                        fontWeight = FontWeight.Black,
+                    )
+                }
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     if (prediction.matchupEdge != MatchupEdge.NONE) MatchupChip(prediction.matchupEdge == MatchupEdge.HOME)
                     ConfidencePill(prediction.confidenceScore, prediction.confidenceTier)
