@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.kickpredict.KickPredictApplication
+import com.kickpredict.presentation.locale.LocalizedContent
 import com.kickpredict.presentation.navigation.KickPredictNavHost
 import com.kickpredict.presentation.theme.KickPredictTheme
 
@@ -28,16 +29,21 @@ class MainActivity : ComponentActivity() {
 private fun KickPredictApp() {
     val container = (LocalContext.current.applicationContext as KickPredictApplication).container
     val theme by container.themePreference.theme.collectAsState()
+    val language by container.languagePreference.language.collectAsState()
 
     KickPredictTheme(theme = theme) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            KickPredictNavHost(
-                currentTheme = theme,
-                onSelectTheme = container.themePreference::select,
-            )
+        LocalizedContent(language) {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background,
+            ) {
+                KickPredictNavHost(
+                    currentTheme = theme,
+                    onSelectTheme = container.themePreference::select,
+                    currentLanguage = language,
+                    onSelectLanguage = container.languagePreference::select,
+                )
+            }
         }
     }
 }

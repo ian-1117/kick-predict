@@ -67,6 +67,10 @@ import com.kickpredict.presentation.theme.AccentPrimary
 import com.kickpredict.presentation.theme.AppTheme
 import com.kickpredict.presentation.theme.ThemePickerDialog
 import com.kickpredict.presentation.theme.LossColor
+import com.kickpredict.presentation.theme.WinColor
+import com.kickpredict.presentation.locale.AppLanguage
+import androidx.compose.ui.res.stringResource
+import com.kickpredict.R
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -84,6 +88,8 @@ fun MatchListScreen(
     onStandings: () -> Unit,
     currentTheme: AppTheme,
     onSelectTheme: (AppTheme) -> Unit,
+    currentLanguage: AppLanguage,
+    onSelectLanguage: (AppLanguage) -> Unit,
     viewModel: MatchListViewModel = viewModel(factory = MatchListViewModel.Factory),
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -94,6 +100,8 @@ fun MatchListScreen(
         ThemePickerDialog(
             current = currentTheme,
             onSelect = onSelectTheme,
+            currentLanguage = currentLanguage,
+            onSelectLanguage = onSelectLanguage,
             onDismiss = { showThemePicker = false },
         )
     }
@@ -114,13 +122,13 @@ fun MatchListScreen(
                 },
                 actions = {
                     IconButton(onClick = onStandings) {
-                        Icon(Icons.Filled.Leaderboard, contentDescription = "리그 순위", tint = AccentPrimary)
+                        Icon(Icons.Filled.Leaderboard, contentDescription = stringResource(R.string.nav_standings), tint = AccentPrimary)
                     }
                     IconButton(onClick = onDashboard) {
-                        Icon(Icons.Filled.Insights, contentDescription = "적중·보정 대시보드", tint = AccentPrimary)
+                        Icon(Icons.Filled.Insights, contentDescription = stringResource(R.string.nav_dashboard), tint = AccentPrimary)
                     }
                     IconButton(onClick = { showThemePicker = true }) {
-                        Icon(Icons.Filled.Palette, contentDescription = "테마", tint = AccentPrimary)
+                        Icon(Icons.Filled.Palette, contentDescription = stringResource(R.string.nav_theme), tint = AccentPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
@@ -153,7 +161,7 @@ fun MatchListScreen(
                             }
                         }
                         if (state.sections.isEmpty()) {
-                            item { Text("해당 조건의 경기가 없습니다.", color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                            item { Text(stringResource(R.string.empty_matches), color = MaterialTheme.colorScheme.onSurfaceVariant) }
                         }
                     }
                 }
@@ -180,11 +188,11 @@ fun MatchListScreen(
                     val to = pickerState.selectedEndDateMillis?.let { millisToDate(it) }
                     if (from != null) viewModel.setDateRange(from, to ?: from)
                     showDatePicker = false
-                }) { Text("적용") }
+                }) { Text(stringResource(R.string.action_apply)) }
             },
-            dismissButton = { TextButton(onClick = { showDatePicker = false }) { Text("취소") } },
+            dismissButton = { TextButton(onClick = { showDatePicker = false }) { Text(stringResource(R.string.action_cancel)) } },
         ) {
-            DateRangePicker(state = pickerState, title = { Text("기간 선택", Modifier.padding(16.dp)) })
+            DateRangePicker(state = pickerState, title = { Text(stringResource(R.string.date_range_picker_title), Modifier.padding(16.dp)) })
         }
     }
 }
@@ -206,11 +214,11 @@ private fun FilterBar(
             onValueChange = onSearch,
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            placeholder = { Text("팀 검색 (한글·영문·약칭)") },
+            placeholder = { Text(stringResource(R.string.search_hint)) },
             leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
             trailingIcon = {
                 if (state.searchQuery.isNotEmpty()) {
-                    IconButton(onClick = { onSearch("") }) { Icon(Icons.Filled.Close, contentDescription = "검색 지우기") }
+                    IconButton(onClick = { onSearch("") }) { Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.clear_search)) }
                 }
             },
             colors = OutlinedTextFieldDefaults.colors(
@@ -224,7 +232,7 @@ private fun FilterBar(
             modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            LeagueChipFilter("전체", state.leagueFilter == null) { onLeague(null) }
+            LeagueChipFilter(stringResource(R.string.filter_all), state.leagueFilter == null) { onLeague(null) }
             LeagueType.entries.forEach { league ->
                 LeagueChipFilter(league.displayName, state.leagueFilter == league) { onLeague(league) }
             }
@@ -236,7 +244,8 @@ private fun FilterBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             GroupMode.entries.forEach { mode ->
-                LeagueChipFilter(mode.label, state.groupMode == mode) { onGroup(mode) }
+                val label = stringResource(if (mode == GroupMode.ROUND) R.string.group_by_round else R.string.group_by_week)
+                LeagueChipFilter(label, state.groupMode == mode) { onGroup(mode) }
             }
             Box(Modifier.weight(1f))
             val hasRange = state.fromDate != null
@@ -246,7 +255,7 @@ private fun FilterBar(
                 label = {
                     Text(
                         if (hasRange) "${state.fromDate!!.format(rangeFormatter)}–${state.toDate!!.format(rangeFormatter)}"
-                        else "기간",
+                        else stringResource(R.string.date_range),
                     )
                 },
                 leadingIcon = {
@@ -273,13 +282,21 @@ private fun LeagueChipFilter(label: String, selected: Boolean, onClick: () -> Un
 }
 
 @Composable
-private fun SectionHeader(title: String, count: Int) {
+private fun SectionHeader(title: SectionTitle, count: Int) {
+    val text = when (title) {
+        is SectionTitle.Round -> stringResource(R.string.section_round, title.number)
+        is SectionTitle.Week -> stringResource(
+            R.string.section_week,
+            title.start.format(rangeFormatter),
+            title.end.format(rangeFormatter),
+        )
+    }
     Row(
         modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Text(title, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onBackground, fontWeight = FontWeight.Bold)
+        Text(text, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onBackground, fontWeight = FontWeight.Bold)
         Text("$count", style = MaterialTheme.typography.labelSmall, color = AccentPrimary)
     }
 }
@@ -289,10 +306,19 @@ private fun CalibrationStatusBar(state: MatchListUiState) {
     val status = state.calibration ?: return
     val applied = status.confidenceApplied || status.leaguesCalibrated.isNotEmpty()
     val color = if (applied) AccentPrimary else MaterialTheme.colorScheme.onSurfaceVariant
-    val accuracy = status.overallHitRate?.let { " · 예측 정확도 ${(it * 100).roundToInt()}%" } ?: ""
-    val detail = if (applied) "신뢰도 보정 ${if (status.confidenceApplied) "적용" else "대기"} · 리그 ${status.leaguesCalibrated.size}개" else "표본 축적 중"
+    val parts = buildList {
+        add(stringResource(R.string.calib_prefix))
+        add(stringResource(R.string.calib_results, status.recordedResults))
+        status.overallHitRate?.let { add(stringResource(R.string.calib_accuracy, (it * 100).roundToInt())) }
+        if (applied) {
+            add(stringResource(if (status.confidenceApplied) R.string.calib_confidence_applied else R.string.calib_confidence_pending))
+            add(stringResource(R.string.calib_leagues, status.leaguesCalibrated.size))
+        } else {
+            add(stringResource(R.string.calib_accumulating))
+        }
+    }
     Text(
-        text = "AI 보정 · 결과 ${status.recordedResults}건$accuracy · $detail",
+        text = parts.joinToString(" · "),
         style = MaterialTheme.typography.labelSmall,
         color = color,
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
@@ -316,19 +342,35 @@ private fun MatchCard(match: Match, onClick: () -> Unit) {
             Text(match.kickoff.format(kickoffFormatter), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
 
+        // Highlight the predicted winner: its name in the win colour and bold, the other side dimmed.
+        val outcome = prediction?.predictedOutcome
+        val winColor = WinColor
+        val homeColor = when (outcome) {
+            PredictedOutcome.HOME_WIN -> winColor
+            PredictedOutcome.AWAY_WIN -> MaterialTheme.colorScheme.onSurfaceVariant
+            else -> MaterialTheme.colorScheme.onSurface
+        }
+        val awayColor = when (outcome) {
+            PredictedOutcome.AWAY_WIN -> winColor
+            PredictedOutcome.HOME_WIN -> MaterialTheme.colorScheme.onSurfaceVariant
+            else -> MaterialTheme.colorScheme.onSurface
+        }
+
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             TeamCrest(match.homeTeam.shortName, match.homeTeam.crestPrimary, match.homeTeam.crestSecondary)
             Text(
                 match.homeTeam.displayName,
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = homeColor,
+                fontWeight = if (outcome == PredictedOutcome.HOME_WIN) FontWeight.Bold else FontWeight.Normal,
                 modifier = Modifier.weight(1f).padding(start = 10.dp),
             )
             Text("vs", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 8.dp))
             Text(
                 match.awayTeam.displayName,
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = awayColor,
+                fontWeight = if (outcome == PredictedOutcome.AWAY_WIN) FontWeight.Bold else FontWeight.Normal,
                 textAlign = TextAlign.End,
                 modifier = Modifier.weight(1f).padding(end = 10.dp),
             )
@@ -336,8 +378,14 @@ private fun MatchCard(match: Match, onClick: () -> Unit) {
         }
 
         if (prediction != null) {
+            val predColor = if (prediction.predictedOutcome == PredictedOutcome.DRAW) DrawColor else winColor
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Text("예측: ${outcomeLabel(match, prediction.predictedOutcome)}", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
+                Text(
+                    stringResource(R.string.prediction_label, outcomeLabel(match, prediction.predictedOutcome)),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = predColor,
+                    fontWeight = FontWeight.Bold,
+                )
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     if (prediction.matchupEdge != MatchupEdge.NONE) MatchupChip(prediction.matchupEdge == MatchupEdge.HOME)
                     ConfidencePill(prediction.confidenceScore, prediction.confidenceTier)
@@ -347,10 +395,11 @@ private fun MatchCard(match: Match, onClick: () -> Unit) {
     }
 }
 
+@Composable
 private fun outcomeLabel(match: Match, outcome: PredictedOutcome): String = when (outcome) {
-    PredictedOutcome.HOME_WIN -> "${match.homeTeam.displayName} 승"
-    PredictedOutcome.AWAY_WIN -> "${match.awayTeam.displayName} 승"
-    PredictedOutcome.DRAW -> "무승부"
+    PredictedOutcome.HOME_WIN -> stringResource(R.string.outcome_win, match.homeTeam.displayName)
+    PredictedOutcome.AWAY_WIN -> stringResource(R.string.outcome_win, match.awayTeam.displayName)
+    PredictedOutcome.DRAW -> stringResource(R.string.outcome_draw)
 }
 
 @Composable
@@ -369,7 +418,7 @@ private fun MatchupChip(isHome: Boolean) {
         horizontalArrangement = Arrangement.spacedBy(3.dp),
     ) {
         Icon(Icons.Filled.LocalFireDepartment, contentDescription = null, tint = color, modifier = Modifier.size(13.dp))
-        Text("상성", style = MaterialTheme.typography.labelSmall, color = color, fontWeight = FontWeight.Bold)
+        Text(stringResource(R.string.matchup_edge), style = MaterialTheme.typography.labelSmall, color = color, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -381,7 +430,7 @@ private fun ConfidencePill(score: Int, tier: ConfidenceTier) {
         ConfidenceTier.LOW, ConfidenceTier.VERY_LOW -> LossColor
     }
     Box(Modifier.clip(RoundedCornerShape(50)).background(color.copy(alpha = 0.16f)).padding(horizontal = 10.dp, vertical = 4.dp)) {
-        Text("적중률 $score%", style = MaterialTheme.typography.labelSmall, color = color, fontWeight = FontWeight.Bold)
+        Text(stringResource(R.string.hit_rate, score), style = MaterialTheme.typography.labelSmall, color = color, fontWeight = FontWeight.Bold)
     }
 }
 

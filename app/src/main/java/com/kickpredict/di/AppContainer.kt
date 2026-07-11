@@ -27,6 +27,7 @@ import com.kickpredict.domain.usecase.RecalibrateUseCase
 import com.kickpredict.domain.usecase.RecordMatchResultUseCase
 import com.kickpredict.domain.usecase.SeedSampleResultsUseCase
 import com.kickpredict.domain.usecase.SimulateSeasonUseCase
+import com.kickpredict.presentation.locale.LanguagePreference
 import com.kickpredict.presentation.theme.ThemePreference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +45,9 @@ class AppContainer(context: Context) {
 
     /** Which palette the app paints with; read synchronously so the first frame is already right. */
     val themePreference = ThemePreference(context)
+
+    /** In-app language override; read synchronously so the app opens in the chosen language. */
+    val languagePreference = LanguagePreference(context)
 
     private val database: KickPredictDatabase = Room.databaseBuilder(
         context.applicationContext,

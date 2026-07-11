@@ -21,26 +21,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.kickpredict.R
+import com.kickpredict.presentation.locale.AppLanguage
 
 /**
- * Lets the user pick a palette. Each row is painted in the theme it offers — a colour choice should
- * be shown, not described.
+ * Lets the user pick a palette (shown, not described — each row is painted in the theme it offers)
+ * and the app language.
  */
 @Composable
 fun ThemePickerDialog(
     current: AppTheme,
     onSelect: (AppTheme) -> Unit,
+    currentLanguage: AppLanguage,
+    onSelectLanguage: (AppLanguage) -> Unit,
     onDismiss: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            TextButton(onClick = onDismiss) { Text("닫기", color = AccentPrimary) }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_close), color = AccentPrimary) }
         },
-        title = { Text("테마", fontWeight = FontWeight.Bold) },
+        title = { Text(stringResource(R.string.settings_theme), fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 AppTheme.entries.forEach { theme ->
@@ -50,10 +55,56 @@ fun ThemePickerDialog(
                         onClick = { onSelect(theme) },
                     )
                 }
+
+                Text(
+                    stringResource(R.string.settings_language),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(top = 6.dp),
+                )
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    AppLanguage.entries.forEach { language ->
+                        LanguageChip(
+                            label = stringResource(language.labelRes),
+                            selected = language == currentLanguage,
+                            onClick = { onSelectLanguage(language) },
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                }
             }
         },
         containerColor = MaterialTheme.colorScheme.surface,
     )
+}
+
+private val AppLanguage.labelRes: Int
+    get() = when (this) {
+        AppLanguage.SYSTEM -> R.string.language_system
+        AppLanguage.KOREAN -> R.string.language_korean
+        AppLanguage.ENGLISH -> R.string.language_english
+    }
+
+@Composable
+private fun LanguageChip(label: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val border = if (selected) AccentPrimary else Color.Transparent
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(10.dp))
+            .background(if (selected) AccentPrimary.copy(alpha = 0.16f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f))
+            .border(1.5.dp, border, RoundedCornerShape(10.dp))
+            .selectable(selected = selected, role = Role.RadioButton, onClick = onClick)
+            .padding(vertical = 10.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            label,
+            style = MaterialTheme.typography.labelMedium,
+            color = if (selected) AccentPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+        )
+    }
 }
 
 @Composable

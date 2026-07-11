@@ -18,10 +18,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
-/** How the fixtures list is grouped into sections. */
-enum class GroupMode(val label: String) { ROUND("라운드별"), WEEK("주별") }
+/** How the fixtures list is grouped into sections. Display labels are resolved in the UI layer. */
+enum class GroupMode { ROUND, WEEK }
+
+/** A section's heading, kept structured so the UI can localise it (and re-localise on language change). */
+sealed interface SectionTitle {
+    data class Round(val number: Int) : SectionTitle
+    data class Week(val start: LocalDate, val end: LocalDate) : SectionTitle
+}
 
 /** True if either team's Korean name, English name or short code contains the query. */
 private fun Match.matchesTeamQuery(query: String): Boolean =
@@ -30,7 +35,7 @@ private fun Match.matchesTeamQuery(query: String): Boolean =
         awayTeam.name, awayTeam.koreanName, awayTeam.shortName,
     ).any { it.contains(query, ignoreCase = true) }
 
-data class MatchSection(val title: String, val matches: List<Match>)
+data class MatchSection(val title: SectionTitle, val matches: List<Match>)
 
 data class MatchListUiState(
     val isLoading: Boolean = true,
@@ -152,21 +157,15 @@ class MatchListViewModel(
             GroupMode.ROUND -> filtered
                 .groupBy { it.round }
                 .toSortedMap()
-                .map { (round, ms) -> MatchSection("라운드 $round", ms.sortedBy { it.kickoff }) }
+                .map { (round, ms) -> MatchSection(SectionTitle.Round(round), ms.sortedBy { it.kickoff }) }
             GroupMode.WEEK -> filtered
                 .groupBy { it.kickoff.toLocalDate().with(DayOfWeek.MONDAY) }
                 .toSortedMap()
                 .map { (weekStart, ms) ->
-                    MatchSection(weekTitle(weekStart), ms.sortedBy { it.kickoff })
+                    MatchSection(SectionTitle.Week(weekStart, weekStart.plusDays(6)), ms.sortedBy { it.kickoff })
                 }
         }
         _uiState.value = state.copy(sections = sections, totalCount = filtered.size)
-    }
-
-    private fun weekTitle(weekStart: LocalDate): String {
-        val end = weekStart.plusDays(6)
-        val fmt = DateTimeFormatter.ofPattern("M.d")
-        return "${weekStart.format(fmt)} – ${end.format(fmt)} 주"
     }
 
     companion object {

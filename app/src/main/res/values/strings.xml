@@ -1,4 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Kick Predict</string>
+
+    <!-- Match list -->
+    <string name="search_hint">Search teams (name or code)</string>
+    <string name="filter_all">All</string>
+    <string name="group_by_round">By round</string>
+    <string name="group_by_week">By week</string>
+    <string name="date_range">Dates</string>
+    <string name="date_range_picker_title">Select dates</string>
+    <string name="action_apply">Apply</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_close">Close</string>
+    <string name="clear_search">Clear search</string>
+    <string name="empty_matches">No matches for these filters.</string>
+    <string name="nav_standings">Standings</string>
+    <string name="nav_dashboard">Accuracy dashboard</string>
+    <string name="nav_theme">Theme</string>
+
+    <!-- Section headers -->
+    <string name="section_round">Round %1$d</string>
+    <string name="section_week">%1$s – %2$s</string>
+
+    <!-- Prediction -->
+    <string name="prediction_label">Prediction: %1$s</string>
+    <string name="outcome_win">%1$s win</string>
+    <string name="outcome_draw">Draw</string>
+    <string name="hit_rate">Hit rate %1$d%%</string>
+    <string name="matchup_edge">Edge</string>
+
+    <!-- Calibration status bar -->
+    <string name="calib_prefix">AI calibration</string>
+    <string name="calib_results">%1$d results</string>
+    <string name="calib_accuracy">accuracy %1$d%%</string>
+    <string name="calib_confidence_applied">confidence calibration on</string>
+    <string name="calib_confidence_pending">confidence calibration pending</string>
+    <string name="calib_leagues">%1$d leagues</string>
+    <string name="calib_accumulating">collecting samples</string>
+
+    <!-- Settings / picker dialog -->
+    <string name="settings_theme">Theme</string>
+    <string name="settings_language">Language</string>
+    <string name="language_system">System</string>
+    <string name="language_korean">한국어</string>
+    <string name="language_english">English</string>
 </resources>

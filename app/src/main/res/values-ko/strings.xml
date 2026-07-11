@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kick Predict</string>
+
+    <!-- Match list -->
+    <string name="search_hint">팀 검색 (한글·영문·약칭)</string>
+    <string name="filter_all">전체</string>
+    <string name="group_by_round">라운드별</string>
+    <string name="group_by_week">주별</string>
+    <string name="date_range">기간</string>
+    <string name="date_range_picker_title">기간 선택</string>
+    <string name="action_apply">적용</string>
+    <string name="action_cancel">취소</string>
+    <string name="action_close">닫기</string>
+    <string name="clear_search">검색 지우기</string>
+    <string name="empty_matches">해당 조건의 경기가 없습니다.</string>
+    <string name="nav_standings">리그 순위</string>
+    <string name="nav_dashboard">적중·보정 대시보드</string>
+    <string name="nav_theme">테마</string>
+
+    <!-- Section headers -->
+    <string name="section_round">라운드 %1$d</string>
+    <string name="section_week">%1$s – %2$s 주</string>
+
+    <!-- Prediction -->
+    <string name="prediction_label">예측: %1$s</string>
+    <string name="outcome_win">%1$s 승</string>
+    <string name="outcome_draw">무승부</string>
+    <string name="hit_rate">적중률 %1$d%%</string>
+    <string name="matchup_edge">상성</string>
+
+    <!-- Calibration status bar -->
+    <string name="calib_prefix">AI 보정</string>
+    <string name="calib_results">결과 %1$d건</string>
+    <string name="calib_accuracy">예측 정확도 %1$d%%</string>
+    <string name="calib_confidence_applied">신뢰도 보정 적용</string>
+    <string name="calib_confidence_pending">신뢰도 보정 대기</string>
+    <string name="calib_leagues">리그 %1$d개</string>
+    <string name="calib_accumulating">표본 축적 중</string>
+
+    <!-- Settings / picker dialog -->
+    <string name="settings_theme">테마</string>
+    <string name="settings_language">언어</string>
+    <string name="language_system">시스템 기본</string>
+    <string name="language_korean">한국어</string>
+    <string name="language_english">English</string>
+</resources>

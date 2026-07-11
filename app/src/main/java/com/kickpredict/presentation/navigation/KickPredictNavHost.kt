@@ -11,6 +11,7 @@ import com.kickpredict.presentation.detail.PredictionDetailScreen
 import com.kickpredict.presentation.matchlist.MatchListScreen
 import com.kickpredict.presentation.simulation.SeasonSimulationScreen
 import com.kickpredict.presentation.standings.StandingsScreen
+import com.kickpredict.presentation.locale.AppLanguage
 import com.kickpredict.presentation.team.TeamScreen
 import com.kickpredict.presentation.theme.AppTheme
 
@@ -31,6 +32,8 @@ object Routes {
 fun KickPredictNavHost(
     currentTheme: AppTheme,
     onSelectTheme: (AppTheme) -> Unit,
+    currentLanguage: AppLanguage,
+    onSelectLanguage: (AppLanguage) -> Unit,
 ) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Routes.MATCH_LIST) {
@@ -41,6 +44,8 @@ fun KickPredictNavHost(
                 onStandings = { navController.navigate(Routes.STANDINGS) },
                 currentTheme = currentTheme,
                 onSelectTheme = onSelectTheme,
+                currentLanguage = currentLanguage,
+                onSelectLanguage = onSelectLanguage,
             )
         }
         composable(Routes.DASHBOARD) {
