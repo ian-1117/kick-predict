@@ -59,7 +59,7 @@ fun ConfidenceBadge(
             color = accent,
         )
         Text(
-            text = "· ${tier.label}",
+            text = "· ${com.kickpredict.presentation.common.confidenceTierName(tier)}",
             style = MaterialTheme.typography.labelSmall,
             color = accent,
         )
