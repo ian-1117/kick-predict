@@ -28,6 +28,15 @@ interface ApiFootballApi {
         @Query("action") action: String = "get_standings",
     ): List<AfStanding>
 
+    /** 1X2 odds per bookmaker for a league's fixtures in a date range (max 5 days). */
+    @GET(".")
+    suspend fun odds(
+        @Query("from") from: String,
+        @Query("to") to: String,
+        @Query("league_id") leagueId: Int,
+        @Query("action") action: String = "get_odds",
+    ): List<AfOdds>
+
     companion object {
         const val BASE_URL = "https://apiv3.apifootball.com/"
         const val K_LEAGUE_1 = 219

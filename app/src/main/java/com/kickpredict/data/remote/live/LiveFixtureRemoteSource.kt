@@ -8,6 +8,7 @@ import com.kickpredict.domain.model.H2HOutcome
 import com.kickpredict.domain.model.HeadToHead
 import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.model.LiveScore
+import com.kickpredict.domain.model.MarketOdds
 import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.MatchOutcome
 import java.time.LocalDate
@@ -63,6 +64,12 @@ class LiveFixtureRemoteSource(
     private var liveScores: Map<String, LiveScore> = emptyMap()
     fun lastLiveScores(): Map<String, LiveScore> = liveScores
 
+    // Market 1X2 odds for upcoming matches, keyed by match id (K League only; the plan has no
+    // European odds). Used to surface value picks where the model disagrees with the market.
+    @Volatile
+    private var odds: Map<String, MarketOdds> = emptyMap()
+    fun lastOdds(): Map<String, MarketOdds> = odds
+
     /** One fetched fixture with its final score (if played) and its live score (if in play now). */
     private data class LiveFixture(val match: Match, val result: Pair<Int, Int>?, val live: LiveScore?)
 
@@ -73,6 +80,7 @@ class LiveFixtureRemoteSource(
         val out = ArrayList<Match>()
         val resultsAcc = HashMap<String, Pair<Int, Int>>()
         val liveAcc = HashMap<String, LiveScore>()
+        val oddsAcc = HashMap<String, MarketOdds>()
 
         europe.forEach { (code, league) ->
             val live = if (footballDataKey.isNotBlank()) {
@@ -85,11 +93,28 @@ class LiveFixtureRemoteSource(
                 runCatching { kLeagueFixtures(id, league, kSeason) }.getOrNull()?.takeIf { it.isNotEmpty() }
             } else null
             out += collect(live, resultsAcc, liveAcc) ?: bundledByLeague(league)
+            if (apiFootballKey.isNotBlank()) {
+                runCatching { kLeagueOdds(id, today) }.getOrNull()?.let { oddsAcc.putAll(it) }
+            }
         }
         results = resultsAcc
         liveScores = liveAcc
+        odds = oddsAcc
         return out
     }
+
+    /** Average 1X2 odds across bookmakers for the next few days, keyed by the app's match id. */
+    private suspend fun kLeagueOdds(leagueId: Int, today: LocalDate): Map<String, MarketOdds> {
+        val rows = apiFootball.odds(from = today.toString(), to = today.plusDays(4).toString(), leagueId = leagueId)
+        return rows.groupBy { it.matchId }.mapNotNull { (matchId, group) ->
+            val home = group.mapNotNull { it.home.toDoubleOrNull() }.averageOrNull() ?: return@mapNotNull null
+            val draw = group.mapNotNull { it.draw.toDoubleOrNull() }.averageOrNull() ?: return@mapNotNull null
+            val away = group.mapNotNull { it.away.toDoubleOrNull() }.averageOrNull() ?: return@mapNotNull null
+            MarketOdds.of(home, draw, away)?.let { "AF_$matchId" to it }
+        }.toMap()
+    }
+
+    private fun List<Double>.averageOrNull(): Double? = if (isEmpty()) null else average()
 
     /** Split fetched fixtures into the match list, harvesting final and live scores into the maps. */
     private fun collect(

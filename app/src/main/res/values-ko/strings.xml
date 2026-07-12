@@ -30,6 +30,7 @@
     <string name="matchup_edge">상성</string>
     <string name="jump_current_round">현재 라운드</string>
     <string name="live">LIVE</string>
+    <string name="value_pick">밸류</string>
     <string name="tier_very_high">매우 높음</string>
     <string name="tier_high">높음</string>
     <string name="tier_moderate">보통</string>

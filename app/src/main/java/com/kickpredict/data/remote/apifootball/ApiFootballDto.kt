@@ -31,6 +31,15 @@ data class AfEvent(
     @SerialName("match_awayteam_score") val awayScore: String = "",
 )
 
+/** One bookmaker's 1X2 odds for a match (get_odds). Blank when a market isn't offered. */
+@Serializable
+data class AfOdds(
+    @SerialName("match_id") val matchId: String = "",
+    @SerialName("odd_1") val home: String = "",   // decimal odds, home win
+    @SerialName("odd_x") val draw: String = "",   // draw
+    @SerialName("odd_2") val away: String = "",   // away win
+)
+
 @Serializable
 data class AfStanding(
     @SerialName("team_id") val teamId: String = "",

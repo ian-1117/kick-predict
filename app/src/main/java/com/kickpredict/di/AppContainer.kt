@@ -89,6 +89,9 @@ class AppContainer(context: Context) {
     /** Scores of matches currently in play (from the last live fetch), for the LIVE badge on cards. */
     val liveScores: () -> Map<String, com.kickpredict.domain.model.LiveScore> = { liveSource.lastLiveScores() }
 
+    /** Market 1X2 odds for upcoming matches (from the last live fetch), for value picks. */
+    val odds: () -> Map<String, com.kickpredict.domain.model.MarketOdds> = { liveSource.lastOdds() }
+
     val repository: MatchRepository = MatchRepositoryImpl(
         liveSource = liveSource,
         teamDao = database.teamDao(),

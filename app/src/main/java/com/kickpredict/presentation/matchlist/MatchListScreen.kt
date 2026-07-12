@@ -64,8 +64,10 @@ import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.model.Match
 import androidx.compose.foundation.shape.CircleShape
 import com.kickpredict.domain.model.LiveScore
+import com.kickpredict.domain.model.MarketOdds
 import com.kickpredict.domain.model.MatchupEdge
 import com.kickpredict.domain.model.PredictedOutcome
+import com.kickpredict.domain.model.PredictionResult
 import com.kickpredict.domain.model.RecordedResult
 import com.kickpredict.presentation.components.TeamCrest
 import com.kickpredict.presentation.theme.DrawColor
@@ -172,7 +174,7 @@ fun MatchListScreen(
                             state.sections.forEach { section ->
                                 item(key = "h_${section.title}") { SectionHeader(section.title, section.matches.size) }
                                 items(section.matches, key = { it.id }) { match ->
-                                    MatchCard(match, state.results[match.id], state.liveScores[match.id]) { onMatchClick(match.id) }
+                                    MatchCard(match, state.results[match.id], state.liveScores[match.id], state.odds[match.id]) { onMatchClick(match.id) }
                                 }
                             }
                             if (state.sections.isEmpty()) {
@@ -342,7 +344,7 @@ private fun CalibrationStatusBar(state: MatchListUiState) {
 }
 
 @Composable
-private fun MatchCard(match: Match, result: RecordedResult?, liveScore: LiveScore?, onClick: () -> Unit) {
+private fun MatchCard(match: Match, result: RecordedResult?, liveScore: LiveScore?, odds: MarketOdds?, onClick: () -> Unit) {
     val prediction = match.predictedResult
     Column(
         modifier = Modifier
@@ -430,7 +432,9 @@ private fun MatchCard(match: Match, result: RecordedResult?, liveScore: LiveScor
                     } else if (result != null) {
                         HitMissBadge(result.wasCorrect)
                     } else {
-                        if (prediction.matchupEdge != MatchupEdge.NONE) MatchupChip(prediction.matchupEdge == MatchupEdge.HOME)
+                        val edge = odds?.let { modelPercent(prediction) - it.percentFor(prediction.predictedOutcome) }
+                        if (edge != null && edge >= VALUE_EDGE_THRESHOLD) ValueChip(edge)
+                        else if (prediction.matchupEdge != MatchupEdge.NONE) MatchupChip(prediction.matchupEdge == MatchupEdge.HOME)
                         ConfidencePill(prediction.confidenceScore, prediction.confidenceTier)
                     }
                 }
@@ -450,6 +454,21 @@ private fun outcomeLabel(match: Match, outcome: PredictedOutcome): String = when
 private fun LeagueChip(text: String) {
     Box(Modifier.clip(RoundedCornerShape(50)).background(AccentPrimary.copy(alpha = 0.14f)).padding(horizontal = 10.dp, vertical = 4.dp)) {
         Text(text, style = MaterialTheme.typography.labelSmall, color = AccentPrimary)
+    }
+}
+
+/** Model's probability (%) for the outcome it predicted. */
+private fun modelPercent(p: PredictionResult): Int = when (p.predictedOutcome) {
+    PredictedOutcome.HOME_WIN -> p.homeWinPercent
+    PredictedOutcome.AWAY_WIN -> p.awayWinPercent
+    PredictedOutcome.DRAW -> p.drawPercent
+}
+
+@Composable
+private fun ValueChip(edgePercent: Int) {
+    val color = WinColor
+    Box(Modifier.clip(RoundedCornerShape(50)).background(color.copy(alpha = 0.18f)).padding(horizontal = 10.dp, vertical = 4.dp)) {
+        Text("${stringResource(R.string.value_pick)} +$edgePercent%", style = MaterialTheme.typography.labelSmall, color = color, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -508,3 +527,6 @@ private fun ConfidencePill(score: Int, tier: ConfidenceTier) {
 private fun millisToDate(millis: Long) = Instant.ofEpochMilli(millis).atZone(ZoneOffset.UTC).toLocalDate()
 
 private const val MILLIS_PER_DAY = 86_400_000L
+
+// The model must beat the market's implied probability by at least this (percentage points) to flag value.
+private const val VALUE_EDGE_THRESHOLD = 4

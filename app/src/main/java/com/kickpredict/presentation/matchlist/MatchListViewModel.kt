@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.kickpredict.KickPredictApplication
 import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.model.LiveScore
+import com.kickpredict.domain.model.MarketOdds
 import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.RecordedResult
 import com.kickpredict.domain.repository.CalibrationRepository
@@ -62,6 +63,8 @@ data class MatchListUiState(
     val results: Map<String, RecordedResult> = emptyMap(),
     // Scores of matches currently in play, keyed by match id — for the LIVE badge + live score.
     val liveScores: Map<String, LiveScore> = emptyMap(),
+    // Market odds for upcoming matches, keyed by match id — for the value-pick badge.
+    val odds: Map<String, MarketOdds> = emptyMap(),
 )
 
 class MatchListViewModel(
@@ -70,6 +73,7 @@ class MatchListViewModel(
     private val calibrationRepository: CalibrationRepository,
     private val syncResults: SyncResultsUseCase,
     private val liveScoresProvider: () -> Map<String, LiveScore>,
+    private val oddsProvider: () -> Map<String, MarketOdds>,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MatchListUiState())
@@ -144,6 +148,7 @@ class MatchListViewModel(
         val results = runCatching { calibrationRepository.recordedResults().associateBy { it.matchId } }
             .getOrDefault(emptyMap())
         val liveScores = runCatching { liveScoresProvider() }.getOrDefault(emptyMap())
+        val odds = runCatching { oddsProvider() }.getOrDefault(emptyMap())
         _uiState.value = current.copy(
             isLoading = false,
             calibration = status,
@@ -153,6 +158,7 @@ class MatchListViewModel(
             toDate = to,
             results = results,
             liveScores = liveScores,
+            odds = odds,
         )
         rebuild()
     }
@@ -227,6 +233,7 @@ class MatchListViewModel(
                     app.container.calibrationRepository,
                     app.container.syncResults,
                     app.container.liveScores,
+                    app.container.odds,
                 )
             }
         }
