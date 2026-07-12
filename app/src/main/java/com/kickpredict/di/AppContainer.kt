@@ -86,6 +86,9 @@ class AppContainer(context: Context) {
         bundledByLeague = { league -> bundledMatches.filter { it.league == league } },
     )
 
+    /** Scores of matches currently in play (from the last live fetch), for the LIVE badge on cards. */
+    val liveScores: () -> Map<String, com.kickpredict.domain.model.LiveScore> = { liveSource.lastLiveScores() }
+
     val repository: MatchRepository = MatchRepositoryImpl(
         liveSource = liveSource,
         teamDao = database.teamDao(),

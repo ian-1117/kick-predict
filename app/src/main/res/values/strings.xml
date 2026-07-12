@@ -29,6 +29,7 @@
     <string name="hit_rate">Hit rate %1$d%%</string>
     <string name="matchup_edge">Edge</string>
     <string name="jump_current_round">Current round</string>
+    <string name="live">LIVE</string>
     <string name="tier_very_high">Very high</string>
     <string name="tier_high">High</string>
     <string name="tier_moderate">Moderate</string>

@@ -62,6 +62,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kickpredict.domain.model.ConfidenceTier
 import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.model.Match
+import androidx.compose.foundation.shape.CircleShape
+import com.kickpredict.domain.model.LiveScore
 import com.kickpredict.domain.model.MatchupEdge
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.RecordedResult
@@ -170,7 +172,7 @@ fun MatchListScreen(
                             state.sections.forEach { section ->
                                 item(key = "h_${section.title}") { SectionHeader(section.title, section.matches.size) }
                                 items(section.matches, key = { it.id }) { match ->
-                                    MatchCard(match, state.results[match.id]) { onMatchClick(match.id) }
+                                    MatchCard(match, state.results[match.id], state.liveScores[match.id]) { onMatchClick(match.id) }
                                 }
                             }
                             if (state.sections.isEmpty()) {
@@ -340,7 +342,7 @@ private fun CalibrationStatusBar(state: MatchListUiState) {
 }
 
 @Composable
-private fun MatchCard(match: Match, result: RecordedResult?, onClick: () -> Unit) {
+private fun MatchCard(match: Match, result: RecordedResult?, liveScore: LiveScore?, onClick: () -> Unit) {
     val prediction = match.predictedResult
     Column(
         modifier = Modifier
@@ -379,11 +381,12 @@ private fun MatchCard(match: Match, result: RecordedResult?, onClick: () -> Unit
                 fontWeight = if (outcome == PredictedOutcome.HOME_WIN) FontWeight.Bold else FontWeight.Normal,
                 modifier = Modifier.weight(1f).padding(start = 10.dp),
             )
-            if (result != null) {
+            val centerScore = liveScore?.scoreline ?: result?.let { "${it.homeGoals} – ${it.awayGoals}" }
+            if (centerScore != null) {
                 Text(
-                    "${result.homeGoals} – ${result.awayGoals}",
+                    centerScore,
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = if (liveScore != null) LossColor else MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Black,
                     modifier = Modifier.padding(horizontal = 10.dp),
                 )
@@ -422,7 +425,9 @@ private fun MatchCard(match: Match, result: RecordedResult?, onClick: () -> Unit
                     )
                 }
                 Row(Modifier.padding(start = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    if (result != null) {
+                    if (liveScore != null) {
+                        LiveBadge(liveScore.minute)
+                    } else if (result != null) {
                         HitMissBadge(result.wasCorrect)
                     } else {
                         if (prediction.matchupEdge != MatchupEdge.NONE) MatchupChip(prediction.matchupEdge == MatchupEdge.HOME)
@@ -445,6 +450,20 @@ private fun outcomeLabel(match: Match, outcome: PredictedOutcome): String = when
 private fun LeagueChip(text: String) {
     Box(Modifier.clip(RoundedCornerShape(50)).background(AccentPrimary.copy(alpha = 0.14f)).padding(horizontal = 10.dp, vertical = 4.dp)) {
         Text(text, style = MaterialTheme.typography.labelSmall, color = AccentPrimary)
+    }
+}
+
+@Composable
+private fun LiveBadge(minute: String) {
+    val color = LossColor
+    Row(
+        modifier = Modifier.clip(RoundedCornerShape(50)).background(color.copy(alpha = 0.18f)).padding(horizontal = 10.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Box(Modifier.size(7.dp).clip(CircleShape).background(color))
+        val label = stringResource(R.string.live).let { if (minute.isBlank()) it else "$it · $minute" }
+        Text(label, style = MaterialTheme.typography.labelSmall, color = color, fontWeight = FontWeight.Bold)
     }
 }
 

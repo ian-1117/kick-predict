@@ -7,6 +7,7 @@ import com.kickpredict.domain.model.H2HMeeting
 import com.kickpredict.domain.model.H2HOutcome
 import com.kickpredict.domain.model.HeadToHead
 import com.kickpredict.domain.model.LeagueType
+import com.kickpredict.domain.model.LiveScore
 import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.MatchOutcome
 import java.time.LocalDate
@@ -57,39 +58,56 @@ class LiveFixtureRemoteSource(
     private var results: Map<String, Pair<Int, Int>> = emptyMap()
     fun lastResults(): Map<String, Pair<Int, Int>> = results
 
+    // Scores of matches currently in play, keyed by match id (not seeded — they aren't final yet).
+    @Volatile
+    private var liveScores: Map<String, LiveScore> = emptyMap()
+    fun lastLiveScores(): Map<String, LiveScore> = liveScores
+
+    /** One fetched fixture with its final score (if played) and its live score (if in play now). */
+    private data class LiveFixture(val match: Match, val result: Pair<Int, Int>?, val live: LiveScore?)
+
     suspend fun getFixtures(): List<Match> {
         val today = clock()
         val europeSeason = europeanSeason(today)
         val kSeason = today.year
         val out = ArrayList<Match>()
         val resultsAcc = HashMap<String, Pair<Int, Int>>()
+        val liveAcc = HashMap<String, LiveScore>()
 
         europe.forEach { (code, league) ->
             val live = if (footballDataKey.isNotBlank()) {
                 runCatching { europeFixtures(code, league, europeSeason) }.getOrNull()?.takeIf { it.isNotEmpty() }
             } else null
-            out += collect(live, resultsAcc) ?: bundledByLeague(league)
+            out += collect(live, resultsAcc, liveAcc) ?: bundledByLeague(league)
         }
         kLeagues.forEach { (id, league) ->
             val live = if (apiFootballKey.isNotBlank()) {
                 runCatching { kLeagueFixtures(id, league, kSeason) }.getOrNull()?.takeIf { it.isNotEmpty() }
             } else null
-            out += collect(live, resultsAcc) ?: bundledByLeague(league)
+            out += collect(live, resultsAcc, liveAcc) ?: bundledByLeague(league)
         }
         results = resultsAcc
+        liveScores = liveAcc
         return out
     }
 
-    /** Split a live (match, finalScore?) list into the match list, harvesting scores into [into]. */
-    private fun collect(live: List<Pair<Match, Pair<Int, Int>?>>?, into: MutableMap<String, Pair<Int, Int>>): List<Match>? {
-        if (live == null) return null
-        live.forEach { (match, score) -> if (score != null) into[match.id] = score }
-        return live.map { it.first }
+    /** Split fetched fixtures into the match list, harvesting final and live scores into the maps. */
+    private fun collect(
+        fixtures: List<LiveFixture>?,
+        results: MutableMap<String, Pair<Int, Int>>,
+        live: MutableMap<String, LiveScore>,
+    ): List<Match>? {
+        if (fixtures == null) return null
+        fixtures.forEach { f ->
+            if (f.result != null) results[f.match.id] = f.result
+            if (f.live != null) live[f.match.id] = f.live
+        }
+        return fixtures.map { it.match }
     }
 
     // --- football-data.org (Europe) ---
 
-    private suspend fun europeFixtures(code: String, league: LeagueType, season: Int): List<Pair<Match, Pair<Int, Int>?>> {
+    private suspend fun europeFixtures(code: String, league: LeagueType, season: Int): List<LiveFixture> {
         val matches = footballData.matches(code, season).matches
         if (matches.isEmpty()) return emptyList()
 
@@ -139,21 +157,23 @@ class LiveFixtureRemoteSource(
                 headToHead = buildHeadToHead(homeKey, awayKey, h2hRecords),
                 round = m.matchday ?: 1,
             )
-            val score = if (m.status == "FINISHED" && m.score.fullTime.home != null && m.score.fullTime.away != null) {
-                m.score.fullTime.home to m.score.fullTime.away
-            } else null
-            match to score
+            val h = m.score.fullTime.home
+            val a = m.score.fullTime.away
+            val live = if ((m.status == "IN_PLAY" || m.status == "PAUSED") && h != null && a != null) LiveScore(h, a) else null
+            val score = if (m.status == "FINISHED" && h != null && a != null) h to a else null
+            LiveFixture(match, score, live)
         }
     }
 
     // --- APIFootball (K League) ---
 
-    private suspend fun kLeagueFixtures(leagueId: Int, league: LeagueType, season: Int): List<Pair<Match, Pair<Int, Int>?>> {
+    private suspend fun kLeagueFixtures(leagueId: Int, league: LeagueType, season: Int): List<LiveFixture> {
         val standings = apiFootball.standings(leagueId = leagueId).associateBy { it.teamId }
         // Pull a few seasons in one call: the extra history only feeds head-to-head; fixtures, form
         // and results are still taken from the current season alone.
         val events = apiFootball.events(from = "${season - 2}-01-01", to = "$season-12-31", leagueId = leagueId)
         val h2hRecords = events.mapNotNull { e ->
+            if (e.live == "1") return@mapNotNull null // in-play, not a settled result
             val d = parseDate(e.date) ?: return@mapNotNull null
             val hs = e.homeScore.toIntOrNull() ?: return@mapNotNull null
             val aws = e.awayScore.toIntOrNull() ?: return@mapNotNull null
@@ -179,8 +199,10 @@ class LiveFixtureRemoteSource(
             )
             val hs = e.homeScore.toIntOrNull()
             val aws = e.awayScore.toIntOrNull()
-            val score = if (hs != null && aws != null) hs to aws else null
-            match to score
+            val isLive = e.live == "1"
+            val live = if (isLive && hs != null && aws != null) LiveScore(hs, aws, e.status) else null
+            val score = if (!isLive && hs != null && aws != null) hs to aws else null
+            LiveFixture(match, score, live)
         }
     }
 

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.kickpredict.KickPredictApplication
 import com.kickpredict.domain.model.LeagueType
+import com.kickpredict.domain.model.LiveScore
 import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.RecordedResult
 import com.kickpredict.domain.repository.CalibrationRepository
@@ -59,6 +60,8 @@ data class MatchListUiState(
     // Actual results for already-played fixtures, keyed by match id — lets a card show the final
     // score and whether the prediction hit.
     val results: Map<String, RecordedResult> = emptyMap(),
+    // Scores of matches currently in play, keyed by match id — for the LIVE badge + live score.
+    val liveScores: Map<String, LiveScore> = emptyMap(),
 )
 
 class MatchListViewModel(
@@ -66,6 +69,7 @@ class MatchListViewModel(
     private val recalibrate: RecalibrateUseCase,
     private val calibrationRepository: CalibrationRepository,
     private val syncResults: SyncResultsUseCase,
+    private val liveScoresProvider: () -> Map<String, LiveScore>,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MatchListUiState())
@@ -139,6 +143,7 @@ class MatchListViewModel(
         val status = runCatching { recalibrate() }.getOrNull()
         val results = runCatching { calibrationRepository.recordedResults().associateBy { it.matchId } }
             .getOrDefault(emptyMap())
+        val liveScores = runCatching { liveScoresProvider() }.getOrDefault(emptyMap())
         _uiState.value = current.copy(
             isLoading = false,
             calibration = status,
@@ -147,6 +152,7 @@ class MatchListViewModel(
             fromDate = from,
             toDate = to,
             results = results,
+            liveScores = liveScores,
         )
         rebuild()
     }
@@ -220,6 +226,7 @@ class MatchListViewModel(
                     app.container.recalibrate,
                     app.container.calibrationRepository,
                     app.container.syncResults,
+                    app.container.liveScores,
                 )
             }
         }

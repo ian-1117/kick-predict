@@ -19,7 +19,8 @@ data class AfEvent(
     @SerialName("league_year") val leagueYear: String = "",
     @SerialName("match_date") val date: String = "",   // YYYY-MM-DD
     @SerialName("match_time") val time: String = "",   // HH:MM
-    @SerialName("match_status") val status: String = "", // "Finished" / "Not Started" / ""
+    @SerialName("match_status") val status: String = "", // "Finished" / "Not Started" / "" / a minute
+    @SerialName("match_live") val live: String = "0",     // "1" while the match is in play
     @SerialName("match_round") val round: String = "",
     @SerialName("match_stadium") val stadium: String = "",
     @SerialName("match_hometeam_id") val homeId: String = "",
