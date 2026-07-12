@@ -27,6 +27,7 @@ import com.kickpredict.domain.usecase.GetPendingNotificationsUseCase
 import com.kickpredict.domain.usecase.GetPredictedMatchesUseCase
 import com.kickpredict.domain.usecase.GetValuePicksUseCase
 import com.kickpredict.domain.usecase.RecalibrateUseCase
+import com.kickpredict.notifications.FollowPreference
 import com.kickpredict.notifications.MatchNotifier
 import com.kickpredict.notifications.NotificationLog
 import com.kickpredict.notifications.NotificationPreference
@@ -123,6 +124,10 @@ class AppContainer(context: Context) {
     /** Value-pick ledger + ROI: logs flagged picks at their flag-time price and settles them. */
     val getValuePicks = GetValuePicksUseCase(valuePickRepository, calibrationRepository)
 
+    // --- Follows ----------------------------------------------------------------------------
+    /** Teams the user follows — drives the "Followed" filter and scopes notifications. */
+    val followPreference = FollowPreference(appContext)
+
     // --- Match notifications ----------------------------------------------------------------
     /** Opt-in toggle for background match notifications (default off). */
     val notificationPreference = NotificationPreference(appContext)
@@ -138,6 +143,7 @@ class AppContainer(context: Context) {
         liveScores = liveScores,
         odds = odds,
         calibrationRepository = calibrationRepository,
+        followedTeams = { followPreference.followed.value },
     )
 
     /**

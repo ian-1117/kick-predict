@@ -19,6 +19,7 @@ class GetPendingNotificationsUseCase(
     private val liveScores: () -> Map<String, LiveScore>,
     private val odds: () -> Map<String, MarketOdds>,
     private val calibrationRepository: CalibrationRepository,
+    private val followedTeams: () -> Set<String> = { emptySet() },
 ) {
 
     suspend operator fun invoke(matches: List<Match>, nowMillis: Long): List<MatchNotification> {
@@ -27,11 +28,14 @@ class GetPendingNotificationsUseCase(
         val results = runCatching { calibrationRepository.recordedResults().associateBy { it.matchId } }
             .getOrDefault(emptyMap())
         val byId = matches.associateBy { it.id }
+        // Once the user follows any team, only notify about matches involving a followed team.
+        val followed = runCatching { followedTeams() }.getOrDefault(emptySet())
 
         val out = mutableListOf<MatchNotification>()
 
         // Finished predictions → hit / miss.
         results.values.forEach { r ->
+            if (followed.isNotEmpty() && r.homeTeamId !in followed && r.awayTeamId !in followed) return@forEach
             out += MatchNotification.Result(
                 matchId = r.matchId,
                 home = r.homeTeam,
@@ -45,6 +49,7 @@ class GetPendingNotificationsUseCase(
         live.forEach { (id, score) ->
             if (id in results) return@forEach
             val match = byId[id] ?: return@forEach
+            if (followed.isNotEmpty() && match.homeTeam.id !in followed && match.awayTeam.id !in followed) return@forEach
             out += MatchNotification.Live(
                 matchId = id,
                 home = match.homeTeam.displayName,
@@ -57,6 +62,7 @@ class GetPendingNotificationsUseCase(
         matches.forEach { match ->
             val prediction = match.predictedResult ?: return@forEach
             if (match.id in results || match.id in live) return@forEach
+            if (followed.isNotEmpty() && match.homeTeam.id !in followed && match.awayTeam.id !in followed) return@forEach
             val kickoffMillis = match.kickoff.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
             val minutes = ((kickoffMillis - nowMillis) / 60_000L)
             if (minutes < 0 || minutes > KICKOFF_WINDOW_MINUTES) return@forEach

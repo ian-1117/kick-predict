@@ -19,6 +19,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,6 +35,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -60,12 +63,26 @@ fun TeamScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
+    val followPreference = (LocalContext.current.applicationContext as com.kickpredict.KickPredictApplication)
+        .container.followPreference
+    val followed by followPreference.followed.collectAsState()
+    val isFollowing = teamId in followed
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text(state.team?.name ?: "Team", fontWeight = FontWeight.Bold) },
                 navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") } },
+                actions = {
+                    IconButton(onClick = { followPreference.toggle(teamId) }) {
+                        Icon(
+                            if (isFollowing) Icons.Filled.Star else Icons.Filled.StarBorder,
+                            contentDescription = stringResource(if (isFollowing) R.string.unfollow else R.string.follow),
+                            tint = AccentPrimary,
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             )
         },

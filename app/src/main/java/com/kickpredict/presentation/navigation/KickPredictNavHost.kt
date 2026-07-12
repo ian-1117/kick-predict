@@ -42,6 +42,7 @@ fun KickPredictNavHost(
         composable(Routes.MATCH_LIST) {
             MatchListScreen(
                 onMatchClick = { matchId -> navController.navigate(Routes.detail(matchId)) },
+                onTeamClick = { teamId -> navController.navigate(Routes.team(teamId)) },
                 onDashboard = { navController.navigate(Routes.DASHBOARD) },
                 onStandings = { navController.navigate(Routes.STANDINGS) },
                 onValuePicks = { navController.navigate(Routes.VALUE_PICKS) },

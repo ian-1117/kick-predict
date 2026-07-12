@@ -27,6 +27,8 @@ import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material.icons.filled.Today
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DatePickerDialog
@@ -94,6 +96,7 @@ private val rangeFormatter = DateTimeFormatter.ofPattern("M.d")
 @Composable
 fun MatchListScreen(
     onMatchClick: (String) -> Unit,
+    onTeamClick: (String) -> Unit,
     onDashboard: () -> Unit,
     onStandings: () -> Unit,
     onValuePicks: () -> Unit,
@@ -164,6 +167,7 @@ fun MatchListScreen(
                         onGroup = viewModel::setGroupMode,
                         onOpenDatePicker = { showDatePicker = true },
                         onClearDate = viewModel::clearDateRange,
+                        onFollowedOnly = viewModel::setFollowedOnly,
                     )
                     CalibrationStatusBar(state)
                     PullToRefreshBox(
@@ -179,7 +183,15 @@ fun MatchListScreen(
                             state.sections.forEach { section ->
                                 item(key = "h_${section.title}") { SectionHeader(section.title, section.matches.size) }
                                 items(section.matches, key = { it.id }) { match ->
-                                    MatchCard(match, state.results[match.id], state.liveScores[match.id], state.odds[match.id]) { onMatchClick(match.id) }
+                                    MatchCard(
+                                        match = match,
+                                        result = state.results[match.id],
+                                        liveScore = state.liveScores[match.id],
+                                        odds = state.odds[match.id],
+                                        followedTeamIds = state.followedTeamIds,
+                                        onTeamClick = onTeamClick,
+                                        onClick = { onMatchClick(match.id) },
+                                    )
                                 }
                             }
                             if (state.sections.isEmpty()) {
@@ -229,6 +241,7 @@ private fun FilterBar(
     onGroup: (GroupMode) -> Unit,
     onOpenDatePicker: () -> Unit,
     onClearDate: () -> Unit,
+    onFollowedOnly: (Boolean) -> Unit,
 ) {
     Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         // Team search.
@@ -255,6 +268,25 @@ private fun FilterBar(
             modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
+            if (state.followedTeamIds.isNotEmpty()) {
+                FilterChip(
+                    selected = state.followedOnly,
+                    onClick = { onFollowedOnly(!state.followedOnly) },
+                    label = { Text(stringResource(R.string.filter_followed)) },
+                    leadingIcon = {
+                        Icon(
+                            if (state.followedOnly) Icons.Filled.Star else Icons.Filled.StarBorder,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = AccentPrimary.copy(alpha = 0.2f),
+                        selectedLabelColor = AccentPrimary,
+                        selectedLeadingIconColor = AccentPrimary,
+                    ),
+                )
+            }
             LeagueChipFilter(stringResource(R.string.filter_all), state.leagueFilter == null) { onLeague(null) }
             LeagueType.entries.forEach { league ->
                 LeagueChipFilter(league.displayName, state.leagueFilter == league) { onLeague(league) }
@@ -349,7 +381,15 @@ private fun CalibrationStatusBar(state: MatchListUiState) {
 }
 
 @Composable
-private fun MatchCard(match: Match, result: RecordedResult?, liveScore: LiveScore?, odds: MarketOdds?, onClick: () -> Unit) {
+private fun MatchCard(
+    match: Match,
+    result: RecordedResult?,
+    liveScore: LiveScore?,
+    odds: MarketOdds?,
+    followedTeamIds: Set<String>,
+    onTeamClick: (String) -> Unit,
+    onClick: () -> Unit,
+) {
     val prediction = match.predictedResult
     Column(
         modifier = Modifier
@@ -380,7 +420,10 @@ private fun MatchCard(match: Match, result: RecordedResult?, liveScore: LiveScor
         }
 
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            TeamCrest(match.homeTeam.shortName, match.homeTeam.crestPrimary, match.homeTeam.crestSecondary)
+            Box(Modifier.clip(CircleShape).clickable { onTeamClick(match.homeTeam.id) }) {
+                TeamCrest(match.homeTeam.shortName, match.homeTeam.crestPrimary, match.homeTeam.crestSecondary)
+            }
+            if (match.homeTeam.id in followedTeamIds) FollowStar()
             Text(
                 match.homeTeam.displayName,
                 style = MaterialTheme.typography.titleMedium,
@@ -408,7 +451,10 @@ private fun MatchCard(match: Match, result: RecordedResult?, liveScore: LiveScor
                 textAlign = TextAlign.End,
                 modifier = Modifier.weight(1f).padding(end = 10.dp),
             )
-            TeamCrest(match.awayTeam.shortName, match.awayTeam.crestPrimary, match.awayTeam.crestSecondary)
+            if (match.awayTeam.id in followedTeamIds) FollowStar()
+            Box(Modifier.clip(CircleShape).clickable { onTeamClick(match.awayTeam.id) }) {
+                TeamCrest(match.awayTeam.shortName, match.awayTeam.crestPrimary, match.awayTeam.crestSecondary)
+            }
         }
 
         if (prediction != null) {
@@ -453,6 +499,17 @@ private fun outcomeLabel(match: Match, outcome: PredictedOutcome): String = when
     PredictedOutcome.HOME_WIN -> stringResource(R.string.outcome_win, match.homeTeam.displayName)
     PredictedOutcome.AWAY_WIN -> stringResource(R.string.outcome_win, match.awayTeam.displayName)
     PredictedOutcome.DRAW -> stringResource(R.string.outcome_draw)
+}
+
+/** Small star shown beside a followed team's name in the fixture list. */
+@Composable
+private fun FollowStar() {
+    Icon(
+        Icons.Filled.Star,
+        contentDescription = stringResource(R.string.following),
+        tint = AccentPrimary,
+        modifier = Modifier.padding(start = 6.dp).size(16.dp),
+    )
 }
 
 @Composable

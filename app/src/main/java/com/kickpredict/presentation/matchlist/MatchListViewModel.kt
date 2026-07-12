@@ -17,6 +17,7 @@ import com.kickpredict.domain.usecase.CalibrationStatus
 import com.kickpredict.domain.usecase.GetPredictedMatchesUseCase
 import com.kickpredict.domain.usecase.RecalibrateUseCase
 import com.kickpredict.domain.usecase.SyncResultsUseCase
+import com.kickpredict.notifications.FollowPreference
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -65,6 +66,10 @@ data class MatchListUiState(
     val liveScores: Map<String, LiveScore> = emptyMap(),
     // Market odds for upcoming matches, keyed by match id — for the value-pick badge.
     val odds: Map<String, MarketOdds> = emptyMap(),
+    // Team ids the user follows — for the star indicator and the "Followed" filter.
+    val followedTeamIds: Set<String> = emptySet(),
+    // When on, the list is restricted to matches involving a followed team.
+    val followedOnly: Boolean = false,
 )
 
 class MatchListViewModel(
@@ -74,6 +79,7 @@ class MatchListViewModel(
     private val syncResults: SyncResultsUseCase,
     private val liveScoresProvider: () -> Map<String, LiveScore>,
     private val oddsProvider: () -> Map<String, MarketOdds>,
+    private val followPreference: FollowPreference,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MatchListUiState())
@@ -81,6 +87,16 @@ class MatchListViewModel(
 
     private var allMatches: List<Match> = emptyList()
     private var loadedOnce = false
+
+    init {
+        // Follow changes (from any screen) re-filter the list live.
+        viewModelScope.launch {
+            followPreference.followed.collect { followed ->
+                _uiState.value = _uiState.value.copy(followedTeamIds = followed)
+                rebuild()
+            }
+        }
+    }
 
     /**
      * Called on every screen resume. The first time shows the loading spinner; on return from the
@@ -185,6 +201,11 @@ class MatchListViewModel(
 
     fun clearDateRange() = setDateRange(null, null)
 
+    fun setFollowedOnly(enabled: Boolean) {
+        _uiState.value = _uiState.value.copy(followedOnly = enabled)
+        rebuild()
+    }
+
     /** Jump back to the current round: clear the search and refocus the range on today → season end. */
     fun jumpToCurrentRound() {
         val s = _uiState.value
@@ -206,6 +227,10 @@ class MatchListViewModel(
                     (state.toDate == null || !date.isAfter(state.toDate))
             }
             .filter { m -> query.isEmpty() || m.matchesTeamQuery(query) }
+            .filter { m ->
+                !state.followedOnly ||
+                    m.homeTeam.id in state.followedTeamIds || m.awayTeam.id in state.followedTeamIds
+            }
             .sortedBy { it.kickoff }
 
         val sections = when (state.groupMode) {
@@ -234,6 +259,7 @@ class MatchListViewModel(
                     app.container.syncResults,
                     app.container.liveScores,
                     app.container.odds,
+                    app.container.followPreference,
                 )
             }
         }
