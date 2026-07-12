@@ -3,6 +3,8 @@ package com.kickpredict.presentation.components
 import androidx.compose.ui.res.stringResource
 import com.kickpredict.R
 import com.kickpredict.presentation.common.weatherName
+import com.kickpredict.presentation.common.rationaleText
+import com.kickpredict.domain.model.RationaleNote
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -52,7 +54,7 @@ import kotlin.math.roundToInt
 fun PowerComparisonReport(
     home: TeamProfile,
     away: TeamProfile,
-    rationale: List<String>,
+    rationale: List<RationaleNote>,
     modifier: Modifier = Modifier,
     headToHead: HeadToHead? = null,
     matchupEdge: MatchupEdge = MatchupEdge.NONE,
@@ -114,7 +116,7 @@ fun PowerComparisonReport(
                 Row(verticalAlignment = Alignment.Top) {
                     Text("· ", color = AccentPrimary, style = MaterialTheme.typography.bodyMedium)
                     Text(
-                        text = note,
+                        text = rationaleText(note),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

@@ -125,6 +125,19 @@
     <string name="sim_metric_top">상위권</string>
     <string name="sim_metric_relegation">강등</string>
 
+    <!-- Prediction rationale notes -->
+    <string name="rationale_calibration">%1$s 보정 λ (홈 %2$s / 원정 %3$s).</string>
+    <string name="rationale_laliga_gap">라리가 순위차 보정으로 전력 우위 강화.</string>
+    <string name="rationale_bundesliga_boost">분데스리가 홈 부스트 적용: %1$s.</string>
+    <string name="rationale_fatigue">%1$s 피로 (휴식 %2$d일).</string>
+    <string name="rationale_matchup_dominates">상성 우위: %1$s가 최근 상대전적 우세 (+%2$d%% λ).</string>
+    <string name="rationale_matchup_bogey">상성 우위: %1$s가 천적 (+%2$d%% λ).</string>
+    <string name="rationale_elo">Elo(학습 레이팅) 반영: Δ%1$d.</string>
+    <string name="rationale_poisson">실데이터 공수 레이팅(Dixon-Coles) 반영: λ %1$s / %2$s.</string>
+    <string name="rationale_weakened">%1$s 전력 약화 (%2$d명 결장, %3$d%% 라인업).</string>
+    <string name="rationale_weather">%1$s: 득점 감소 예상.</string>
+    <string name="rationale_expected_score">예상 스코어 %1$s (λ %2$s / %3$s).</string>
+
     <!-- Power comparison report -->
     <string name="power_title">전력 비교 리포트</string>
     <string name="power_why">예측 근거</string>

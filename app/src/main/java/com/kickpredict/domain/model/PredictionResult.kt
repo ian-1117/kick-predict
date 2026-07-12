@@ -45,7 +45,7 @@ data class PredictionResult(
      * Display uses [confidenceScore]; calibration uses this.
      */
     val rawConfidenceScore: Int = confidenceScore,
-    val rationale: List<String>,
+    val rationale: List<RationaleNote>,
     val matchupBias: Double = 0.0,
     val expectedHomeGoals: Double = 0.0,
     val expectedAwayGoals: Double = 0.0,

@@ -4,6 +4,7 @@ import com.kickpredict.domain.calibration.CalibrationDefaults
 import com.kickpredict.domain.calibration.ConfidenceCalibration
 import com.kickpredict.domain.calibration.IdentityConfidenceCalibration
 import com.kickpredict.domain.model.CalibrationProvider
+import com.kickpredict.domain.model.RationaleNote
 import com.kickpredict.domain.model.HeadToHead
 import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.model.Match
@@ -83,7 +84,7 @@ class PredictionEngine(
         val away = match.awayTeam
         val h2h = match.headToHead
         val cal = calibration.forLeague(league)
-        val rationale = mutableListOf<String>()
+        val rationale = mutableListOf<RationaleNote>()
 
         // --- 1. Base expected goals from calibrated league rates + team scoring rates ------------
         val mean = cal.leagueMeanGoals
@@ -93,13 +94,13 @@ class PredictionEngine(
         var lambdaAway = cal.awayGoalsAvg *
             (away.goalsScoredAvg / mean).pow(GOAL_RATIO_EXPONENT) *
             (home.goalsConcededAvg / mean).pow(GOAL_RATIO_EXPONENT)
-        rationale += "λ from ${league.displayName} calibration (home ${fmt(cal.homeGoalsAvg)} / away ${fmt(cal.awayGoalsAvg)})."
+        rationale += RationaleNote.Calibration(league, cal.homeGoalsAvg, cal.awayGoalsAvg)
 
         // --- 2. Quality (rating/position/form) skews the goal ratio -----------------------------
         var qualityGap = qualityIndex(home) - qualityIndex(away)
         if (league == LeagueType.LALIGA) {
             qualityGap *= LALIGA_QUALITY_AMP
-            rationale += "LaLiga position-gap correction amplifies the quality edge."
+            rationale += RationaleNote.LaLigaPositionGap
         }
         lambdaHome *= (1.0 + QUALITY_STRENGTH * qualityGap)
         lambdaAway *= (1.0 - QUALITY_STRENGTH * qualityGap)
@@ -107,16 +108,16 @@ class PredictionEngine(
         // --- 3. League + schedule modifiers -----------------------------------------------------
         if (league == LeagueType.BUNDESLIGA) {
             lambdaHome *= BUNDESLIGA_HOME_BOOST
-            rationale += "Bundesliga home boost applied to ${home.shortName}."
+            rationale += RationaleNote.BundesligaHomeBoost(home.shortName)
         }
         if (league == LeagueType.EPL || league == LeagueType.K_LEAGUE || league == LeagueType.K_LEAGUE_2) {
             if (home.isFatigued) {
                 lambdaHome *= FATIGUE_PENALTY
-                rationale += "${home.shortName} fatigued (${home.daysSinceLastMatch}d rest)."
+                rationale += RationaleNote.Fatigue(home.shortName, home.daysSinceLastMatch)
             }
             if (away.isFatigued) {
                 lambdaAway *= FATIGUE_PENALTY
-                rationale += "${away.shortName} fatigued (${away.daysSinceLastMatch}d rest)."
+                rationale += RationaleNote.Fatigue(away.shortName, away.daysSinceLastMatch)
             }
         }
 
@@ -134,14 +135,14 @@ class PredictionEngine(
             val eloSkew = tanh(eloDiff / 400.0) // -1..1
             lambdaHome *= (1.0 + ELO_STRENGTH * eloSkew)
             lambdaAway *= (1.0 - ELO_STRENGTH * eloSkew)
-            rationale += "Elo(학습 레이팅) 반영: Δ${eloDiff.roundToInt()}."
+            rationale += RationaleNote.Elo(eloDiff.roundToInt())
         }
 
         // --- 4a-2. Learned Dixon-Coles attack/defence goal model (from real results) ------------
         poissonProvider.lambdas(home.id, away.id)?.let { (poissonHome, poissonAway) ->
             lambdaHome = (1.0 - POISSON_STRENGTH) * lambdaHome + POISSON_STRENGTH * poissonHome
             lambdaAway = (1.0 - POISSON_STRENGTH) * lambdaAway + POISSON_STRENGTH * poissonAway
-            rationale += "실데이터 공수 레이팅(Dixon-Coles) 반영: λ ${fmt(poissonHome)} / ${fmt(poissonAway)}."
+            rationale += RationaleNote.Poisson(poissonHome, poissonAway)
         }
 
         // --- 4b. Context variables: injuries / lineup strength / weather ------------------------
@@ -149,15 +150,15 @@ class PredictionEngine(
         lambdaHome *= context.homeAvailability.availabilityFactor
         lambdaAway *= context.awayAvailability.availabilityFactor
         if (context.homeAvailability.isWeakened) {
-            rationale += "${home.shortName} weakened (${context.homeAvailability.keyPlayersInjured} out, ${context.homeAvailability.lineupStrengthPercent}% XI)."
+            rationale += RationaleNote.Weakened(home.shortName, context.homeAvailability.keyPlayersInjured, context.homeAvailability.lineupStrengthPercent)
         }
         if (context.awayAvailability.isWeakened) {
-            rationale += "${away.shortName} weakened (${context.awayAvailability.keyPlayersInjured} out, ${context.awayAvailability.lineupStrengthPercent}% XI)."
+            rationale += RationaleNote.Weakened(away.shortName, context.awayAvailability.keyPlayersInjured, context.awayAvailability.lineupStrengthPercent)
         }
         if (context.weather.isAdverse) {
             lambdaHome *= context.weather.goalFactor
             lambdaAway *= context.weather.goalFactor
-            rationale += "${context.weather.displayLabel}: fewer goals expected."
+            rationale += RationaleNote.Weather(context.weather)
         }
 
         lambdaHome = lambdaHome.coerceIn(LAMBDA_MIN, LAMBDA_MAX)
@@ -209,7 +210,7 @@ class PredictionEngine(
                 else -> it.homeGoals == it.awayGoals
             }
         }?.label ?: "${lambdaHome.roundToInt()} – ${lambdaAway.roundToInt()}"
-        rationale += "예상 스코어 $likelyScore (λ ${fmt(lambdaHome)} / ${fmt(lambdaAway)})."
+        rationale += RationaleNote.ExpectedScore(likelyScore, lambdaHome, lambdaAway)
 
         // Extra markets from the (independent-Poisson) goal expectations.
         val totalLambda = lambdaHome + lambdaAway
@@ -245,16 +246,15 @@ class PredictionEngine(
         return h2h.weightedBias(H2H_RECENCY_DECAY, H2H_VENUE_BOOST)
     }
 
-    private fun matchupNote(home: TeamProfile, away: TeamProfile, bias: Double): String {
+    private fun matchupNote(home: TeamProfile, away: TeamProfile, bias: Double): RationaleNote {
         val pct = (MATCHUP_STRENGTH * abs(bias) * 100).roundToInt()
         return if (bias > 0) {
-            "상성 우위: ${home.shortName} dominates the recent H2H (+$pct% λ)."
+            RationaleNote.Matchup(home.shortName, pct, dominates = true)
         } else {
-            "상성 우위: ${away.shortName} is a bogey team (+$pct% λ)."
+            RationaleNote.Matchup(away.shortName, pct, dominates = false)
         }
     }
 
-    private fun fmt(v: Double): String = ((v * 100).roundToInt() / 100.0).toString()
 
     /**
      * Convert three probabilities (summing to ~1.0) into whole percents that sum to exactly 100,

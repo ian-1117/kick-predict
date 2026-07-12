@@ -125,6 +125,19 @@
     <string name="sim_metric_top">Top</string>
     <string name="sim_metric_relegation">Relegation</string>
 
+    <!-- Prediction rationale notes -->
+    <string name="rationale_calibration">λ from %1$s calibration (home %2$s / away %3$s).</string>
+    <string name="rationale_laliga_gap">LaLiga position-gap correction amplifies the quality edge.</string>
+    <string name="rationale_bundesliga_boost">Bundesliga home boost applied to %1$s.</string>
+    <string name="rationale_fatigue">%1$s fatigued (%2$d-day rest).</string>
+    <string name="rationale_matchup_dominates">Edge: %1$s dominates the recent H2H (+%2$d%% λ).</string>
+    <string name="rationale_matchup_bogey">Edge: %1$s is a bogey team (+%2$d%% λ).</string>
+    <string name="rationale_elo">Elo (learned rating): Δ%1$d.</string>
+    <string name="rationale_poisson">Attack/defense rating (Dixon-Coles): λ %1$s / %2$s.</string>
+    <string name="rationale_weakened">%1$s weakened (%2$d out, %3$d%% XI).</string>
+    <string name="rationale_weather">%1$s: fewer goals expected.</string>
+    <string name="rationale_expected_score">Expected score %1$s (λ %2$s / %3$s).</string>
+
     <!-- Power comparison report -->
     <string name="power_title">Power comparison</string>
     <string name="power_why">Why this prediction</string>

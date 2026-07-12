@@ -5,7 +5,9 @@ import androidx.compose.ui.res.stringResource
 import com.kickpredict.R
 import com.kickpredict.domain.model.ConfidenceTier
 import com.kickpredict.domain.model.PredictedOutcome
+import com.kickpredict.domain.model.RationaleNote
 import com.kickpredict.domain.model.Weather
+import kotlin.math.roundToInt
 
 /** Localised generic name for a predicted outcome (home win / away win / draw). */
 @Composable
@@ -34,3 +36,23 @@ fun confidenceTierName(tier: ConfidenceTier): String = when (tier) {
     ConfidenceTier.LOW -> stringResource(R.string.tier_low)
     ConfidenceTier.VERY_LOW -> stringResource(R.string.tier_very_low)
 }
+
+/** Localised text for one prediction-rationale note. */
+@Composable
+fun rationaleText(note: RationaleNote): String = when (note) {
+    is RationaleNote.Calibration ->
+        stringResource(R.string.rationale_calibration, note.league.displayName, lambda(note.homeAvg), lambda(note.awayAvg))
+    RationaleNote.LaLigaPositionGap -> stringResource(R.string.rationale_laliga_gap)
+    is RationaleNote.BundesligaHomeBoost -> stringResource(R.string.rationale_bundesliga_boost, note.team)
+    is RationaleNote.Fatigue -> stringResource(R.string.rationale_fatigue, note.team, note.days)
+    is RationaleNote.Matchup ->
+        stringResource(if (note.dominates) R.string.rationale_matchup_dominates else R.string.rationale_matchup_bogey, note.team, note.percent)
+    is RationaleNote.Elo -> stringResource(R.string.rationale_elo, note.delta)
+    is RationaleNote.Poisson -> stringResource(R.string.rationale_poisson, lambda(note.homeLambda), lambda(note.awayLambda))
+    is RationaleNote.Weakened -> stringResource(R.string.rationale_weakened, note.team, note.out, note.xiPercent)
+    is RationaleNote.Weather -> stringResource(R.string.rationale_weather, weatherName(note.weather))
+    is RationaleNote.ExpectedScore ->
+        stringResource(R.string.rationale_expected_score, note.scoreline, lambda(note.homeLambda), lambda(note.awayLambda))
+}
+
+private fun lambda(v: Double): String = ((v * 100).roundToInt() / 100.0).toString()
