@@ -68,6 +68,13 @@
     <string name="detail_btts">Both teams to score</string>
     <string name="detail_no_goal">No goal</string>
     <string name="detail_score_prob">Scoreline probability</string>
+    <string name="detail_value_title">Model vs market</string>
+    <string name="detail_value_note">Model probability against the odds\' implied probability. A green edge means the model rates the pick higher than the bookmaker.</string>
+    <string name="detail_value_col_odds">Odds</string>
+    <string name="detail_value_col_market">Market</string>
+    <string name="detail_value_col_model">Model</string>
+    <string name="detail_value_edge">Value edge · %1$s %2$+d%%</string>
+    <string name="detail_value_none">No value edge — the market agrees with the model.</string>
 
     <!-- Standings screen -->
     <string name="standings_simulate">Season simulation</string>

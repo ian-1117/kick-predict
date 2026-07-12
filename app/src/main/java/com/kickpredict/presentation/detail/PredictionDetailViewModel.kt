@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.kickpredict.KickPredictApplication
 import com.kickpredict.domain.model.ActualResult
+import com.kickpredict.domain.model.MarketOdds
 import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.repository.CalibrationRepository
 import com.kickpredict.domain.usecase.GetPredictedMatchUseCase
@@ -24,6 +25,7 @@ data class PredictionDetailUiState(
     val error: String? = null,
     val actualResult: ActualResult? = null,
     val recordedResultCount: Int = 0,
+    val odds: MarketOdds? = null,
 )
 
 class PredictionDetailViewModel(
@@ -32,6 +34,7 @@ class PredictionDetailViewModel(
     private val recordMatchResult: RecordMatchResultUseCase,
     private val recalibrate: RecalibrateUseCase,
     private val calibrationRepository: CalibrationRepository,
+    private val oddsProvider: () -> Map<String, MarketOdds>,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PredictionDetailUiState())
@@ -49,6 +52,7 @@ class PredictionDetailViewModel(
                         isLoading = false,
                         match = match,
                         error = if (match == null) "Match not found" else null,
+                        odds = runCatching { oddsProvider()[matchId] }.getOrNull(),
                     )
                     refreshResult()
                 }
@@ -84,6 +88,7 @@ class PredictionDetailViewModel(
                     recordMatchResult = app.container.recordMatchResult,
                     recalibrate = app.container.recalibrate,
                     calibrationRepository = app.container.calibrationRepository,
+                    oddsProvider = app.container.odds,
                 )
             }
         }

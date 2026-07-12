@@ -51,7 +51,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kickpredict.domain.model.ActualResult
+import com.kickpredict.domain.model.MarketOdds
 import com.kickpredict.domain.model.Match
+import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.PredictionResult
 import com.kickpredict.presentation.components.ConfidenceBadge
 import com.kickpredict.presentation.components.PowerComparisonReport
@@ -70,6 +72,9 @@ private val detailFormatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy · HH
  * layout. ~600dp comfortably separates the Fold 3 cover screen from the main screen.
  */
 private const val EXPANDED_WIDTH_DP = 600
+
+/** Model must beat the market by at least this many points (matching the list badge) to flag value. */
+private const val VALUE_EDGE_THRESHOLD = 4
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,6 +125,7 @@ fun PredictionDetailScreen(
                     prediction = match.predictedResult!!,
                     actualResult = state.actualResult,
                     recordedCount = state.recordedResultCount,
+                    odds = state.odds,
                     onSaveResult = viewModel::recordResult,
                 )
             }
@@ -133,6 +139,7 @@ private fun ResponsivePredictionContent(
     prediction: PredictionResult,
     actualResult: com.kickpredict.domain.model.ActualResult?,
     recordedCount: Int,
+    odds: MarketOdds?,
     onSaveResult: (Int, Int) -> Unit,
 ) {
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
@@ -174,6 +181,10 @@ private fun ResponsivePredictionContent(
                     ProbabilityGauges(prediction, match.homeTeam.shortName, match.awayTeam.shortName)
                     Spacer(Modifier.height(16.dp))
                     MarketSummary(prediction)
+                    if (odds != null) {
+                        Spacer(Modifier.height(16.dp))
+                        MarketOddsCard(prediction, odds, match.homeTeam.shortName, match.awayTeam.shortName)
+                    }
                     Spacer(Modifier.height(16.dp))
                     ScorelineDistribution(prediction)
                     Spacer(Modifier.height(20.dp))
@@ -195,6 +206,9 @@ private fun ResponsivePredictionContent(
                 PredictionDonutChart(prediction, modifier = Modifier.fillMaxWidth(0.7f))
                 ProbabilityGauges(prediction, match.homeTeam.shortName, match.awayTeam.shortName)
                 MarketSummary(prediction)
+                if (odds != null) {
+                    MarketOddsCard(prediction, odds, match.homeTeam.shortName, match.awayTeam.shortName)
+                }
                 ScorelineDistribution(prediction)
                 Box(
                     modifier = Modifier
@@ -389,6 +403,114 @@ private fun ScorelineDistribution(prediction: PredictionResult) {
             }
         }
     }
+}
+
+/** Model probability (whole percent) for a given outcome. */
+private fun modelPercentFor(prediction: PredictionResult, outcome: PredictedOutcome): Int = when (outcome) {
+    PredictedOutcome.HOME_WIN -> prediction.homeWinPercent
+    PredictedOutcome.AWAY_WIN -> prediction.awayWinPercent
+    PredictedOutcome.DRAW -> prediction.drawPercent
+}
+
+/**
+ * Value-pick explainer: for each outcome, the bookmaker's decimal odds, the market's implied
+ * probability and the model's probability side by side, so it's clear *why* a pick is (or isn't)
+ * value — the model rating an outcome higher than the market is the edge the list badge flags.
+ */
+@Composable
+private fun MarketOddsCard(
+    prediction: PredictionResult,
+    odds: MarketOdds,
+    homeShort: String,
+    awayShort: String,
+) {
+    val predicted = prediction.predictedOutcome
+    val edge = modelPercentFor(prediction, predicted) - odds.percentFor(predicted)
+    val predictedLabel = when (predicted) {
+        PredictedOutcome.HOME_WIN -> homeShort
+        PredictedOutcome.AWAY_WIN -> awayShort
+        PredictedOutcome.DRAW -> stringResource(R.string.outcome_draw)
+    }
+    val rows = listOf(
+        Triple(PredictedOutcome.HOME_WIN, homeShort, odds.homeWin),
+        Triple(PredictedOutcome.DRAW, stringResource(R.string.outcome_draw), odds.draw),
+        Triple(PredictedOutcome.AWAY_WIN, awayShort, odds.awayWin),
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        Text(stringResource(R.string.detail_value_title), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+        // Column headers.
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Spacer(Modifier.weight(1f))
+            MarketColHeader(stringResource(R.string.detail_value_col_odds))
+            MarketColHeader(stringResource(R.string.detail_value_col_market))
+            MarketColHeader(stringResource(R.string.detail_value_col_model))
+        }
+        rows.forEach { (outcome, label, decimal) ->
+            val isPredicted = outcome == predicted
+            val model = modelPercentFor(prediction, outcome)
+            val market = odds.percentFor(outcome)
+            val modelBeatsMarket = model - market >= VALUE_EDGE_THRESHOLD
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    label,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = if (isPredicted) FontWeight.Bold else FontWeight.Normal,
+                    color = if (isPredicted) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.weight(1f),
+                )
+                MarketCell(String.format("%.2f", decimal), MaterialTheme.colorScheme.onSurfaceVariant)
+                MarketCell("$market%", MaterialTheme.colorScheme.onSurfaceVariant)
+                MarketCell(
+                    "$model%",
+                    if (modelBeatsMarket) WinColor else MaterialTheme.colorScheme.onSurface,
+                    bold = true,
+                )
+            }
+        }
+        val hasEdge = edge >= VALUE_EDGE_THRESHOLD
+        Text(
+            text = if (hasEdge) stringResource(R.string.detail_value_edge, predictedLabel, edge)
+            else stringResource(R.string.detail_value_none),
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = if (hasEdge) FontWeight.Bold else FontWeight.Normal,
+            color = if (hasEdge) WinColor else MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Text(
+            stringResource(R.string.detail_value_note),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@Composable
+private fun MarketColHeader(label: String) {
+    Text(
+        label,
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = TextAlign.End,
+        modifier = Modifier.width(56.dp),
+    )
+}
+
+@Composable
+private fun MarketCell(text: String, color: androidx.compose.ui.graphics.Color, bold: Boolean = false) {
+    Text(
+        text,
+        style = MaterialTheme.typography.bodyMedium,
+        fontWeight = if (bold) FontWeight.Bold else FontWeight.Normal,
+        color = color,
+        textAlign = TextAlign.End,
+        modifier = Modifier.width(56.dp),
+    )
 }
 
 @Composable

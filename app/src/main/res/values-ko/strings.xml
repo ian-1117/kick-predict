@@ -68,6 +68,13 @@
     <string name="detail_btts">양팀 득점</string>
     <string name="detail_no_goal">노골</string>
     <string name="detail_score_prob">스코어 확률</string>
+    <string name="detail_value_title">모델 vs 시장</string>
+    <string name="detail_value_note">모델 확률과 배당에 내재된 시장 확률 비교. 초록색 우위는 모델이 북메이커보다 높게 본다는 뜻입니다.</string>
+    <string name="detail_value_col_odds">배당</string>
+    <string name="detail_value_col_market">시장</string>
+    <string name="detail_value_col_model">모델</string>
+    <string name="detail_value_edge">밸류 · %1$s %2$+d%%</string>
+    <string name="detail_value_none">밸류 없음 — 시장과 모델이 일치합니다.</string>
 
     <!-- Standings screen -->
     <string name="standings_simulate">시즌 시뮬레이션</string>
