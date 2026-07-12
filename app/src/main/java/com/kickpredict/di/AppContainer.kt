@@ -89,6 +89,7 @@ class AppContainer(context: Context) {
     val repository: MatchRepository = MatchRepositoryImpl(
         liveSource = liveSource,
         teamDao = database.teamDao(),
+        fixtureCacheDao = database.fixtureCacheDao(),
         offlineFallback = { bundledMatches },
         // The bundled as-of view rebuilds historical profiles round-by-round to stay out-of-sample.
         // With live data the current season is already a point-in-time snapshot, so the season

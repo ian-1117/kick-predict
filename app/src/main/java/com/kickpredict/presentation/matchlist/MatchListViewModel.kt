@@ -42,6 +42,7 @@ data class MatchSection(val title: SectionTitle, val matches: List<Match>)
 
 data class MatchListUiState(
     val isLoading: Boolean = true,
+    val isRefreshing: Boolean = false,
     val error: String? = null,
     val leagueFilter: LeagueType? = null, // null == all leagues
     val searchQuery: String = "",
@@ -85,50 +86,69 @@ class MatchListViewModel(
     /** Public reload (e.g. retry after an error) — always shows the spinner. */
     fun load() = load(silent = false)
 
-    private fun load(silent: Boolean) {
-        if (!silent) _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+    /** Pull-to-refresh: force a fresh network fetch while keeping the current list on screen. */
+    fun refresh() {
+        if (_uiState.value.isRefreshing) return
+        _uiState.value = _uiState.value.copy(isRefreshing = true)
         viewModelScope.launch {
+            runCatching { getPredictedMatches(forceRefresh = true) }
+                .onSuccess { applyMatches(it) }
+            _uiState.value = _uiState.value.copy(isRefreshing = false)
+        }
+    }
+
+    private fun load(silent: Boolean) {
+        viewModelScope.launch {
+            // Instant first paint from the persisted cache, so a cold start isn't a blank spinner.
+            if (!loadedOnce) {
+                val cachedMatches = runCatching { getPredictedMatches.cached() }.getOrNull()
+                if (!cachedMatches.isNullOrEmpty()) applyMatches(cachedMatches)
+                else if (!silent) _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+            } else if (!silent) {
+                _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+            }
+            // Fresh data from the network.
             runCatching { getPredictedMatches() }
-                .onSuccess { matches ->
-                    val isFirstLoad = !loadedOnce
-                    allMatches = matches
-                    loadedOnce = true
-                    val dates = matches.map { it.kickoff.toLocalDate() }
-                    val earliest = dates.minOrNull()
-                    val latest = dates.maxOrNull()
-                    // Open on the current round: on the first load, default the range to "today → end
-                    // of the loaded fixtures" so already-played rounds are hidden and the list starts
-                    // on what's coming. Only when there is something upcoming; the ✕ chip reveals all.
-                    val today = LocalDate.now()
-                    val current = _uiState.value
-                    val (from, to) = if (isFirstLoad && current.fromDate == null &&
-                        latest != null && !latest.isBefore(today)
-                    ) {
-                        maxOf(today, earliest ?: today) to latest
-                    } else {
-                        current.fromDate to current.toDate
-                    }
-                    // Seed the current season's real scores, then refit calibration so the status
-                    // reflects them (predictions catch up on the next load — startup already refit).
-                    runCatching { syncResults() }
-                    val status = runCatching { recalibrate() }.getOrNull()
-                    val results = runCatching { calibrationRepository.recordedResults().associateBy { it.matchId } }
-                        .getOrDefault(emptyMap())
-                    _uiState.value = current.copy(
-                        isLoading = false,
-                        calibration = status,
-                        earliestDate = earliest,
-                        latestDate = latest,
-                        fromDate = from,
-                        toDate = to,
-                        results = results,
-                    )
-                    rebuild()
-                }
+                .onSuccess { applyMatches(it) }
                 .onFailure { t ->
-                    _uiState.value = _uiState.value.copy(isLoading = false, error = t.message)
+                    if (allMatches.isEmpty()) _uiState.value = _uiState.value.copy(isLoading = false, error = t.message)
                 }
         }
+    }
+
+    /** Fold a loaded fixture set into state: default the range on first load, seed results, refit. */
+    private suspend fun applyMatches(matches: List<Match>) {
+        val isFirstLoad = !loadedOnce
+        allMatches = matches
+        loadedOnce = true
+        val dates = matches.map { it.kickoff.toLocalDate() }
+        val earliest = dates.minOrNull()
+        val latest = dates.maxOrNull()
+        // Open on the current round: on the first load, default the range to "today → end of the
+        // loaded fixtures" so already-played rounds are hidden and the list starts on what's coming.
+        val today = LocalDate.now()
+        val current = _uiState.value
+        val (from, to) = if (isFirstLoad && current.fromDate == null &&
+            latest != null && !latest.isBefore(today)
+        ) {
+            maxOf(today, earliest ?: today) to latest
+        } else {
+            current.fromDate to current.toDate
+        }
+        runCatching { syncResults() }
+        val status = runCatching { recalibrate() }.getOrNull()
+        val results = runCatching { calibrationRepository.recordedResults().associateBy { it.matchId } }
+            .getOrDefault(emptyMap())
+        _uiState.value = current.copy(
+            isLoading = false,
+            calibration = status,
+            earliestDate = earliest,
+            latestDate = latest,
+            fromDate = from,
+            toDate = to,
+            results = results,
+        )
+        rebuild()
     }
 
     fun setLeague(league: LeagueType?) {

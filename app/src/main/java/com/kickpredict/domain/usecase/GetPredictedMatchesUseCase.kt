@@ -14,11 +14,15 @@ class GetPredictedMatchesUseCase(
     private val engine: PredictionEngine,
     private val calibrationRepository: CalibrationRepository,
 ) {
-    suspend operator fun invoke(): List<Match> {
-        val predicted = repository.getMatches().map { match ->
+    suspend operator fun invoke(forceRefresh: Boolean = false): List<Match> {
+        val predicted = repository.getMatches(forceRefresh).map { match ->
             match.copy(predictedResult = engine.predict(match))
         }
         runCatching { calibrationRepository.recordPredictions(predicted) }
         return predicted
     }
+
+    /** Predictions over the last persisted fixtures (no network) for an instant first paint. */
+    suspend fun cached(): List<Match>? =
+        repository.cachedMatches()?.map { match -> match.copy(predictedResult = engine.predict(match)) }
 }

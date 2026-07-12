@@ -1,6 +1,11 @@
 package com.kickpredict.data.repository
 
+import com.kickpredict.data.local.cache.CachedMatch
+import com.kickpredict.data.local.cache.toCached
+import com.kickpredict.data.local.cache.toDomain
+import com.kickpredict.data.local.dao.FixtureCacheDao
 import com.kickpredict.data.local.dao.TeamDao
+import com.kickpredict.data.local.entity.FixtureCacheEntity
 import com.kickpredict.data.local.entity.TeamEntity
 import com.kickpredict.data.mock.MockDataProvider
 import com.kickpredict.data.remote.live.LiveFixtureRemoteSource
@@ -10,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.json.Json
 
 /**
  * Fixture repository backed by the live data providers ([LiveFixtureRemoteSource]) with the bundled
@@ -24,6 +31,7 @@ import kotlinx.coroutines.withContext
 class MatchRepositoryImpl(
     private val liveSource: LiveFixtureRemoteSource,
     private val teamDao: TeamDao,
+    private val fixtureCacheDao: FixtureCacheDao,
     // Offline seed source; defaults to bundled mock fixtures, overridden with real data when available.
     private val offlineFallback: () -> List<Match> = { MockDataProvider.matches() },
     // Rebuilds fixtures with profiles as of a matchday; only the bundled historical data can do this.
@@ -32,20 +40,39 @@ class MatchRepositoryImpl(
     private val now: () -> Long = { System.currentTimeMillis() },
 ) : MatchRepository {
 
+    private val json = Json { ignoreUnknownKeys = true }
+    private val listSerializer = ListSerializer(CachedMatch.serializer())
+
     private val mutex = Mutex()
     @Volatile private var cached: List<Match>? = null
     @Volatile private var cachedAt: Long = 0L
 
-    override suspend fun getMatches(): List<Match> = withContext(Dispatchers.IO) {
-        cached?.takeIf { now() - cachedAt < cacheTtlMillis }?.let { return@withContext it }
+    override suspend fun getMatches(forceRefresh: Boolean): List<Match> = withContext(Dispatchers.IO) {
+        if (!forceRefresh) cached?.takeIf { now() - cachedAt < cacheTtlMillis }?.let { return@withContext it }
         mutex.withLock {
-            cached?.takeIf { now() - cachedAt < cacheTtlMillis }?.let { return@withContext it }
-            val matches = runCatching { liveSource.getFixtures() }.getOrNull()?.takeIf { it.isNotEmpty() }
-                ?: offlineFallback()
+            if (!forceRefresh) cached?.takeIf { now() - cachedAt < cacheTtlMillis }?.let { return@withContext it }
+            val live = runCatching { liveSource.getFixtures() }.getOrNull()?.takeIf { it.isNotEmpty() }
+            val matches = live ?: cachedMatches()?.takeIf { it.isNotEmpty() } ?: offlineFallback()
+            if (live != null) persist(live)
             cacheTeams(matches)
             cached = matches
             cachedAt = now()
             matches
+        }
+    }
+
+    /** Last persisted fixtures, deserialized from Room — no network, for an instant first paint. */
+    override suspend fun cachedMatches(): List<Match>? = withContext(Dispatchers.IO) {
+        cached?.let { return@withContext it }
+        val entity = fixtureCacheDao.get(CACHE_KEY) ?: return@withContext null
+        runCatching { json.decodeFromString(listSerializer, entity.json).map { it.toDomain() } }
+            .getOrNull()?.takeIf { it.isNotEmpty() }
+    }
+
+    private suspend fun persist(matches: List<Match>) {
+        runCatching {
+            val payload = json.encodeToString(listSerializer, matches.map { it.toCached() })
+            fixtureCacheDao.upsert(FixtureCacheEntity(CACHE_KEY, payload, now()))
         }
     }
 
@@ -64,5 +91,9 @@ class MatchRepositoryImpl(
             )
         }
         teamDao.upsertAll(entities)
+    }
+
+    private companion object {
+        const val CACHE_KEY = "live_fixtures"
     }
 }

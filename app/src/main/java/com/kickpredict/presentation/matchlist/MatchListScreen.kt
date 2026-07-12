@@ -30,6 +30,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -156,19 +157,25 @@ fun MatchListScreen(
                         onClearDate = viewModel::clearDateRange,
                     )
                     CalibrationStatusBar(state)
-                    LazyColumn(
+                    PullToRefreshBox(
+                        isRefreshing = state.isRefreshing,
+                        onRefresh = viewModel::refresh,
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
-                        state.sections.forEach { section ->
-                            item(key = "h_${section.title}") { SectionHeader(section.title, section.matches.size) }
-                            items(section.matches, key = { it.id }) { match ->
-                                MatchCard(match, state.results[match.id]) { onMatchClick(match.id) }
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                        ) {
+                            state.sections.forEach { section ->
+                                item(key = "h_${section.title}") { SectionHeader(section.title, section.matches.size) }
+                                items(section.matches, key = { it.id }) { match ->
+                                    MatchCard(match, state.results[match.id]) { onMatchClick(match.id) }
+                                }
                             }
-                        }
-                        if (state.sections.isEmpty()) {
-                            item { Text(stringResource(R.string.empty_matches), color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                            if (state.sections.isEmpty()) {
+                                item { Text(stringResource(R.string.empty_matches), color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                            }
                         }
                     }
                 }

@@ -7,7 +7,14 @@ import com.kickpredict.domain.model.Match
  * a Retrofit-backed implementation can be swapped in without touching the UI or use cases.
  */
 interface MatchRepository {
-    suspend fun getMatches(): List<Match>
+    suspend fun getMatches(): List<Match> = getMatches(forceRefresh = false)
+
+    /** [forceRefresh] bypasses the in-memory memo to re-hit the source (e.g. pull-to-refresh). */
+    suspend fun getMatches(forceRefresh: Boolean): List<Match>
+
+    /** Last persisted fixtures (no network) for an instant first paint; null if nothing cached. */
+    suspend fun cachedMatches(): List<Match>?
+
     suspend fun getMatch(id: String): Match?
 
     /**
