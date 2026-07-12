@@ -97,6 +97,10 @@ dependencies {
     // WorkManager (background match-notification sync)
     implementation(libs.androidx.work.runtime.ktx)
 
+    // Glance (Compose-based home-screen widget)
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
+
     // Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

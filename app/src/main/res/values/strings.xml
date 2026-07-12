@@ -90,6 +90,10 @@
     <string name="value_clv_label">CLV %1$s%%</string>
     <string name="value_clv_caption">vs the closing line</string>
 
+    <!-- Home-screen widget -->
+    <string name="widget_description">Upcoming picks and value edges at a glance</string>
+    <string name="widget_empty">No upcoming picks yet — open the app to load fixtures.</string>
+
     <!-- Standings screen -->
     <string name="standings_simulate">Season simulation</string>
     <string name="standings_empty">No results yet. Enter results or fill samples from the dashboard to build the table.</string>

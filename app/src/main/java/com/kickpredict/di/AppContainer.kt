@@ -38,6 +38,8 @@ import com.kickpredict.domain.usecase.SimulateSeasonUseCase
 import com.kickpredict.domain.usecase.SyncResultsUseCase
 import com.kickpredict.presentation.locale.LanguagePreference
 import com.kickpredict.presentation.theme.ThemePreference
+import androidx.glance.appwidget.updateAll
+import com.kickpredict.widget.KickPredictWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -221,6 +223,8 @@ class AppContainer(context: Context) {
                 getValuePicks.record(matches, odds(), System.currentTimeMillis())
                 // Re-arm the periodic notification scan if the user left notifications on.
                 if (notificationPreference.enabled.value) NotificationScheduler.schedule(appContext)
+                // Refresh any home-screen widgets now that fixtures + odds are loaded.
+                runCatching { KickPredictWidget().updateAll(appContext) }
             }
         }
     }

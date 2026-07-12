@@ -90,6 +90,10 @@
     <string name="value_clv_label">CLV %1$s%%</string>
     <string name="value_clv_caption">마감 배당 대비</string>
 
+    <!-- Home-screen widget -->
+    <string name="widget_description">다가오는 픽과 밸류 엣지를 한눈에</string>
+    <string name="widget_empty">아직 예정된 픽이 없습니다 — 앱을 열어 일정을 불러오세요.</string>
+
     <!-- Standings screen -->
     <string name="standings_simulate">시즌 시뮬레이션</string>
     <string name="standings_empty">아직 결과가 없습니다. 결과를 입력하거나 대시보드에서 샘플을 채우면 순위표가 만들어집니다.</string>
