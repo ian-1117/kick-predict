@@ -59,9 +59,23 @@ data class PredictionResult(
     val underProbabilityPercent: Int get() = 100 - overProbabilityPercent
     val noBttsProbabilityPercent: Int get() = 100 - bttsProbabilityPercent
 
-    /** Most-likely integer scoreline from the goal expectations, e.g. "2 – 1". */
+    /**
+     * The scoreline shown as "expected". The most-likely exact scoreline that **agrees with the
+     * predicted result** (so the headline score and the win/draw/loss call never contradict each
+     * other), falling back to the rounded goal expectations if the top grid cells don't include one.
+     */
     val expectedScoreline: String
-        get() = "${kotlin.math.round(expectedHomeGoals).toInt()} – ${kotlin.math.round(expectedAwayGoals).toInt()}"
+        get() {
+            val consistent = topScorelines.firstOrNull {
+                when (predictedOutcome) {
+                    PredictedOutcome.HOME_WIN -> it.homeGoals > it.awayGoals
+                    PredictedOutcome.AWAY_WIN -> it.awayGoals > it.homeGoals
+                    PredictedOutcome.DRAW -> it.homeGoals == it.awayGoals
+                }
+            }
+            return consistent?.label
+                ?: "${kotlin.math.round(expectedHomeGoals).toInt()} – ${kotlin.math.round(expectedAwayGoals).toInt()}"
+        }
 
     val predictedOutcome: PredictedOutcome
         get() = when (maxOf(homeWinPercent, drawPercent, awayWinPercent)) {

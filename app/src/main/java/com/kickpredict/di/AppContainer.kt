@@ -90,7 +90,11 @@ class AppContainer(context: Context) {
         liveSource = liveSource,
         teamDao = database.teamDao(),
         offlineFallback = { bundledMatches },
-        asOfFallback = if (realData.hasData) { round -> realData.matchesAsOf(round) } else null,
+        // The bundled as-of view rebuilds historical profiles round-by-round to stay out-of-sample.
+        // With live data the current season is already a point-in-time snapshot, so the season
+        // projection should simulate the *live* remaining fixtures (getMatchesAsOf falls back to the
+        // live matches filtered by round) rather than a bundled season.
+        asOfFallback = if (!liveSource.isConfigured && realData.hasData) { round -> realData.matchesAsOf(round) } else null,
     )
 
     val calibrationRepository: CalibrationRepository = CalibrationRepositoryImpl(

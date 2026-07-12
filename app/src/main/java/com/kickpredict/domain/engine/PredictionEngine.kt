@@ -199,7 +199,17 @@ class PredictionEngine(
             .coerceIn(5, 97)
         // Re-map against observed hit rate (identity until a reliability curve is fitted).
         val confidenceScore = confidenceCalibration.calibrate(rawConfidence).coerceIn(5, 97)
-        rationale += "예상 스코어 ${lambdaHome.roundToInt()}–${lambdaAway.roundToInt()} (λ ${fmt(lambdaHome)} / ${fmt(lambdaAway)})."
+        // Show the most-likely scoreline that agrees with the predicted result, not the rounded λ —
+        // otherwise a 1.2 vs 1.4 game reads "1–1" (a draw) under an "away win" prediction. Falls back
+        // to the rounded λ if the top grid cells don't include the predicted outcome.
+        val likelyScore = topScorelines.firstOrNull {
+            when {
+                homePct >= drawPct && homePct >= awayPct -> it.homeGoals > it.awayGoals
+                awayPct >= drawPct -> it.awayGoals > it.homeGoals
+                else -> it.homeGoals == it.awayGoals
+            }
+        }?.label ?: "${lambdaHome.roundToInt()} – ${lambdaAway.roundToInt()}"
+        rationale += "예상 스코어 $likelyScore (λ ${fmt(lambdaHome)} / ${fmt(lambdaAway)})."
 
         // Extra markets from the (independent-Poisson) goal expectations.
         val totalLambda = lambdaHome + lambdaAway
