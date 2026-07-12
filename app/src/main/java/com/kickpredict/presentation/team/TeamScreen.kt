@@ -110,7 +110,7 @@ private fun Header(team: TeamDetail) {
             }
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Stat(stringResource(R.string.team_rank), team.standingRank?.let { "#$it" } ?: "-")
+            Stat(stringResource(R.string.team_rank), team.standingRank?.takeIf { it > 0 }?.let { "#$it" } ?: "-")
             Stat(stringResource(R.string.team_points), team.standing?.points?.toString() ?: "-")
             Stat("Elo", "${team.eloRating}")
         }

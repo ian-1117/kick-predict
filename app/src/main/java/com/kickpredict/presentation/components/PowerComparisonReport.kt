@@ -81,8 +81,8 @@ fun PowerComparisonReport(
 
         MetricRow("Rating", home.overallRating / 100.0, away.overallRating / 100.0,
             home.overallRating.roundToInt().toString(), away.overallRating.roundToInt().toString())
-        MetricRow("Position", (21 - home.leaguePosition) / 20.0, (21 - away.leaguePosition) / 20.0,
-            "#${home.leaguePosition}", "#${away.leaguePosition}")
+        MetricRow("Position", positionFraction(home.leaguePosition), positionFraction(away.leaguePosition),
+            positionLabel(home.leaguePosition), positionLabel(away.leaguePosition))
         MetricRow("Form", home.formScore, away.formScore,
             pct(home.formScore), pct(away.formScore))
         MetricRow("Attack", home.goalsScoredAvg / 3.0, away.goalsScoredAvg / 3.0,
@@ -379,3 +379,9 @@ private fun FormChips(form: List<MatchOutcome>) {
 }
 
 private fun pct(v: Double): String = "${(v * 100).roundToInt()}%"
+
+// Live teams with no standings row yet (e.g. a just-promoted side) carry position 0 — show it as
+// unknown ("-", a half-filled bar) rather than a misleading "#0" at the top of the table.
+private fun positionLabel(position: Int): String = if (position <= 0) "-" else "#$position"
+private fun positionFraction(position: Int): Double =
+    if (position <= 0) 0.5 else ((21 - position) / 20.0).coerceIn(0.0, 1.0)
