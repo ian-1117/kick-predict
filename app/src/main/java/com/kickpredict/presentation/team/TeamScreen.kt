@@ -50,6 +50,7 @@ import com.kickpredict.presentation.theme.AccentPrimary
 import com.kickpredict.presentation.theme.LossColor
 import com.kickpredict.presentation.theme.WinColor
 import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
 
 private val fixtureFormatter = DateTimeFormatter.ofPattern("d MMM · HH:mm")
 
@@ -102,9 +103,13 @@ fun TeamScreen(
 private fun TeamContent(team: TeamDetail, onMatchClick: (String) -> Unit) {
     LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         item { Header(team) }
+        team.standing?.let { standing ->
+            item { SeasonCard(standing) }
+        }
         if (team.recentResults.isNotEmpty()) {
             item { SectionTitle(stringResource(R.string.team_recent_form)) }
             item { FormRow(team) }
+            item { FormDetail(team) }
         }
         if (team.fixtures.isNotEmpty()) {
             item { SectionTitle(stringResource(R.string.team_fixtures)) }
@@ -135,11 +140,59 @@ private fun Header(team: TeamDetail) {
 }
 
 @Composable
-private fun Stat(label: String, value: String) {
+private fun Stat(label: String, value: String, color: Color = AccentPrimary) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(value, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Black, color = AccentPrimary)
+        Text(value, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Black, color = color)
         Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
+}
+
+@Composable
+private fun SeasonCard(standing: com.kickpredict.domain.model.Standing) {
+    Column(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(MaterialTheme.colorScheme.surface).padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Text(
+            "${stringResource(R.string.team_season)} · ${standing.played}",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Stat("W", standing.won.toString(), WinColor)
+            Stat("D", standing.drawn.toString(), DrawColor)
+            Stat("L", standing.lost.toString(), LossColor)
+            Stat(stringResource(R.string.team_points), standing.points.toString())
+        }
+        Text(
+            stringResource(
+                R.string.team_goals,
+                standing.goalsFor,
+                standing.goalsAgainst,
+                if (standing.goalDiff >= 0) "+${standing.goalDiff}" else "${standing.goalDiff}",
+            ),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+/** One-decimal goals-per-game + the model's hit rate over this team's recent matches. */
+@Composable
+private fun FormDetail(team: TeamDetail) {
+    val recent = team.recentResults
+    if (recent.isEmpty()) return
+    val gf = recent.sumOf { goalsForTeam(it, team.teamId) }
+    val ga = recent.sumOf { goalsAgainstTeam(it, team.teamId) }
+    val gfpg = String.format("%.1f", gf.toDouble() / recent.size)
+    val gapg = String.format("%.1f", ga.toDouble() / recent.size)
+    val modelPct = (recent.count { it.wasCorrect } * 100.0 / recent.size).roundToInt()
+    Text(
+        stringResource(R.string.team_form_detail, gfpg, gapg, modelPct),
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
 }
 
 @Composable
@@ -178,8 +231,13 @@ private fun SectionTitle(text: String) {
 }
 
 private fun teamOutcome(r: RecordedResult, teamId: String): Char {
-    val isHome = r.homeTeamId == teamId
-    val gf = if (isHome) r.homeGoals else r.awayGoals
-    val ga = if (isHome) r.awayGoals else r.homeGoals
+    val gf = goalsForTeam(r, teamId)
+    val ga = goalsAgainstTeam(r, teamId)
     return when { gf > ga -> 'W'; gf < ga -> 'L'; else -> 'D' }
 }
+
+private fun goalsForTeam(r: RecordedResult, teamId: String): Int =
+    if (r.homeTeamId == teamId) r.homeGoals else r.awayGoals
+
+private fun goalsAgainstTeam(r: RecordedResult, teamId: String): Int =
+    if (r.homeTeamId == teamId) r.awayGoals else r.homeGoals
