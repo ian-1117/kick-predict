@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Leaderboard
+import androidx.compose.material.icons.filled.Today
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
@@ -61,6 +62,7 @@ import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.MatchupEdge
 import com.kickpredict.domain.model.PredictedOutcome
+import com.kickpredict.domain.model.RecordedResult
 import com.kickpredict.presentation.components.TeamCrest
 import com.kickpredict.presentation.theme.DrawColor
 import com.kickpredict.presentation.theme.AccentPrimary
@@ -122,6 +124,9 @@ fun MatchListScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = { viewModel.jumpToCurrentRound() }) {
+                        Icon(Icons.Filled.Today, contentDescription = stringResource(R.string.jump_current_round), tint = AccentPrimary)
+                    }
                     IconButton(onClick = onStandings) {
                         Icon(Icons.Filled.Leaderboard, contentDescription = stringResource(R.string.nav_standings), tint = AccentPrimary)
                     }
@@ -158,7 +163,7 @@ fun MatchListScreen(
                         state.sections.forEach { section ->
                             item(key = "h_${section.title}") { SectionHeader(section.title, section.matches.size) }
                             items(section.matches, key = { it.id }) { match ->
-                                MatchCard(match) { onMatchClick(match.id) }
+                                MatchCard(match, state.results[match.id]) { onMatchClick(match.id) }
                             }
                         }
                         if (state.sections.isEmpty()) {
@@ -327,7 +332,7 @@ private fun CalibrationStatusBar(state: MatchListUiState) {
 }
 
 @Composable
-private fun MatchCard(match: Match, onClick: () -> Unit) {
+private fun MatchCard(match: Match, result: RecordedResult?, onClick: () -> Unit) {
     val prediction = match.predictedResult
     Column(
         modifier = Modifier
@@ -366,7 +371,17 @@ private fun MatchCard(match: Match, onClick: () -> Unit) {
                 fontWeight = if (outcome == PredictedOutcome.HOME_WIN) FontWeight.Bold else FontWeight.Normal,
                 modifier = Modifier.weight(1f).padding(start = 10.dp),
             )
-            Text("vs", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 8.dp))
+            if (result != null) {
+                Text(
+                    "${result.homeGoals} – ${result.awayGoals}",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Black,
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                )
+            } else {
+                Text("vs", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 8.dp))
+            }
             Text(
                 match.awayTeam.displayName,
                 style = MaterialTheme.typography.titleMedium,
@@ -396,8 +411,12 @@ private fun MatchCard(match: Match, onClick: () -> Unit) {
                     )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    if (prediction.matchupEdge != MatchupEdge.NONE) MatchupChip(prediction.matchupEdge == MatchupEdge.HOME)
-                    ConfidencePill(prediction.confidenceScore, prediction.confidenceTier)
+                    if (result != null) {
+                        HitMissBadge(result.wasCorrect)
+                    } else {
+                        if (prediction.matchupEdge != MatchupEdge.NONE) MatchupChip(prediction.matchupEdge == MatchupEdge.HOME)
+                        ConfidencePill(prediction.confidenceScore, prediction.confidenceTier)
+                    }
                 }
             }
         }
@@ -415,6 +434,19 @@ private fun outcomeLabel(match: Match, outcome: PredictedOutcome): String = when
 private fun LeagueChip(text: String) {
     Box(Modifier.clip(RoundedCornerShape(50)).background(AccentPrimary.copy(alpha = 0.14f)).padding(horizontal = 10.dp, vertical = 4.dp)) {
         Text(text, style = MaterialTheme.typography.labelSmall, color = AccentPrimary)
+    }
+}
+
+@Composable
+private fun HitMissBadge(hit: Boolean) {
+    val color = if (hit) WinColor else LossColor
+    Box(Modifier.clip(RoundedCornerShape(50)).background(color.copy(alpha = 0.18f)).padding(horizontal = 12.dp, vertical = 4.dp)) {
+        Text(
+            stringResource(if (hit) R.string.result_hit else R.string.result_miss),
+            style = MaterialTheme.typography.labelSmall,
+            color = color,
+            fontWeight = FontWeight.Bold,
+        )
     }
 }
 

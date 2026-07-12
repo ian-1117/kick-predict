@@ -49,30 +49,45 @@ class LiveFixtureRemoteSource(
     /** True when at least one live source is configured; lets callers keep the bundled-only path. */
     val isConfigured: Boolean get() = footballDataKey.isNotBlank() || apiFootballKey.isNotBlank()
 
+    // Final scores of the finished matches from the last successful live fetch, keyed by match id.
+    // Seeded into the results store so standings/accuracy reflect the current season.
+    @Volatile
+    private var results: Map<String, Pair<Int, Int>> = emptyMap()
+    fun lastResults(): Map<String, Pair<Int, Int>> = results
+
     suspend fun getFixtures(): List<Match> {
         val today = clock()
         val europeSeason = europeanSeason(today)
         val kSeason = today.year
         val out = ArrayList<Match>()
+        val resultsAcc = HashMap<String, Pair<Int, Int>>()
 
         europe.forEach { (code, league) ->
             val live = if (footballDataKey.isNotBlank()) {
                 runCatching { europeFixtures(code, league, europeSeason) }.getOrNull()?.takeIf { it.isNotEmpty() }
             } else null
-            out += live ?: bundledByLeague(league)
+            out += collect(live, resultsAcc) ?: bundledByLeague(league)
         }
         kLeagues.forEach { (id, league) ->
             val live = if (apiFootballKey.isNotBlank()) {
                 runCatching { kLeagueFixtures(id, league, kSeason) }.getOrNull()?.takeIf { it.isNotEmpty() }
             } else null
-            out += live ?: bundledByLeague(league)
+            out += collect(live, resultsAcc) ?: bundledByLeague(league)
         }
+        results = resultsAcc
         return out
+    }
+
+    /** Split a live (match, finalScore?) list into the match list, harvesting scores into [into]. */
+    private fun collect(live: List<Pair<Match, Pair<Int, Int>?>>?, into: MutableMap<String, Pair<Int, Int>>): List<Match>? {
+        if (live == null) return null
+        live.forEach { (match, score) -> if (score != null) into[match.id] = score }
+        return live.map { it.first }
     }
 
     // --- football-data.org (Europe) ---
 
-    private suspend fun europeFixtures(code: String, league: LeagueType, season: Int): List<Match> {
+    private suspend fun europeFixtures(code: String, league: LeagueType, season: Int): List<Pair<Match, Pair<Int, Int>?>> {
         val matches = footballData.matches(code, season).matches
         if (matches.isEmpty()) return emptyList()
 
@@ -101,7 +116,7 @@ class LiveFixtureRemoteSource(
             val awayName = m.awayTeam.name ?: return@mapNotNull null
             val homeId = "FD_${code}_${teamKey(m.homeTeam.id, homeName)}"
             val awayId = "FD_${code}_${teamKey(m.awayTeam.id, awayName)}"
-            Match(
+            val match = Match(
                 id = "FD_${code}_${m.id}",
                 league = league,
                 homeTeam = LiveProfileBuilder.profile(homeId, homeName, tlaOf(m.homeTeam.tla, homeName), stats[teamKey(m.homeTeam.id, homeName)]),
@@ -111,12 +126,16 @@ class LiveFixtureRemoteSource(
                 headToHead = HeadToHead(),
                 round = m.matchday ?: 1,
             )
+            val score = if (m.status == "FINISHED" && m.score.fullTime.home != null && m.score.fullTime.away != null) {
+                m.score.fullTime.home to m.score.fullTime.away
+            } else null
+            match to score
         }
     }
 
     // --- APIFootball (K League) ---
 
-    private suspend fun kLeagueFixtures(leagueId: Int, league: LeagueType, season: Int): List<Match> {
+    private suspend fun kLeagueFixtures(leagueId: Int, league: LeagueType, season: Int): List<Pair<Match, Pair<Int, Int>?>> {
         val standings = apiFootball.standings(leagueId = leagueId).associateBy { it.teamId }
         val events = apiFootball.events(from = "$season-01-01", to = "$season-12-31", leagueId = leagueId)
         val form = recentForm(events)
@@ -126,7 +145,7 @@ class LiveFixtureRemoteSource(
             val kickoff = LocalDateTime.of(date, parseTime(e.time) ?: LocalTime.of(15, 0))
             val homeStats = stats(standings[e.homeId]?.let { s -> s to form[e.homeId].orEmpty() })
             val awayStats = stats(standings[e.awayId]?.let { s -> s to form[e.awayId].orEmpty() })
-            Match(
+            val match = Match(
                 id = "AF_${e.id}",
                 league = league,
                 homeTeam = LiveProfileBuilder.profile("AF_${e.homeId}", e.homeName, LiveProfileBuilder.shortCode(e.homeName), homeStats),
@@ -136,6 +155,10 @@ class LiveFixtureRemoteSource(
                 headToHead = HeadToHead(),
                 round = e.round.toIntOrNull() ?: 1,
             )
+            val hs = e.homeScore.toIntOrNull()
+            val aws = e.awayScore.toIntOrNull()
+            val score = if (hs != null && aws != null) hs to aws else null
+            match to score
         }
     }
 

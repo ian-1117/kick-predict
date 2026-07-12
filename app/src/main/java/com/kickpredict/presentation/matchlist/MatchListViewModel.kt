@@ -9,9 +9,12 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.kickpredict.KickPredictApplication
 import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.model.Match
+import com.kickpredict.domain.model.RecordedResult
+import com.kickpredict.domain.repository.CalibrationRepository
 import com.kickpredict.domain.usecase.CalibrationStatus
 import com.kickpredict.domain.usecase.GetPredictedMatchesUseCase
 import com.kickpredict.domain.usecase.RecalibrateUseCase
+import com.kickpredict.domain.usecase.SyncResultsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -52,11 +55,16 @@ data class MatchListUiState(
     // rather than on today's (empty, off-season/future) month.
     val earliestDate: LocalDate? = null,
     val latestDate: LocalDate? = null,
+    // Actual results for already-played fixtures, keyed by match id — lets a card show the final
+    // score and whether the prediction hit.
+    val results: Map<String, RecordedResult> = emptyMap(),
 )
 
 class MatchListViewModel(
     private val getPredictedMatches: GetPredictedMatchesUseCase,
     private val recalibrate: RecalibrateUseCase,
+    private val calibrationRepository: CalibrationRepository,
+    private val syncResults: SyncResultsUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MatchListUiState())
@@ -80,8 +88,6 @@ class MatchListViewModel(
     private fun load(silent: Boolean) {
         if (!silent) _uiState.value = _uiState.value.copy(isLoading = true, error = null)
         viewModelScope.launch {
-            // Refit calibration from accumulated results first, so these predictions use it.
-            val status = runCatching { recalibrate() }.getOrNull()
             runCatching { getPredictedMatches() }
                 .onSuccess { matches ->
                     val isFirstLoad = !loadedOnce
@@ -102,6 +108,12 @@ class MatchListViewModel(
                     } else {
                         current.fromDate to current.toDate
                     }
+                    // Seed the current season's real scores, then refit calibration so the status
+                    // reflects them (predictions catch up on the next load — startup already refit).
+                    runCatching { syncResults() }
+                    val status = runCatching { recalibrate() }.getOrNull()
+                    val results = runCatching { calibrationRepository.recordedResults().associateBy { it.matchId } }
+                        .getOrDefault(emptyMap())
                     _uiState.value = current.copy(
                         isLoading = false,
                         calibration = status,
@@ -109,6 +121,7 @@ class MatchListViewModel(
                         latestDate = latest,
                         fromDate = from,
                         toDate = to,
+                        results = results,
                     )
                     rebuild()
                 }
@@ -139,6 +152,16 @@ class MatchListViewModel(
     }
 
     fun clearDateRange() = setDateRange(null, null)
+
+    /** Jump back to the current round: clear the search and refocus the range on today → season end. */
+    fun jumpToCurrentRound() {
+        val s = _uiState.value
+        val today = LocalDate.now()
+        val latest = s.latestDate
+        val from = if (latest != null && !latest.isBefore(today)) maxOf(today, s.earliestDate ?: today) else s.earliestDate
+        _uiState.value = s.copy(searchQuery = "", fromDate = from, toDate = latest ?: s.toDate)
+        rebuild()
+    }
 
     private fun rebuild() {
         val state = _uiState.value
@@ -172,7 +195,12 @@ class MatchListViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = this[APPLICATION_KEY] as KickPredictApplication
-                MatchListViewModel(app.container.getPredictedMatches, app.container.recalibrate)
+                MatchListViewModel(
+                    app.container.getPredictedMatches,
+                    app.container.recalibrate,
+                    app.container.calibrationRepository,
+                    app.container.syncResults,
+                )
             }
         }
     }

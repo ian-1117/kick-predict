@@ -23,6 +23,7 @@ class RecalibrateUseCaseTest {
     ) : CalibrationRepository {
         override suspend fun recordPredictions(matches: List<Match>) {}
         override suspend fun recordResult(matchId: String, homeGoals: Int, awayGoals: Int) {}
+        override suspend fun replaceResults(results: Map<String, Pair<Int, Int>>) {}
         override suspend fun getResult(matchId: String): ActualResult? = null
         override suspend fun recordedResultCount(): Int = records.size
         override suspend fun recordedResults(): List<com.kickpredict.domain.model.RecordedResult> = emptyList()

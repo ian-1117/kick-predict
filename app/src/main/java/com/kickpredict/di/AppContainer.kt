@@ -27,6 +27,7 @@ import com.kickpredict.domain.usecase.RecalibrateUseCase
 import com.kickpredict.domain.usecase.RecordMatchResultUseCase
 import com.kickpredict.domain.usecase.SeedSampleResultsUseCase
 import com.kickpredict.domain.usecase.SimulateSeasonUseCase
+import com.kickpredict.domain.usecase.SyncResultsUseCase
 import com.kickpredict.presentation.locale.LanguagePreference
 import com.kickpredict.presentation.theme.ThemePreference
 import kotlinx.coroutines.CoroutineScope
@@ -116,6 +117,13 @@ class AppContainer(context: Context) {
     val getCalibrationDashboard = GetCalibrationDashboardUseCase(calibrationRepository, recalibrate)
     val getStandings = GetStandingsUseCase(calibrationRepository)
     val getTeam = GetTeamUseCase(getPredictedMatches, getStandings, calibrationRepository, eloProvider)
+    // Seeds the current season's real scores into the results store (live where available, else bundled).
+    val syncResults = SyncResultsUseCase(
+        liveResults = { liveSource.lastResults() },
+        bundledResults = { if (realData.hasData) realData.displayResults() else emptyMap() },
+        liveConfigured = liveSource.isConfigured,
+        calibrationRepository = calibrationRepository,
+    )
     val seedSampleResults = SeedSampleResultsUseCase(getPredictedMatches, calibrationRepository)
     // Reads the live calibration, so a simulated season uses the same draw inflation the engine does.
     val simulateSeason = SimulateSeasonUseCase(
@@ -130,19 +138,15 @@ class AppContainer(context: Context) {
     init {
         applicationScope.launch {
             runCatching {
-                // Pre-train the models (on prior real seasons) so predictions are ready.
+                // Pre-train the models (on prior seasons) so predictions are ready.
                 recalibrate()
-                // First launch with real data: seed the real display-season results so standings,
-                // the accuracy dashboard and team pages are populated with real football. Predictions
-                // are logged first (out-of-sample) and then scored against the real outcomes.
-                if (realData.hasData && calibrationRepository.recordedResultCount() == 0) {
-                    val matches = getPredictedMatches()
-                    val results = realData.displayResults()
-                    matches.forEach { m ->
-                        results[m.id]?.let { (home, away) -> calibrationRepository.recordResult(m.id, home, away) }
-                    }
-                    recalibrate() // refit confidence/league calibration against the real outcomes
-                }
+                // Load + predict the current fixtures (this populates the live source's finished-match
+                // scores), then seed those results so standings, the accuracy dashboard and team pages
+                // reflect the current season. Predictions are logged first, then scored against the
+                // real outcomes. Live results replace any earlier import so nothing goes stale.
+                getPredictedMatches()
+                syncResults()
+                recalibrate() // refit confidence/league calibration against the real outcomes
             }
         }
     }

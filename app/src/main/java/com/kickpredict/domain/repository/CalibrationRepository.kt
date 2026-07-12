@@ -19,6 +19,12 @@ interface CalibrationRepository {
     /** Save the actual final score entered by the user. */
     suspend fun recordResult(matchId: String, homeGoals: Int, awayGoals: Int)
 
+    /**
+     * Replace the whole results store with these final scores (keyed by match id) — used to seed the
+     * current live season so standings/accuracy reflect it rather than a stale earlier import.
+     */
+    suspend fun replaceResults(results: Map<String, Pair<Int, Int>>)
+
     suspend fun getResult(matchId: String): ActualResult?
 
     suspend fun recordedResultCount(): Int

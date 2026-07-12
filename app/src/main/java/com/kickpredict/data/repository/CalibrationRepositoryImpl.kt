@@ -50,6 +50,15 @@ class CalibrationRepositoryImpl(
             )
         }
 
+    override suspend fun replaceResults(results: Map<String, Pair<Int, Int>>) =
+        withContext(Dispatchers.IO) {
+            matchResultDao.deleteAll()
+            val now = System.currentTimeMillis()
+            results.forEach { (matchId, score) ->
+                matchResultDao.upsert(MatchResultEntity(matchId, score.first, score.second, now))
+            }
+        }
+
     override suspend fun getResult(matchId: String): ActualResult? = withContext(Dispatchers.IO) {
         matchResultDao.getById(matchId)?.let {
             ActualResult(it.matchId, it.homeGoals, it.awayGoals, it.recordedAt)

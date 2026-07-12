@@ -28,6 +28,7 @@
     <string name="outcome_draw">무승부</string>
     <string name="hit_rate">적중률 %1$d%%</string>
     <string name="matchup_edge">상성</string>
+    <string name="jump_current_round">현재 라운드</string>
 
     <!-- Calibration status bar -->
     <string name="calib_prefix">AI 보정</string>

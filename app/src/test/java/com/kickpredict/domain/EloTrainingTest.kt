@@ -31,6 +31,7 @@ class EloTrainingTest {
         override suspend fun getAll() = store.values.toList()
         override suspend fun count() = store.size
         override suspend fun delete(id: String) { store.remove(id) }
+        override suspend fun deleteAll() { store.clear() }
     }
 
     @Test

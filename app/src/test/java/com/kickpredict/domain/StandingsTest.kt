@@ -18,6 +18,7 @@ class StandingsTest {
     private class FakeRepo(private val results: List<RecordedResult>) : CalibrationRepository {
         override suspend fun recordPredictions(matches: List<Match>) {}
         override suspend fun recordResult(matchId: String, homeGoals: Int, awayGoals: Int) {}
+        override suspend fun replaceResults(results: Map<String, Pair<Int, Int>>) {}
         override suspend fun getResult(matchId: String): ActualResult? = null
         override suspend fun recordedResultCount() = results.size
         override suspend fun recordedResults() = results

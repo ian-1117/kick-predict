@@ -21,6 +21,18 @@ data class FdMatch(
     @SerialName("matchday") val matchday: Int? = null,
     @SerialName("homeTeam") val homeTeam: FdTeam,
     @SerialName("awayTeam") val awayTeam: FdTeam,
+    @SerialName("score") val score: FdScore = FdScore(),
+)
+
+@Serializable
+data class FdScore(
+    @SerialName("fullTime") val fullTime: FdScoreTime = FdScoreTime(),
+)
+
+@Serializable
+data class FdScoreTime(
+    @SerialName("home") val home: Int? = null,
+    @SerialName("away") val away: Int? = null,
 )
 
 @Serializable

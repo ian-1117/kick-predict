@@ -28,6 +28,7 @@
     <string name="outcome_draw">Draw</string>
     <string name="hit_rate">Hit rate %1$d%%</string>
     <string name="matchup_edge">Edge</string>
+    <string name="jump_current_round">Current round</string>
 
     <!-- Calibration status bar -->
     <string name="calib_prefix">AI calibration</string>
