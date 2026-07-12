@@ -95,7 +95,7 @@ class SeasonSimulationViewModel(
                         return@onSuccess
                     }
                     val lastRound = loaded.lastRound(league)
-                    val cutoff = defaultCutoff(lastRound)
+                    val cutoff = loaded.currentRound(league)
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         leagues = loaded.leagues,
@@ -113,7 +113,7 @@ class SeasonSimulationViewModel(
         val loaded = data ?: return
         if (_uiState.value.selected == league) return
         val lastRound = loaded.lastRound(league)
-        val cutoff = defaultCutoff(lastRound)
+        val cutoff = loaded.currentRound(league)
         // Clear the previous league's projection so its teams don't linger while the new 10k-season
         // run computes; the screen shows a spinner until the fresh projection lands.
         _uiState.value = _uiState.value.copy(
@@ -152,9 +152,6 @@ class SeasonSimulationViewModel(
             onFailure = { _uiState.value.copy(isSimulating = false, error = it.message) },
         )
     }
-
-    /** Open on the half-way point: enough real results to anchor the table, enough left to be uncertain. */
-    private fun defaultCutoff(lastRound: Int): Int = (lastRound / 2).coerceAtLeast(1)
 
     companion object {
         private const val SIMULATION_DEBOUNCE_MS = 150L

@@ -27,6 +27,19 @@ class SeasonData(
     fun lastRound(league: LeagueType): Int = matchesByLeague[league]?.maxOfOrNull { it.round } ?: 0
 
     fun resultFor(matchId: String): Pair<Int, Int>? = results[matchId]
+
+    /**
+     * The first round still to be played — the natural cutoff to project from. It's the earliest
+     * round with no recorded result, so a season in progress opens on its current matchday and a
+     * not-yet-started season opens at round 1 (project the whole thing from prior-season strength).
+     */
+    fun currentRound(league: LeagueType): Int {
+        val matches = matchesByLeague[league].orEmpty()
+        if (matches.isEmpty()) return 1
+        val roundsWithResult = matches.filter { results.containsKey(it.id) }.map { it.round }.toSet()
+        val last = lastRound(league)
+        return (1..last).firstOrNull { it !in roundsWithResult } ?: last
+    }
 }
 
 /**
