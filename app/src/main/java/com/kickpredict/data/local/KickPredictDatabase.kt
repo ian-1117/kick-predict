@@ -7,10 +7,12 @@ import com.kickpredict.data.local.dao.FixtureCacheDao
 import com.kickpredict.data.local.dao.MatchResultDao
 import com.kickpredict.data.local.dao.PredictionLogDao
 import com.kickpredict.data.local.dao.TeamDao
+import com.kickpredict.data.local.dao.ValuePickDao
 import com.kickpredict.data.local.entity.FixtureCacheEntity
 import com.kickpredict.data.local.entity.MatchResultEntity
 import com.kickpredict.data.local.entity.PredictionLogEntity
 import com.kickpredict.data.local.entity.TeamEntity
+import com.kickpredict.data.local.entity.ValuePickEntity
 
 @Database(
     entities = [
@@ -18,8 +20,9 @@ import com.kickpredict.data.local.entity.TeamEntity
         FixtureCacheEntity::class,
         PredictionLogEntity::class,
         MatchResultEntity::class,
+        ValuePickEntity::class,
     ],
-    version = 7,
+    version = 8,
     exportSchema = false,
 )
 @TypeConverters(Converters::class)
@@ -28,6 +31,7 @@ abstract class KickPredictDatabase : RoomDatabase() {
     abstract fun fixtureCacheDao(): FixtureCacheDao
     abstract fun predictionLogDao(): PredictionLogDao
     abstract fun matchResultDao(): MatchResultDao
+    abstract fun valuePickDao(): ValuePickDao
 
     companion object {
         const val NAME = "kick_predict.db"

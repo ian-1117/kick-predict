@@ -10,6 +10,7 @@ import com.kickpredict.data.real.RealDataProvider
 import com.kickpredict.domain.model.Match
 import com.kickpredict.data.repository.CalibrationRepositoryImpl
 import com.kickpredict.data.repository.MatchRepositoryImpl
+import com.kickpredict.data.repository.ValuePickRepositoryImpl
 import com.kickpredict.domain.calibration.MutableCalibrationProvider
 import com.kickpredict.domain.calibration.MutableConfidenceCalibration
 import com.kickpredict.domain.engine.PredictionEngine
@@ -23,6 +24,7 @@ import com.kickpredict.domain.usecase.GetPredictedMatchUseCase
 import com.kickpredict.domain.usecase.GetStandingsUseCase
 import com.kickpredict.domain.usecase.GetTeamUseCase
 import com.kickpredict.domain.usecase.GetPredictedMatchesUseCase
+import com.kickpredict.domain.usecase.GetValuePicksUseCase
 import com.kickpredict.domain.usecase.RecalibrateUseCase
 import com.kickpredict.domain.usecase.RecordMatchResultUseCase
 import com.kickpredict.domain.usecase.SeedSampleResultsUseCase
@@ -109,6 +111,11 @@ class AppContainer(context: Context) {
         matchResultDao = database.matchResultDao(),
     )
 
+    private val valuePickRepository = ValuePickRepositoryImpl(database.valuePickDao())
+
+    /** Value-pick ledger + ROI: logs flagged picks at their flag-time price and settles them. */
+    val getValuePicks = GetValuePicksUseCase(valuePickRepository, calibrationRepository)
+
     val getPredictedMatches = GetPredictedMatchesUseCase(repository, engine, calibrationRepository)
     val getPredictedMatch = GetPredictedMatchUseCase(repository, engine, calibrationRepository)
     val recordMatchResult = RecordMatchResultUseCase(calibrationRepository)
@@ -155,9 +162,12 @@ class AppContainer(context: Context) {
                 // scores), then seed those results so standings, the accuracy dashboard and team pages
                 // reflect the current season. Predictions are logged first, then scored against the
                 // real outcomes. Live results replace any earlier import so nothing goes stale.
-                getPredictedMatches()
+                val matches = getPredictedMatches()
                 syncResults()
                 recalibrate() // refit confidence/league calibration against the real outcomes
+                // Log any currently-flagged value picks so the ROI ledger fills even before the hub
+                // is opened, capturing today's odds while they're still in the live window.
+                getValuePicks.record(matches, odds())
             }
         }
     }

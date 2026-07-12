@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Insights
@@ -95,6 +96,7 @@ fun MatchListScreen(
     onMatchClick: (String) -> Unit,
     onDashboard: () -> Unit,
     onStandings: () -> Unit,
+    onValuePicks: () -> Unit,
     currentTheme: AppTheme,
     onSelectTheme: (AppTheme) -> Unit,
     currentLanguage: AppLanguage,
@@ -132,6 +134,9 @@ fun MatchListScreen(
                 actions = {
                     IconButton(onClick = { viewModel.jumpToCurrentRound() }) {
                         Icon(Icons.Filled.Today, contentDescription = stringResource(R.string.jump_current_round), tint = AccentPrimary)
+                    }
+                    IconButton(onClick = onValuePicks) {
+                        Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = stringResource(R.string.nav_value_picks), tint = AccentPrimary)
                     }
                     IconButton(onClick = onStandings) {
                         Icon(Icons.Filled.Leaderboard, contentDescription = stringResource(R.string.nav_standings), tint = AccentPrimary)

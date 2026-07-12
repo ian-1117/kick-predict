@@ -16,6 +16,7 @@
     <string name="empty_matches">해당 조건의 경기가 없습니다.</string>
     <string name="nav_standings">리그 순위</string>
     <string name="nav_dashboard">적중·보정 대시보드</string>
+    <string name="nav_value_picks">밸류 픽</string>
     <string name="nav_theme">테마</string>
 
     <!-- Section headers -->
@@ -75,6 +76,13 @@
     <string name="detail_value_col_model">모델</string>
     <string name="detail_value_edge">밸류 · %1$s %2$+d%%</string>
     <string name="detail_value_none">밸류 없음 — 시장과 모델이 일치합니다.</string>
+
+    <!-- Value picks hub -->
+    <string name="value_empty">아직 밸류 픽이 없습니다. 모델이 시장보다 높게 보는 픽이 나오면, 플래그된 시점의 배당과 함께 여기 표시됩니다.</string>
+    <string name="value_roi_caption">누적 ROI · 정산 %1$d픽 (1유닛 균등 베팅)</string>
+    <string name="value_won">적중</string>
+    <string name="value_lost">실패</string>
+    <string name="value_pending_count">대기</string>
 
     <!-- Standings screen -->
     <string name="standings_simulate">시즌 시뮬레이션</string>

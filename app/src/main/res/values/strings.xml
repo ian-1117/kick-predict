@@ -16,6 +16,7 @@
     <string name="empty_matches">No matches for these filters.</string>
     <string name="nav_standings">Standings</string>
     <string name="nav_dashboard">Accuracy dashboard</string>
+    <string name="nav_value_picks">Value picks</string>
     <string name="nav_theme">Theme</string>
 
     <!-- Section headers -->
@@ -75,6 +76,13 @@
     <string name="detail_value_col_model">Model</string>
     <string name="detail_value_edge">Value edge · %1$s %2$+d%%</string>
     <string name="detail_value_none">No value edge — the market agrees with the model.</string>
+
+    <!-- Value picks hub -->
+    <string name="value_empty">No value picks yet. When the model rates a pick higher than the market, it shows up here with the price it was flagged at.</string>
+    <string name="value_roi_caption">Cumulative ROI · %1$d settled picks (flat 1-unit stake)</string>
+    <string name="value_won">won</string>
+    <string name="value_lost">lost</string>
+    <string name="value_pending_count">pending</string>
 
     <!-- Standings screen -->
     <string name="standings_simulate">Season simulation</string>

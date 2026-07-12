@@ -11,6 +11,7 @@ import com.kickpredict.presentation.detail.PredictionDetailScreen
 import com.kickpredict.presentation.matchlist.MatchListScreen
 import com.kickpredict.presentation.simulation.SeasonSimulationScreen
 import com.kickpredict.presentation.standings.StandingsScreen
+import com.kickpredict.presentation.valuepicks.ValuePicksScreen
 import com.kickpredict.presentation.locale.AppLanguage
 import com.kickpredict.presentation.team.TeamScreen
 import com.kickpredict.presentation.theme.AppTheme
@@ -23,6 +24,7 @@ object Routes {
     const val DASHBOARD = "dashboard"
     const val STANDINGS = "standings"
     const val SIMULATION = "simulation"
+    const val VALUE_PICKS = "value_picks"
     const val TEAM = "team/{teamId}"
     fun team(teamId: String) = "team/$teamId"
     const val ARG_TEAM_ID = "teamId"
@@ -42,6 +44,7 @@ fun KickPredictNavHost(
                 onMatchClick = { matchId -> navController.navigate(Routes.detail(matchId)) },
                 onDashboard = { navController.navigate(Routes.DASHBOARD) },
                 onStandings = { navController.navigate(Routes.STANDINGS) },
+                onValuePicks = { navController.navigate(Routes.VALUE_PICKS) },
                 currentTheme = currentTheme,
                 onSelectTheme = onSelectTheme,
                 currentLanguage = currentLanguage,
@@ -60,6 +63,12 @@ fun KickPredictNavHost(
         }
         composable(Routes.SIMULATION) {
             SeasonSimulationScreen(onBack = { navController.popBackStack() })
+        }
+        composable(Routes.VALUE_PICKS) {
+            ValuePicksScreen(
+                onBack = { navController.popBackStack() },
+                onMatchClick = { matchId -> navController.navigate(Routes.detail(matchId)) },
+            )
         }
         composable(
             route = Routes.TEAM,
