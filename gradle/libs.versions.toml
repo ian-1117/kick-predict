@@ -16,6 +16,7 @@ kotlinxSerialization = "1.7.3"
 retrofitKotlinxConverter = "1.0.0"
 
 room = "2.6.1"
+work = "2.9.1"
 
 junit = "4.13.2"
 androidxJunit = "1.2.1"
@@ -52,6 +53,9 @@ retrofit-kotlinx-serialization = { module = "com.jakewharton.retrofit:retrofit2-
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+
+# WorkManager (background match-notification sync)
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
 
 # Test
 junit = { module = "junit:junit", version.ref = "junit" }

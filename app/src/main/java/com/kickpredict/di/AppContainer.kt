@@ -23,9 +23,14 @@ import com.kickpredict.domain.usecase.GetCalibrationDashboardUseCase
 import com.kickpredict.domain.usecase.GetPredictedMatchUseCase
 import com.kickpredict.domain.usecase.GetStandingsUseCase
 import com.kickpredict.domain.usecase.GetTeamUseCase
+import com.kickpredict.domain.usecase.GetPendingNotificationsUseCase
 import com.kickpredict.domain.usecase.GetPredictedMatchesUseCase
 import com.kickpredict.domain.usecase.GetValuePicksUseCase
 import com.kickpredict.domain.usecase.RecalibrateUseCase
+import com.kickpredict.notifications.MatchNotifier
+import com.kickpredict.notifications.NotificationLog
+import com.kickpredict.notifications.NotificationPreference
+import com.kickpredict.notifications.NotificationScheduler
 import com.kickpredict.domain.usecase.RecordMatchResultUseCase
 import com.kickpredict.domain.usecase.SeedSampleResultsUseCase
 import com.kickpredict.domain.usecase.SimulateSeasonUseCase
@@ -45,6 +50,8 @@ import kotlinx.coroutines.launch
  * processing coupling beyond Room; it can be replaced by Hilt/Koin later without API changes.
  */
 class AppContainer(context: Context) {
+
+    private val appContext = context.applicationContext
 
     /** Which palette the app paints with; read synchronously so the first frame is already right. */
     val themePreference = ThemePreference(context)
@@ -116,6 +123,44 @@ class AppContainer(context: Context) {
     /** Value-pick ledger + ROI: logs flagged picks at their flag-time price and settles them. */
     val getValuePicks = GetValuePicksUseCase(valuePickRepository, calibrationRepository)
 
+    // --- Match notifications ----------------------------------------------------------------
+    /** Opt-in toggle for background match notifications (default off). */
+    val notificationPreference = NotificationPreference(appContext)
+
+    /** Fire-once log so each notification event posts at most once. */
+    val notificationLog = NotificationLog(appContext)
+
+    /** Builds + posts the system notifications. */
+    val matchNotifier = MatchNotifier(appContext)
+
+    /** Scans fixtures + live state for notify-worthy events (kickoff / live / result). */
+    val getPendingNotifications = GetPendingNotificationsUseCase(
+        liveScores = liveScores,
+        odds = odds,
+        calibrationRepository = calibrationRepository,
+    )
+
+    /**
+     * Turn notifications on/off. Enabling primes the log (marks every current candidate as seen, so
+     * the backlog doesn't all fire at once) and schedules the periodic scan; disabling cancels it.
+     */
+    fun setNotificationsEnabled(enabled: Boolean) {
+        notificationPreference.setEnabled(enabled)
+        if (enabled) {
+            applicationScope.launch {
+                runCatching {
+                    val matches = getPredictedMatches()
+                    val pending = getPendingNotifications(matches, System.currentTimeMillis())
+                    notificationLog.markNotified(pending.map { it.key })
+                }
+                NotificationScheduler.schedule(appContext)
+            }
+        } else {
+            NotificationScheduler.cancel(appContext)
+            notificationLog.clear()
+        }
+    }
+
     val getPredictedMatches = GetPredictedMatchesUseCase(repository, engine, calibrationRepository)
     val getPredictedMatch = GetPredictedMatchUseCase(repository, engine, calibrationRepository)
     val recordMatchResult = RecordMatchResultUseCase(calibrationRepository)
@@ -168,6 +213,8 @@ class AppContainer(context: Context) {
                 // Log any currently-flagged value picks so the ROI ledger fills even before the hub
                 // is opened, capturing today's odds while they're still in the live window.
                 getValuePicks.record(matches, odds())
+                // Re-arm the periodic notification scan if the user left notifications on.
+                if (notificationPreference.enabled.value) NotificationScheduler.schedule(appContext)
             }
         }
     }

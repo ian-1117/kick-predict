@@ -12,19 +12,31 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import com.kickpredict.KickPredictApplication
 import com.kickpredict.R
 import com.kickpredict.presentation.locale.AppLanguage
 
@@ -73,10 +85,62 @@ fun ThemePickerDialog(
                         )
                     }
                 }
+
+                NotificationToggle()
             }
         },
         containerColor = MaterialTheme.colorScheme.surface,
     )
+}
+
+/**
+ * Toggle for background match notifications. Enabling requests POST_NOTIFICATIONS (API 33+) first;
+ * the container primes the fire-once log and schedules the periodic scan.
+ */
+@Composable
+private fun NotificationToggle() {
+    val context = LocalContext.current
+    val container = (context.applicationContext as KickPredictApplication).container
+    val enabled by container.notificationPreference.enabled.collectAsState()
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { granted -> if (granted) container.setNotificationsEnabled(true) }
+
+    fun requestEnable() {
+        val needsPermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
+            PackageManager.PERMISSION_GRANTED
+        if (needsPermission) permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        else container.setNotificationsEnabled(true)
+    }
+
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(
+                stringResource(R.string.settings_notifications),
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                stringResource(R.string.settings_notifications_desc),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        Switch(
+            checked = enabled,
+            onCheckedChange = { on -> if (on) requestEnable() else container.setNotificationsEnabled(false) },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = AccentPrimary,
+                checkedTrackColor = AccentPrimary.copy(alpha = 0.4f),
+            ),
+        )
+    }
 }
 
 private val AppLanguage.labelRes: Int

@@ -175,6 +175,17 @@
     <string name="weather_snow">Snow</string>
     <string name="weather_heat">Heat</string>
 
+    <!-- Match notifications -->
+    <string name="settings_notifications">Match notifications</string>
+    <string name="settings_notifications_desc">Kickoff alerts for strong picks, live starts, and results</string>
+    <string name="notif_channel_name">Match alerts</string>
+    <string name="notif_channel_desc">Kickoff, live and result alerts for your predictions</string>
+    <string name="notif_kickoff_title">Kick-off in %1$d min</string>
+    <string name="notif_live_title">Match is live</string>
+    <string name="notif_result_hit">Prediction hit ✅</string>
+    <string name="notif_result_miss">Prediction miss ❌</string>
+    <string name="notif_value_suffix">Value +%1$d%%</string>
+
     <!-- Settings / picker dialog -->
     <string name="settings_theme">Theme</string>
     <string name="settings_language">Language</string>
