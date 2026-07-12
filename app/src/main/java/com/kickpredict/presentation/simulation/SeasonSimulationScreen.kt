@@ -104,7 +104,14 @@ fun SeasonSimulationScreen(
                     LeagueChips(state, viewModel)
                     CutoffCard(state, viewModel)
                     MetricChips(state, viewModel)
-                    ProjectionList(state)
+                    Box(Modifier.fillMaxWidth().weight(1f)) {
+                        if (state.projection != null) ProjectionList(state)
+                        // Spinner only while there's nothing to show (league switch / first run) — a
+                        // cutoff drag keeps the current league's list up to avoid flicker.
+                        if (state.isSimulating && state.projection == null) {
+                            CircularProgressIndicator(color = AccentPrimary, modifier = Modifier.align(Alignment.Center))
+                        }
+                    }
                 }
             }
         }

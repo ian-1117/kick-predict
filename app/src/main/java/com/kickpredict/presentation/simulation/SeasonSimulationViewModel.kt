@@ -111,9 +111,18 @@ class SeasonSimulationViewModel(
 
     fun selectLeague(league: LeagueType) {
         val loaded = data ?: return
+        if (_uiState.value.selected == league) return
         val lastRound = loaded.lastRound(league)
         val cutoff = defaultCutoff(lastRound)
-        _uiState.value = _uiState.value.copy(selected = league, lastRound = lastRound, cutoffRound = cutoff)
+        // Clear the previous league's projection so its teams don't linger while the new 10k-season
+        // run computes; the screen shows a spinner until the fresh projection lands.
+        _uiState.value = _uiState.value.copy(
+            selected = league,
+            lastRound = lastRound,
+            cutoffRound = cutoff,
+            projection = null,
+            isSimulating = true,
+        )
         pending.value = league to cutoff
     }
 
