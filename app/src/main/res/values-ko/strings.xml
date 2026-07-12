@@ -113,6 +113,7 @@
     <string name="team_wdl">%1$d승 · %2$d무 · %3$d패</string>
     <string name="team_goals">득점 %1$d · 실점 %2$d · 득실 %3$s</string>
     <string name="team_form_detail">경기당 득점 %1$s · 실점 %2$s · 모델 적중 %3$d%%</string>
+    <string name="team_h2h">상성 %1$d승 %2$d무 %3$d패</string>
 
     <!-- Dashboard -->
     <string name="dash_title">적중 · 보정 대시보드</string>

@@ -113,6 +113,7 @@
     <string name="team_wdl">%1$dW · %2$dD · %3$dL</string>
     <string name="team_goals">GF %1$d · GA %2$d · GD %3$s</string>
     <string name="team_form_detail">%1$s GF · %2$s GA per game · model %3$d%% correct</string>
+    <string name="team_h2h">H2H %1$dW %2$dD %3$dL</string>
 
     <!-- Dashboard -->
     <string name="dash_title">Accuracy · calibration dashboard</string>

@@ -220,6 +220,22 @@ private fun FixtureRow(match: Match, teamId: String, onClick: () -> Unit) {
         Column(Modifier.weight(1f).padding(start = 10.dp)) {
             Text("$homeAway · ${opponent.displayName}", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface, maxLines = 1)
             Text("R${match.round} · ${match.kickoff.format(fixtureFormatter)}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            // Head-to-head record vs this opponent, from the viewed team's perspective (상성).
+            val h2h = match.headToHead
+            if (h2h.total > 0) {
+                val teamIsHome = match.homeTeam.id == teamId
+                val w = if (teamIsHome) h2h.homeWins else h2h.awayWins
+                val l = if (teamIsHome) h2h.awayWins else h2h.homeWins
+                Text(
+                    stringResource(R.string.team_h2h, w, h2h.draws, l),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = when {
+                        w > l -> WinColor
+                        l > w -> LossColor
+                        else -> DrawColor
+                    },
+                )
+            }
         }
         match.predictedResult?.let { Text(stringResource(R.string.hit_rate, it.confidenceScore), style = MaterialTheme.typography.labelSmall, color = AccentPrimary) }
     }
