@@ -3,6 +3,8 @@ package com.kickpredict.data.remote.live
 import com.kickpredict.data.remote.apifootball.AfEvent
 import com.kickpredict.data.remote.apifootball.ApiFootballApi
 import com.kickpredict.data.remote.football.FootballDataApi
+import com.kickpredict.domain.model.H2HMeeting
+import com.kickpredict.domain.model.H2HOutcome
 import com.kickpredict.domain.model.HeadToHead
 import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.model.Match
@@ -111,19 +113,30 @@ class LiveFixtureRemoteSource(
                 }
         }.getOrDefault(emptyMap())
 
+        // Head-to-head from this season's finished matches (empty in preseason, fills in as it plays).
+        val h2hRecords = matches.mapNotNull { m ->
+            if (m.status != "FINISHED") return@mapNotNull null
+            val h = m.score.fullTime.home ?: return@mapNotNull null
+            val a = m.score.fullTime.away ?: return@mapNotNull null
+            val d = runCatching { fromInstant(m.utcDate).toLocalDate() }.getOrNull() ?: return@mapNotNull null
+            H2HRecord(teamKey(m.homeTeam.id, m.homeTeam.name), teamKey(m.awayTeam.id, m.awayTeam.name), h, a, d)
+        }
+
         return matches.mapNotNull { m ->
             val homeName = m.homeTeam.name ?: return@mapNotNull null
             val awayName = m.awayTeam.name ?: return@mapNotNull null
-            val homeId = "FD_${code}_${teamKey(m.homeTeam.id, homeName)}"
-            val awayId = "FD_${code}_${teamKey(m.awayTeam.id, awayName)}"
+            val homeKey = teamKey(m.homeTeam.id, homeName)
+            val awayKey = teamKey(m.awayTeam.id, awayName)
+            val homeId = "FD_${code}_$homeKey"
+            val awayId = "FD_${code}_$awayKey"
             val match = Match(
                 id = "FD_${code}_${m.id}",
                 league = league,
-                homeTeam = LiveProfileBuilder.profile(homeId, homeName, tlaOf(m.homeTeam.tla, homeName), stats[teamKey(m.homeTeam.id, homeName)]),
-                awayTeam = LiveProfileBuilder.profile(awayId, awayName, tlaOf(m.awayTeam.tla, awayName), stats[teamKey(m.awayTeam.id, awayName)]),
+                homeTeam = LiveProfileBuilder.profile(homeId, homeName, tlaOf(m.homeTeam.tla, homeName), stats[homeKey]),
+                awayTeam = LiveProfileBuilder.profile(awayId, awayName, tlaOf(m.awayTeam.tla, awayName), stats[awayKey]),
                 kickoff = fromInstant(m.utcDate),
                 venue = homeName,
-                headToHead = HeadToHead(),
+                headToHead = buildHeadToHead(homeKey, awayKey, h2hRecords),
                 round = m.matchday ?: 1,
             )
             val score = if (m.status == "FINISHED" && m.score.fullTime.home != null && m.score.fullTime.away != null) {
@@ -137,10 +150,19 @@ class LiveFixtureRemoteSource(
 
     private suspend fun kLeagueFixtures(leagueId: Int, league: LeagueType, season: Int): List<Pair<Match, Pair<Int, Int>?>> {
         val standings = apiFootball.standings(leagueId = leagueId).associateBy { it.teamId }
-        val events = apiFootball.events(from = "$season-01-01", to = "$season-12-31", leagueId = leagueId)
-        val form = recentForm(events)
+        // Pull a few seasons in one call: the extra history only feeds head-to-head; fixtures, form
+        // and results are still taken from the current season alone.
+        val events = apiFootball.events(from = "${season - 2}-01-01", to = "$season-12-31", leagueId = leagueId)
+        val h2hRecords = events.mapNotNull { e ->
+            val d = parseDate(e.date) ?: return@mapNotNull null
+            val hs = e.homeScore.toIntOrNull() ?: return@mapNotNull null
+            val aws = e.awayScore.toIntOrNull() ?: return@mapNotNull null
+            H2HRecord(e.homeId, e.awayId, hs, aws, d)
+        }
+        val current = events.filter { it.date.startsWith(season.toString()) }
+        val form = recentForm(current)
 
-        return events.mapNotNull { e ->
+        return current.mapNotNull { e ->
             val date = parseDate(e.date) ?: return@mapNotNull null
             val kickoff = LocalDateTime.of(date, parseTime(e.time) ?: LocalTime.of(15, 0))
             val homeStats = stats(standings[e.homeId]?.let { s -> s to form[e.homeId].orEmpty() })
@@ -152,7 +174,7 @@ class LiveFixtureRemoteSource(
                 awayTeam = LiveProfileBuilder.profile("AF_${e.awayId}", e.awayName, LiveProfileBuilder.shortCode(e.awayName), awayStats),
                 kickoff = kickoff,
                 venue = e.stadium.ifBlank { e.homeName },
-                headToHead = HeadToHead(),
+                headToHead = buildHeadToHead(e.homeId, e.awayId, h2hRecords),
                 round = e.round.toIntOrNull() ?: 1,
             )
             val hs = e.homeScore.toIntOrNull()
@@ -187,6 +209,33 @@ class LiveFixtureRemoteSource(
                 byTeam.getOrPut(e.awayId) { ArrayList() }.add(outcome(aws, hs))
             }
         return byTeam.mapValues { it.value.takeLast(5).reversed() }
+    }
+
+    /** A played match, reduced to what head-to-head needs. */
+    private data class H2HRecord(val homeId: String, val awayId: String, val homeGoals: Int, val awayGoals: Int, val date: LocalDate)
+
+    /**
+     * The recent meetings between two teams, most-recent-first and from the upcoming fixture's home
+     * side's perspective — mirrors the bundled provider so live and bundled fixtures feed the 상성
+     * (matchup) logic identically. [homeId]/[awayId] are the fixture's teams.
+     */
+    private fun buildHeadToHead(homeId: String, awayId: String, records: List<H2HRecord>): HeadToHead {
+        val meetings = records
+            .filter { (it.homeId == homeId && it.awayId == awayId) || (it.homeId == awayId && it.awayId == homeId) }
+            .sortedByDescending { it.date }
+            .take(8)
+            .map { r ->
+                val homeSideWon = r.homeGoals > r.awayGoals
+                val draw = r.homeGoals == r.awayGoals
+                val fixtureHomeWon = if (r.homeId == homeId) homeSideWon else (!homeSideWon && !draw)
+                val outcome = when {
+                    draw -> H2HOutcome.DRAW
+                    fixtureHomeWon -> H2HOutcome.HOME_WIN
+                    else -> H2HOutcome.AWAY_WIN
+                }
+                H2HMeeting(outcome = outcome, atHomeVenue = r.homeId == homeId)
+            }
+        return HeadToHead(meetings)
     }
 
     private fun outcome(scored: Int, conceded: Int): MatchOutcome = when {
