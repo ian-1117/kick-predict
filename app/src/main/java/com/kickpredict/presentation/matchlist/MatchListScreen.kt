@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -399,6 +400,7 @@ private fun MatchCard(match: Match, result: RecordedResult?, onClick: () -> Unit
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     Modifier
+                        .weight(1f, fill = false)
                         .clip(RoundedCornerShape(10.dp))
                         .background(AccentPrimary)
                         .padding(horizontal = 12.dp, vertical = 6.dp),
@@ -408,9 +410,11 @@ private fun MatchCard(match: Match, result: RecordedResult?, onClick: () -> Unit
                         style = MaterialTheme.typography.titleMedium,
                         color = OnAccent,
                         fontWeight = FontWeight.Black,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Row(Modifier.padding(start = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     if (result != null) {
                         HitMissBadge(result.wasCorrect)
                     } else {
