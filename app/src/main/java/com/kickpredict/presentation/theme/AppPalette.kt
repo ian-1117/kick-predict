@@ -36,13 +36,13 @@ data class AppPalette(
  */
 enum class AppTheme(
     val displayName: String,
-    val description: String,
+    @androidx.annotation.StringRes val descriptionRes: Int,
     val palette: AppPalette,
 ) {
     /** Cool blue-white of stadium lights at night. Cyan/amber/magenta avoids the red-green axis. */
     FLOODLIGHT(
         displayName = "Floodlight",
-        description = "야간 조명 · 색각이상 안전",
+        descriptionRes = com.kickpredict.R.string.theme_floodlight_desc,
         palette = AppPalette(
             ground = Color(0xFF080B12),
             surfaceSunken = Color(0xFF0E1320),
@@ -63,7 +63,7 @@ enum class AppTheme(
     /** Pitch green and chalk lines; the draw and loss colours are the referee's two cards. */
     CARD(
         displayName = "Card",
-        description = "잔디와 심판 카드",
+        descriptionRes = com.kickpredict.R.string.theme_card_desc,
         palette = AppPalette(
             ground = Color(0xFF08120C),
             surfaceSunken = Color(0xFF0D1A12),
@@ -84,7 +84,7 @@ enum class AppTheme(
     /** Newsprint: paper, ink, and a single headline red. The one light palette. */
     BROADSHEET(
         displayName = "Broadsheet",
-        description = "스포츠 지면 · 라이트",
+        descriptionRes = com.kickpredict.R.string.theme_broadsheet_desc,
         palette = AppPalette(
             ground = Color(0xFFF7F6F2),
             surfaceSunken = Color(0xFFEFEEE8),
@@ -106,7 +106,7 @@ enum class AppTheme(
     /** Warm dark: copper accent, teal draw, crimson loss. */
     EMBER(
         displayName = "Ember",
-        description = "따뜻한 어둠 · 구릿빛",
+        descriptionRes = com.kickpredict.R.string.theme_ember_desc,
         palette = AppPalette(
             ground = Color(0xFF0D0A08),
             surfaceSunken = Color(0xFF16110D),

@@ -130,7 +130,7 @@ private fun ThemeRow(theme: AppTheme, selected: Boolean, onClick: () -> Unit) {
                 fontWeight = FontWeight.Bold,
             )
             Text(
-                theme.description,
+                stringResource(theme.descriptionRes),
                 style = MaterialTheme.typography.labelSmall,
                 color = palette.textSecondary,
             )

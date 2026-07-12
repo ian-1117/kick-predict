@@ -1,5 +1,7 @@
 package com.kickpredict.presentation.standings
 
+import androidx.compose.ui.res.stringResource
+import com.kickpredict.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -58,13 +60,13 @@ fun StandingsScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text("리그 순위", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.nav_standings), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") }
                 },
                 actions = {
                     IconButton(onClick = onSimulate) {
-                        Icon(Icons.Filled.Timeline, contentDescription = "시즌 시뮬레이션", tint = AccentPrimary)
+                        Icon(Icons.Filled.Timeline, contentDescription = stringResource(R.string.standings_simulate), tint = AccentPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
@@ -75,7 +77,7 @@ fun StandingsScreen(
             when {
                 state.isLoading -> CircularProgressIndicator(color = AccentPrimary, modifier = Modifier.align(Alignment.Center))
                 state.leaguesWithData.isEmpty() -> Text(
-                    "아직 결과가 없습니다. 결과를 입력하거나 대시보드에서 샘플을 채우면\n순위표가 만들어집니다.",
+                    stringResource(R.string.standings_empty),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.align(Alignment.Center).padding(32.dp),
@@ -116,8 +118,8 @@ private fun HeaderRow() {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text("#", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(width = 28.dp, height = 16.dp))
-        Text("팀", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f).padding(start = 8.dp))
-        StatCell("경기"); StatCell("승점")
+        Text(stringResource(R.string.standings_col_team), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f).padding(start = 8.dp))
+        StatCell(stringResource(R.string.standings_col_played)); StatCell(stringResource(R.string.standings_col_points))
     }
 }
 
@@ -139,8 +141,9 @@ private fun StandingRow(rank: Int, s: Standing, onClick: () -> Unit) {
         }
         Column(Modifier.weight(1f).padding(start = 10.dp)) {
             Text(s.teamName, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface, maxLines = 1)
+            val gd = "${if (s.goalDiff >= 0) "+" else ""}${s.goalDiff}"
             Text(
-                "${s.won}승 ${s.drawn}무 ${s.lost}패 · 득실 ${if (s.goalDiff >= 0) "+" else ""}${s.goalDiff}",
+                stringResource(R.string.standings_record, s.won, s.drawn, s.lost, gd),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

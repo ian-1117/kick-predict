@@ -1,5 +1,9 @@
 package com.kickpredict.presentation.detail
 
+import androidx.compose.ui.res.stringResource
+import com.kickpredict.R
+import com.kickpredict.presentation.common.outcomeName
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -222,7 +226,7 @@ private fun ExpectedScoreLabel(scoreline: String) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "예상 스코어",
+            text = stringResource(R.string.detail_expected_score),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -255,8 +259,8 @@ private fun ResultEntrySection(
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Text("실제 결과 입력", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
-            Text("기록된 결과 ${recordedCount}건", style = MaterialTheme.typography.labelSmall, color = AccentPrimary)
+            Text(stringResource(R.string.detail_enter_result), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+            Text(stringResource(R.string.detail_recorded_count, recordedCount), style = MaterialTheme.typography.labelSmall, color = AccentPrimary)
         }
 
         if (actualResult != null) {
@@ -268,10 +272,10 @@ private fun ResultEntrySection(
                         .border(1.dp, color.copy(alpha = 0.6f), RoundedCornerShape(50))
                         .padding(horizontal = 12.dp, vertical = 6.dp),
                 ) {
-                    Text(if (correct) "예측 적중" else "예측 실패", color = color, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                    Text(stringResource(if (correct) R.string.detail_prediction_hit else R.string.detail_prediction_miss), color = color, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
                 }
                 Text(
-                    "예측: ${prediction.predictedOutcome.label}",
+                    stringResource(R.string.prediction_label, outcomeName(prediction.predictedOutcome)),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -289,7 +293,7 @@ private fun ResultEntrySection(
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = AccentPrimary, contentColor = MaterialTheme.colorScheme.background),
         ) {
-            Text(if (actualResult == null) "결과 저장" else "결과 수정", fontWeight = FontWeight.Bold)
+            Text(stringResource(if (actualResult == null) R.string.detail_save_result else R.string.detail_edit_result), fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -300,7 +304,7 @@ private fun GoalStepper(label: String, value: Int, onChange: (Int) -> Unit) {
         Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { onChange((value - 1).coerceAtLeast(0)) }) {
-                Icon(Icons.Filled.Remove, contentDescription = "감소", tint = MaterialTheme.colorScheme.onSurface)
+                Icon(Icons.Filled.Remove, contentDescription = stringResource(R.string.detail_decrease), tint = MaterialTheme.colorScheme.onSurface)
             }
             Text(
                 "$value",
@@ -311,7 +315,7 @@ private fun GoalStepper(label: String, value: Int, onChange: (Int) -> Unit) {
                 modifier = Modifier.size(width = 44.dp, height = 40.dp).padding(top = 4.dp),
             )
             IconButton(onClick = { onChange(value + 1) }) {
-                Icon(Icons.Filled.Add, contentDescription = "증가", tint = AccentPrimary)
+                Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.detail_increase), tint = AccentPrimary)
             }
         }
     }
@@ -327,9 +331,9 @@ private fun MarketSummary(prediction: PredictionResult) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        Text("추가 마켓", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
-        MarketRow("오버 2.5", prediction.overProbabilityPercent, "언더 2.5", prediction.underProbabilityPercent)
-        MarketRow("양팀 득점", prediction.bttsProbabilityPercent, "노골", prediction.noBttsProbabilityPercent)
+        Text(stringResource(R.string.detail_extra_markets), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+        MarketRow(stringResource(R.string.detail_over25), prediction.overProbabilityPercent, stringResource(R.string.detail_under25), prediction.underProbabilityPercent)
+        MarketRow(stringResource(R.string.detail_btts), prediction.bttsProbabilityPercent, stringResource(R.string.detail_no_goal), prediction.noBttsProbabilityPercent)
     }
 }
 
@@ -359,7 +363,7 @@ private fun ScorelineDistribution(prediction: PredictionResult) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        Text("스코어 확률", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+        Text(stringResource(R.string.detail_score_prob), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
         lines.forEach { s ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(

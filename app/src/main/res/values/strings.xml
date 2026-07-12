@@ -38,10 +38,117 @@
     <string name="calib_leagues">%1$d leagues</string>
     <string name="calib_accumulating">collecting samples</string>
 
+    <!-- Outcomes (generic home/away/draw) -->
+    <string name="outcome_home">Home win</string>
+    <string name="outcome_away">Away win</string>
+    <string name="result_hit">Hit</string>
+    <string name="result_miss">Miss</string>
+
+    <!-- Detail screen -->
+    <string name="detail_expected_score">Expected score</string>
+    <string name="detail_enter_result">Enter actual result</string>
+    <string name="detail_recorded_count">%1$d results recorded</string>
+    <string name="detail_prediction_hit">Prediction hit</string>
+    <string name="detail_prediction_miss">Prediction miss</string>
+    <string name="detail_save_result">Save result</string>
+    <string name="detail_edit_result">Edit result</string>
+    <string name="detail_decrease">Decrease</string>
+    <string name="detail_increase">Increase</string>
+    <string name="detail_extra_markets">Extra markets</string>
+    <string name="detail_over25">Over 2.5</string>
+    <string name="detail_under25">Under 2.5</string>
+    <string name="detail_btts">Both teams to score</string>
+    <string name="detail_no_goal">No goal</string>
+    <string name="detail_score_prob">Scoreline probability</string>
+
+    <!-- Standings screen -->
+    <string name="standings_simulate">Season simulation</string>
+    <string name="standings_empty">No results yet. Enter results or fill samples from the dashboard to build the table.</string>
+    <string name="standings_col_team">Team</string>
+    <string name="standings_col_played">P</string>
+    <string name="standings_col_points">Pts</string>
+    <string name="standings_record">%1$dW %2$dD %3$dL · GD %4$s</string>
+
+    <!-- Team screen -->
+    <string name="team_recent_form">Recent form</string>
+    <string name="team_fixtures">Fixtures · predictions</string>
+    <string name="team_rank">Rank</string>
+    <string name="team_points">Pts</string>
+    <string name="team_home">Home</string>
+    <string name="team_away">Away</string>
+
+    <!-- Dashboard -->
+    <string name="dash_title">Accuracy · calibration dashboard</string>
+    <string name="dash_fill_samples">Fill sample results</string>
+    <string name="dash_empty_title">No results recorded yet</string>
+    <string name="dash_empty_body">Enter actual results from a match, or fill 5 leagues × 5 rounds of sample results to see prediction accuracy and calibration right away.</string>
+    <string name="dash_fill_5rounds">Fill 5-round sample results</string>
+    <string name="dash_accuracy_by_round">Accuracy by round</string>
+    <string name="dash_model_compare">Model comparison</string>
+    <string name="dash_reliability">Actual hit rate by confidence band</string>
+    <string name="dash_recent">Recent results</string>
+    <string name="dash_stat_records">Records</string>
+    <string name="dash_records_value">%1$d</string>
+    <string name="dash_stat_accuracy">Accuracy</string>
+    <string name="dash_applied">On</string>
+    <string name="dash_pending">Pending</string>
+    <string name="dash_confidence_line">Confidence calibration %1$s · %2$d leagues calibrated</string>
+    <string name="dash_model_note">Per-model accuracy on the same record · Elo is scored honestly walk-forward (predict, then learn).</string>
+    <string name="dash_round_note">Bar height = accuracy that round (correct predictions ÷ matches).</string>
+    <string name="dash_reliability_note">Bars: actual hit rate / grey line: predicted confidence — hit rate below confidence means over-confidence.</string>
+    <string name="dash_band_value">%1$d%% · %2$d</string>
+    <string name="dash_recent_pred">Predicted %1$s · hit rate %2$d%%</string>
+    <string name="model_engine">AI engine (Poisson)</string>
+    <string name="model_elo">Elo (walk-forward)</string>
+    <string name="model_baseline">Baseline (home win)</string>
+
+    <!-- Season simulation -->
+    <string name="nav_back">Back</string>
+    <string name="sim_no_fixtures">No fixtures to simulate.</string>
+    <string name="sim_start">Run simulation</string>
+    <string name="sim_round">Round %1$d</string>
+    <string name="sim_preseason">Preseason — simulate every match</string>
+    <string name="sim_split">Rounds 1–%1$d actual · %2$d–%3$d simulated</string>
+    <string name="sim_iterations">%1$s iterations · %2$d matches left</string>
+    <string name="sim_metric_prob">%1$s probability</string>
+    <string name="sim_disclaimer">\"Actual\" is where this season really finished. Post-cutoff matches are predicted only from what was known at the cutoff, so the model never sees the results it must call. But the sample is a single season — a few correct calls don\'t prove predictive power.</string>
+    <string name="sim_expected_points">Exp. points %1$s · avg rank %2$s</string>
+    <string name="sim_actual_metric">Actual: %1$s ✓</string>
+    <string name="sim_actual_rank">Actual %1$d</string>
+    <string name="sim_metric_title">Title</string>
+    <string name="sim_metric_top">Top</string>
+    <string name="sim_metric_relegation">Relegation</string>
+
+    <!-- Power comparison report -->
+    <string name="power_title">Power comparison</string>
+    <string name="power_why">Why this prediction</string>
+    <string name="power_bogey">Clear bogey team</string>
+    <string name="power_edge">Matchup edge</string>
+    <string name="power_slight_edge">Slight matchup edge</string>
+    <string name="power_record">Record %1$dW %2$dD %3$dL</string>
+    <string name="power_matchup">%1$s · %2$s</string>
+    <string name="power_recent">Recent</string>
+    <string name="power_factors">Match factors</string>
+    <string name="power_weather">Weather · %1$s</string>
+    <string name="power_availability">%1$s %2$d out · %3$d%%</string>
+
+    <!-- Weather -->
+    <string name="weather_clear">Clear</string>
+    <string name="weather_rain">Rain</string>
+    <string name="weather_wind">Wind</string>
+    <string name="weather_snow">Snow</string>
+    <string name="weather_heat">Heat</string>
+
     <!-- Settings / picker dialog -->
     <string name="settings_theme">Theme</string>
     <string name="settings_language">Language</string>
     <string name="language_system">System</string>
     <string name="language_korean">한국어</string>
     <string name="language_english">English</string>
+
+    <!-- Theme descriptions -->
+    <string name="theme_floodlight_desc">Floodlit · colour-blind safe</string>
+    <string name="theme_card_desc">Pitch &amp; referee cards</string>
+    <string name="theme_broadsheet_desc">Sports pages · light</string>
+    <string name="theme_ember_desc">Warm dark · copper</string>
 </resources>

@@ -26,8 +26,11 @@ data class RoundAccuracy(
 }
 
 /** One predictor's out-of-sample accuracy over the recorded results. */
+/** Which model a [ModelScore] describes; the display name is resolved in the UI layer. */
+enum class ModelKind { ENGINE, ELO, BASELINE }
+
 data class ModelScore(
-    val name: String,
+    val kind: ModelKind,
     val correct: Int,
     val total: Int,
 ) {
@@ -111,9 +114,9 @@ class GetCalibrationDashboardUseCase(
         }
         val n = ordered.size
         return listOf(
-            ModelScore("AI 엔진 (Poisson)", engineCorrect, n),
-            ModelScore("Elo 학습 (walk-forward)", eloCorrect, n),
-            ModelScore("베이스라인 (홈 승)", homeCorrect, n),
+            ModelScore(ModelKind.ENGINE, engineCorrect, n),
+            ModelScore(ModelKind.ELO, eloCorrect, n),
+            ModelScore(ModelKind.BASELINE, homeCorrect, n),
         )
     }
 }

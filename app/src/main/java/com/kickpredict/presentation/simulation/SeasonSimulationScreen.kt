@@ -1,5 +1,8 @@
 package com.kickpredict.presentation.simulation
 
+import androidx.compose.ui.res.stringResource
+import com.kickpredict.R
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -71,9 +74,9 @@ fun SeasonSimulationScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text("시즌 시뮬레이션", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.standings_simulate), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로") }
+                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.nav_back)) }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             )
@@ -91,7 +94,7 @@ fun SeasonSimulationScreen(
                 )
 
                 state.selected == null -> Text(
-                    "시뮬레이션할 일정이 없습니다.",
+                    stringResource(R.string.sim_no_fixtures),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.align(Alignment.Center).padding(32.dp),
@@ -136,13 +139,13 @@ private fun CutoffCard(state: SeasonSimulationUiState, viewModel: SeasonSimulati
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                "시뮬레이션 시작",
+                stringResource(R.string.sim_start),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.weight(1f),
             )
             Text(
-                "${state.cutoffRound}라운드",
+                stringResource(R.string.sim_round, state.cutoffRound),
                 style = MaterialTheme.typography.titleMedium,
                 color = AccentPrimary,
                 fontWeight = FontWeight.Black,
@@ -163,15 +166,15 @@ private fun CutoffCard(state: SeasonSimulationUiState, viewModel: SeasonSimulati
 
         val played = state.playedRounds
         val summary = if (played <= 0) {
-            "프리시즌 — 전 경기 시뮬레이션"
+            stringResource(R.string.sim_preseason)
         } else {
-            "1~${played}R 실제 결과 · ${state.cutoffRound}~${state.lastRound}R 시뮬레이션"
+            stringResource(R.string.sim_split, played, state.cutoffRound, state.lastRound)
         }
         Text(summary, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
         if (projection != null) {
             Text(
-                "${"%,d".format(projection.iterations)}회 반복 · 잔여 ${projection.remainingMatches}경기",
+                stringResource(R.string.sim_iterations, "%,d".format(projection.iterations), projection.remainingMatches),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -199,7 +202,7 @@ private fun MetricChips(state: SeasonSimulationUiState, viewModel: SeasonSimulat
             FilterChip(
                 selected = state.metric == metric,
                 onClick = { viewModel.selectMetric(metric) },
-                label = { Text("${metric.label} 확률") },
+                label = { Text(stringResource(R.string.sim_metric_prob, stringResource(metric.labelRes))) },
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = accent.copy(alpha = 0.22f),
                     selectedLabelColor = accent,
@@ -228,9 +231,7 @@ private fun ProjectionList(state: SeasonSimulationUiState) {
         if (projection.hasActualOutcome) {
             item {
                 Text(
-                    "‘실제’는 이 시즌이 실제로 끝난 순위입니다. 컷오프 이후 경기는 그 시점까지 " +
-                        "알 수 있었던 기록만으로 예측하므로, 모델은 자신이 맞혀야 할 결과를 미리 보지 않습니다. " +
-                        "다만 표본은 한 시즌뿐입니다 — 몇 개 맞혔다고 예측력이 검증된 것은 아닙니다.",
+                    stringResource(R.string.sim_disclaimer),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
@@ -269,18 +270,20 @@ private fun TeamRow(team: TeamProjection, metric: ProjectionMetric, projection: 
         Column(Modifier.weight(1f).padding(start = 10.dp)) {
             Text(team.teamName, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface, maxLines = 1)
             Text(
-                "예상 승점 ${"%.1f".format(team.expectedPoints)} · 평균 ${"%.1f".format(team.averageRank)}위",
+                stringResource(R.string.sim_expected_points, "%.1f".format(team.expectedPoints), "%.1f".format(team.averageRank)),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             // Only a team that really did win / qualify / go down gets the accent; the rest stay muted
             // so the outcome column can't be misread as the model having called every row.
-            team.actualOutcome(metric, projection)?.let { (label, hit) ->
+            team.actualOutcome(metric, projection)?.let { outcome ->
+                val label = if (outcome.hit) stringResource(R.string.sim_actual_metric, stringResource(metric.labelRes))
+                    else stringResource(R.string.sim_actual_rank, outcome.actualRank)
                 Text(
                     label,
                     style = MaterialTheme.typography.labelSmall,
-                    color = if (hit) accent.copy(alpha = 0.85f) else MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontWeight = if (hit) FontWeight.Bold else FontWeight.Normal,
+                    color = if (outcome.hit) accent.copy(alpha = 0.85f) else MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = if (outcome.hit) FontWeight.Bold else FontWeight.Normal,
                 )
             }
         }
@@ -315,7 +318,9 @@ private fun ProbabilityBar(fraction: Float, accent: Color) {
 }
 
 /** How the season really ended for this team, and whether that matches the metric being shown. */
-private fun TeamProjection.actualOutcome(metric: ProjectionMetric, projection: SeasonProjection): Pair<String, Boolean>? {
+private data class ActualOutcome(val hit: Boolean, val actualRank: Int)
+
+private fun TeamProjection.actualOutcome(metric: ProjectionMetric, projection: SeasonProjection): ActualOutcome? {
     val actual = actualRank ?: return null
     val teamCount = projection.teams.size
     val hit = when (metric) {
@@ -323,7 +328,7 @@ private fun TeamProjection.actualOutcome(metric: ProjectionMetric, projection: S
         ProjectionMetric.CONTINENTAL -> actual <= projection.rules.continentalSpots
         ProjectionMetric.RELEGATION -> actual > teamCount - projection.rules.relegationSpots
     }
-    return if (hit) "실제: ${metric.label} ✓" to true else "실제 ${actual}위" to false
+    return ActualOutcome(hit, actual)
 }
 
 @Composable

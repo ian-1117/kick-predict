@@ -1,5 +1,9 @@
 package com.kickpredict.presentation.components
 
+import androidx.compose.ui.res.stringResource
+import com.kickpredict.R
+import com.kickpredict.presentation.common.weatherName
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -60,7 +64,7 @@ fun PowerComparisonReport(
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         Text(
-            text = "전력 비교 리포트",
+            text = stringResource(R.string.power_title),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
         )
@@ -102,7 +106,7 @@ fun PowerComparisonReport(
         if (rationale.isNotEmpty()) {
             Spacer(Modifier.height(2.dp))
             Text(
-                text = "예측 근거",
+                text = stringResource(R.string.power_why),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )
@@ -128,15 +132,17 @@ private fun MatchupBanner(
     headToHead: HeadToHead?,
 ) {
     val accent = if (isHome) WinColor else LossColor
-    val label = when {
-        strengthPercent >= 60 -> "뚜렷한 천적 관계"
-        strengthPercent >= 30 -> "상성 우위"
-        else -> "근소한 상성 우위"
-    }
+    val label = stringResource(
+        when {
+            strengthPercent >= 60 -> R.string.power_bogey
+            strengthPercent >= 30 -> R.string.power_edge
+            else -> R.string.power_slight_edge
+        },
+    )
     val record = headToHead?.let {
         val (w, d, l) = if (isHome) Triple(it.homeWins, it.draws, it.awayWins)
         else Triple(it.awayWins, it.draws, it.homeWins)
-        "역대 전적 ${w}승 ${d}무 ${l}패"
+        stringResource(R.string.power_record, w, d, l)
     }
     Row(
         modifier = Modifier
@@ -151,7 +157,7 @@ private fun MatchupBanner(
         Icon(Icons.Filled.LocalFireDepartment, contentDescription = null, tint = accent)
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = "상성 $label · ${favored.name}",
+                text = stringResource(R.string.power_matchup, label, favored.name),
                 style = MaterialTheme.typography.labelLarge,
                 color = accent,
                 fontWeight = FontWeight.Bold,
@@ -182,7 +188,7 @@ private fun RecentMeetingChips(meetings: List<H2HMeeting>) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "최근",
+            text = stringResource(R.string.power_recent),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -247,23 +253,23 @@ private fun TeamHeader(home: TeamProfile, away: TeamProfile) {
 private fun MatchVariablesRow(homeShort: String, awayShort: String, context: MatchContext) {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Text(
-            text = "경기 변수",
+            text = stringResource(R.string.power_factors),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
         )
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             if (context.weather.isAdverse) {
-                VariableChip("날씨 · ${context.weather.displayLabel}", DrawColor)
+                VariableChip(stringResource(R.string.power_weather, weatherName(context.weather)), DrawColor)
             }
             if (context.homeAvailability.isWeakened) {
                 VariableChip(
-                    "$homeShort ${context.homeAvailability.keyPlayersInjured}명 결장 · ${context.homeAvailability.lineupStrengthPercent}%",
+                    stringResource(R.string.power_availability, homeShort, context.homeAvailability.keyPlayersInjured, context.homeAvailability.lineupStrengthPercent),
                     LossColor,
                 )
             }
             if (context.awayAvailability.isWeakened) {
                 VariableChip(
-                    "$awayShort ${context.awayAvailability.keyPlayersInjured}명 결장 · ${context.awayAvailability.lineupStrengthPercent}%",
+                    stringResource(R.string.power_availability, awayShort, context.awayAvailability.keyPlayersInjured, context.awayAvailability.lineupStrengthPercent),
                     LossColor,
                 )
             }

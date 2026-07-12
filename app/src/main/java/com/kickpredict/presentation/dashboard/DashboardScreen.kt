@@ -1,5 +1,9 @@
 package com.kickpredict.presentation.dashboard
 
+import androidx.compose.ui.res.stringResource
+import com.kickpredict.R
+import com.kickpredict.presentation.common.outcomeName
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,6 +48,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.RecordedResult
 import com.kickpredict.domain.usecase.CalibrationDashboard
+import com.kickpredict.domain.usecase.ModelKind
 import com.kickpredict.domain.usecase.ModelScore
 import com.kickpredict.domain.usecase.ReliabilityBucket
 import com.kickpredict.domain.usecase.RoundAccuracy
@@ -66,10 +71,10 @@ fun DashboardScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text("적중 · 보정 대시보드", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.dash_title), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.nav_back))
                     }
                 },
                 actions = {
@@ -77,7 +82,7 @@ fun DashboardScreen(
                         CircularProgressIndicator(color = AccentPrimary, strokeWidth = 2.dp, modifier = Modifier.size(22.dp))
                     } else {
                         IconButton(onClick = viewModel::seedSampleResults) {
-                            Icon(Icons.Filled.AutoFixHigh, contentDescription = "샘플 결과 채우기", tint = AccentPrimary)
+                            Icon(Icons.Filled.AutoFixHigh, contentDescription = stringResource(R.string.dash_fill_samples), tint = AccentPrimary)
                         }
                     }
                 },
@@ -103,15 +108,15 @@ fun DashboardScreen(
 @Composable
 private fun EmptyState(modifier: Modifier, isSeeding: Boolean, onSeed: () -> Unit) {
     Column(modifier.padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("아직 기록된 결과가 없습니다", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onBackground)
-        Text("경기 상세에서 실제 결과를 입력하거나,\n5개 리그·5라운드 샘플 결과를 채워\n예측 정확도와 보정을 바로 확인해 보세요.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(stringResource(R.string.dash_empty_title), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onBackground)
+        Text(stringResource(R.string.dash_empty_body), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Button(
             onClick = onSeed,
             enabled = !isSeeding,
             colors = ButtonDefaults.buttonColors(containerColor = AccentPrimary, contentColor = MaterialTheme.colorScheme.background),
         ) {
             if (isSeeding) CircularProgressIndicator(color = MaterialTheme.colorScheme.background, strokeWidth = 2.dp, modifier = Modifier.size(18.dp))
-            else Text("5라운드 샘플 결과 채우기", fontWeight = FontWeight.Bold)
+            else Text(stringResource(R.string.dash_fill_5rounds), fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -125,18 +130,18 @@ private fun DashboardContent(dash: CalibrationDashboard) {
     ) {
         item { SummaryCard(dash) }
         if (dash.accuracyByRound.isNotEmpty()) {
-            item { SectionTitle("라운드별 예측 정확도") }
+            item { SectionTitle(stringResource(R.string.dash_accuracy_by_round)) }
             item { AccuracyTrendCard(dash.accuracyByRound) }
         }
         if (dash.modelComparison.isNotEmpty()) {
-            item { SectionTitle("모델 비교") }
+            item { SectionTitle(stringResource(R.string.dash_model_compare)) }
             item { ModelComparisonCard(dash.modelComparison) }
         }
         if (dash.reliability.isNotEmpty()) {
-            item { SectionTitle("신뢰도 구간별 실제 적중률") }
+            item { SectionTitle(stringResource(R.string.dash_reliability)) }
             item { ReliabilityCard(dash.reliability) }
         }
-        item { SectionTitle("최근 기록") }
+        item { SectionTitle(stringResource(R.string.dash_recent)) }
         items(dash.recent, key = { it.matchId }) { ResultRow(it) }
     }
 }
@@ -145,13 +150,14 @@ private fun DashboardContent(dash: CalibrationDashboard) {
 private fun SummaryCard(dash: CalibrationDashboard) {
     Card {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Stat("기록", "${dash.totalResults}건", MaterialTheme.colorScheme.onSurface)
-            Stat("예측 정확도", "${(dash.overallHitRate * 100).roundToInt()}%", AccentPrimary)
+            Stat(stringResource(R.string.dash_stat_records), stringResource(R.string.dash_records_value, dash.totalResults), MaterialTheme.colorScheme.onSurface)
+            Stat(stringResource(R.string.dash_stat_accuracy), "${(dash.overallHitRate * 100).roundToInt()}%", AccentPrimary)
             val applied = dash.status.confidenceApplied || dash.status.leaguesCalibrated.isNotEmpty()
-            Stat("AI 보정", if (applied) "적용" else "대기", if (applied) AccentPrimary else DrawColor)
+            Stat(stringResource(R.string.calib_prefix), stringResource(if (applied) R.string.dash_applied else R.string.dash_pending), if (applied) AccentPrimary else DrawColor)
         }
+        val confState = stringResource(if (dash.status.confidenceApplied) R.string.dash_applied else R.string.dash_pending)
         Text(
-            text = "신뢰도 보정 ${if (dash.status.confidenceApplied) "적용" else "대기"} · 리그 ${dash.status.leaguesCalibrated.size}개 보정",
+            text = stringResource(R.string.dash_confidence_line, confState, dash.status.leaguesCalibrated.size),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 10.dp),
@@ -173,7 +179,7 @@ private fun ModelComparisonCard(models: List<ModelScore>) {
     val maxAcc = ranked.firstOrNull()?.accuracy?.coerceAtLeast(0.01) ?: 1.0
     Card {
         Text(
-            "동일한 기록에 대한 모델별 정확도 · Elo는 walk-forward(예측 후 학습)로 정직하게 평가",
+            stringResource(R.string.dash_model_note),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(bottom = 12.dp),
@@ -183,7 +189,14 @@ private fun ModelComparisonCard(models: List<ModelScore>) {
                 val best = index == 0
                 Column(Modifier.fillMaxWidth()) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text(m.name, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
+                        val modelName = stringResource(
+                            when (m.kind) {
+                                ModelKind.ENGINE -> R.string.model_engine
+                                ModelKind.ELO -> R.string.model_elo
+                                ModelKind.BASELINE -> R.string.model_baseline
+                            },
+                        )
+                        Text(modelName, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
                         Text("${(m.accuracy * 100).roundToInt()}%", style = MaterialTheme.typography.labelLarge, color = if (best) AccentPrimary else MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
                     }
                     Spacer(Modifier.height(4.dp))
@@ -200,7 +213,7 @@ private fun ModelComparisonCard(models: List<ModelScore>) {
 private fun AccuracyTrendCard(rounds: List<RoundAccuracy>) {
     Card {
         Text(
-            "막대 높이 = 라운드별 예측 정확도 (맞힌 예측 ÷ 경기 수)",
+            stringResource(R.string.dash_round_note),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(bottom = 12.dp),
@@ -236,7 +249,7 @@ private fun AccuracyTrendCard(rounds: List<RoundAccuracy>) {
 private fun ReliabilityCard(buckets: List<ReliabilityBucket>) {
     Card {
         Text(
-            "막대: 실제 적중률 / 회색선: 예측 신뢰도 — 적중률이 신뢰도보다 낮으면 과신뢰",
+            stringResource(R.string.dash_reliability_note),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(bottom = 10.dp),
@@ -249,7 +262,7 @@ private fun ReliabilityCard(buckets: List<ReliabilityBucket>) {
                 Column(Modifier.fillMaxWidth()) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text(b.rangeLabel, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
-                        Text("${(hit * 100).roundToInt()}% · ${b.count}건", style = MaterialTheme.typography.labelSmall, color = if (overconfident) LossColor else AccentPrimary)
+                        Text(stringResource(R.string.dash_band_value, (hit * 100).roundToInt(), b.count), style = MaterialTheme.typography.labelSmall, color = if (overconfident) LossColor else AccentPrimary)
                     }
                     // bar fill = actual hit rate; colour flags over-confidence vs predicted band
                     Box(Modifier.fillMaxWidth().height(12.dp).clip(RoundedCornerShape(50)).background(OutlineColor.copy(alpha = 0.45f))) {
@@ -267,11 +280,11 @@ private fun ResultRow(r: RecordedResult) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text("${r.homeTeam}  ${r.scoreline}  ${r.awayTeam}", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
-                Text("예측 ${outcomeKo(r.predictedOutcome)} · 적중률 ${r.confidence}%", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 2.dp))
+                Text(stringResource(R.string.dash_recent_pred, outcomeName(r.predictedOutcome), r.confidence), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 2.dp))
             }
             val color = if (r.wasCorrect) WinColor else LossColor
             Box(Modifier.clip(RoundedCornerShape(50)).background(color.copy(alpha = 0.16f)).padding(horizontal = 12.dp, vertical = 6.dp)) {
-                Text(if (r.wasCorrect) "적중" else "실패", color = color, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                Text(stringResource(if (r.wasCorrect) R.string.result_hit else R.string.result_miss), color = color, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
             }
         }
     }
@@ -288,10 +301,4 @@ private fun Card(content: @Composable ColumnScope.() -> Unit) {
         modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(MaterialTheme.colorScheme.surface).padding(16.dp),
         content = content,
     )
-}
-
-private fun outcomeKo(o: PredictedOutcome): String = when (o) {
-    PredictedOutcome.HOME_WIN -> "홈 승"
-    PredictedOutcome.AWAY_WIN -> "원정 승"
-    PredictedOutcome.DRAW -> "무승부"
 }

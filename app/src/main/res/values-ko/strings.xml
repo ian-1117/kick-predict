@@ -38,10 +38,117 @@
     <string name="calib_leagues">리그 %1$d개</string>
     <string name="calib_accumulating">표본 축적 중</string>
 
+    <!-- Outcomes (generic home/away/draw) -->
+    <string name="outcome_home">홈 승</string>
+    <string name="outcome_away">원정 승</string>
+    <string name="result_hit">적중</string>
+    <string name="result_miss">실패</string>
+
+    <!-- Detail screen -->
+    <string name="detail_expected_score">예상 스코어</string>
+    <string name="detail_enter_result">실제 결과 입력</string>
+    <string name="detail_recorded_count">기록된 결과 %1$d건</string>
+    <string name="detail_prediction_hit">예측 적중</string>
+    <string name="detail_prediction_miss">예측 실패</string>
+    <string name="detail_save_result">결과 저장</string>
+    <string name="detail_edit_result">결과 수정</string>
+    <string name="detail_decrease">감소</string>
+    <string name="detail_increase">증가</string>
+    <string name="detail_extra_markets">추가 마켓</string>
+    <string name="detail_over25">오버 2.5</string>
+    <string name="detail_under25">언더 2.5</string>
+    <string name="detail_btts">양팀 득점</string>
+    <string name="detail_no_goal">노골</string>
+    <string name="detail_score_prob">스코어 확률</string>
+
+    <!-- Standings screen -->
+    <string name="standings_simulate">시즌 시뮬레이션</string>
+    <string name="standings_empty">아직 결과가 없습니다. 결과를 입력하거나 대시보드에서 샘플을 채우면 순위표가 만들어집니다.</string>
+    <string name="standings_col_team">팀</string>
+    <string name="standings_col_played">경기</string>
+    <string name="standings_col_points">승점</string>
+    <string name="standings_record">%1$d승 %2$d무 %3$d패 · 득실 %4$s</string>
+
+    <!-- Team screen -->
+    <string name="team_recent_form">최근 폼</string>
+    <string name="team_fixtures">경기 일정 · 예측</string>
+    <string name="team_rank">순위</string>
+    <string name="team_points">승점</string>
+    <string name="team_home">홈</string>
+    <string name="team_away">원정</string>
+
+    <!-- Dashboard -->
+    <string name="dash_title">적중 · 보정 대시보드</string>
+    <string name="dash_fill_samples">샘플 결과 채우기</string>
+    <string name="dash_empty_title">아직 기록된 결과가 없습니다</string>
+    <string name="dash_empty_body">경기 상세에서 실제 결과를 입력하거나, 5개 리그·5라운드 샘플 결과를 채워 예측 정확도와 보정을 바로 확인해 보세요.</string>
+    <string name="dash_fill_5rounds">5라운드 샘플 결과 채우기</string>
+    <string name="dash_accuracy_by_round">라운드별 예측 정확도</string>
+    <string name="dash_model_compare">모델 비교</string>
+    <string name="dash_reliability">신뢰도 구간별 실제 적중률</string>
+    <string name="dash_recent">최근 기록</string>
+    <string name="dash_stat_records">기록</string>
+    <string name="dash_records_value">%1$d건</string>
+    <string name="dash_stat_accuracy">예측 정확도</string>
+    <string name="dash_applied">적용</string>
+    <string name="dash_pending">대기</string>
+    <string name="dash_confidence_line">신뢰도 보정 %1$s · 리그 %2$d개 보정</string>
+    <string name="dash_model_note">동일한 기록에 대한 모델별 정확도 · Elo는 walk-forward(예측 후 학습)로 정직하게 평가</string>
+    <string name="dash_round_note">막대 높이 = 라운드별 예측 정확도 (맞힌 예측 ÷ 경기 수)</string>
+    <string name="dash_reliability_note">막대: 실제 적중률 / 회색선: 예측 신뢰도 — 적중률이 신뢰도보다 낮으면 과신뢰</string>
+    <string name="dash_band_value">%1$d%% · %2$d건</string>
+    <string name="dash_recent_pred">예측 %1$s · 적중률 %2$d%%</string>
+    <string name="model_engine">AI 엔진 (Poisson)</string>
+    <string name="model_elo">Elo 학습 (walk-forward)</string>
+    <string name="model_baseline">베이스라인 (홈 승)</string>
+
+    <!-- Season simulation -->
+    <string name="nav_back">뒤로</string>
+    <string name="sim_no_fixtures">시뮬레이션할 일정이 없습니다.</string>
+    <string name="sim_start">시뮬레이션 시작</string>
+    <string name="sim_round">%1$d라운드</string>
+    <string name="sim_preseason">프리시즌 — 전 경기 시뮬레이션</string>
+    <string name="sim_split">1~%1$dR 실제 결과 · %2$d~%3$dR 시뮬레이션</string>
+    <string name="sim_iterations">%1$s회 반복 · 잔여 %2$d경기</string>
+    <string name="sim_metric_prob">%1$s 확률</string>
+    <string name="sim_disclaimer">\'실제\'는 이 시즌이 실제로 끝난 순위입니다. 컷오프 이후 경기는 그 시점까지 알 수 있었던 기록만으로 예측하므로, 모델은 자신이 맞혀야 할 결과를 미리 보지 않습니다. 다만 표본은 한 시즌뿐입니다 — 몇 개 맞혔다고 예측력이 검증된 것은 아닙니다.</string>
+    <string name="sim_expected_points">예상 승점 %1$s · 평균 %2$s위</string>
+    <string name="sim_actual_metric">실제: %1$s ✓</string>
+    <string name="sim_actual_rank">실제 %1$d위</string>
+    <string name="sim_metric_title">우승</string>
+    <string name="sim_metric_top">상위권</string>
+    <string name="sim_metric_relegation">강등</string>
+
+    <!-- Power comparison report -->
+    <string name="power_title">전력 비교 리포트</string>
+    <string name="power_why">예측 근거</string>
+    <string name="power_bogey">뚜렷한 천적 관계</string>
+    <string name="power_edge">상성 우위</string>
+    <string name="power_slight_edge">근소한 상성 우위</string>
+    <string name="power_record">역대 전적 %1$d승 %2$d무 %3$d패</string>
+    <string name="power_matchup">%1$s · %2$s</string>
+    <string name="power_recent">최근</string>
+    <string name="power_factors">경기 변수</string>
+    <string name="power_weather">날씨 · %1$s</string>
+    <string name="power_availability">%1$s %2$d명 결장 · %3$d%%</string>
+
+    <!-- Weather -->
+    <string name="weather_clear">맑음</string>
+    <string name="weather_rain">비</string>
+    <string name="weather_wind">강풍</string>
+    <string name="weather_snow">눈</string>
+    <string name="weather_heat">폭염</string>
+
     <!-- Settings / picker dialog -->
     <string name="settings_theme">테마</string>
     <string name="settings_language">언어</string>
     <string name="language_system">시스템 기본</string>
     <string name="language_korean">한국어</string>
     <string name="language_english">English</string>
+
+    <!-- Theme descriptions -->
+    <string name="theme_floodlight_desc">야간 조명 · 색각이상 안전</string>
+    <string name="theme_card_desc">잔디와 심판 카드</string>
+    <string name="theme_broadsheet_desc">스포츠 지면 · 라이트</string>
+    <string name="theme_ember_desc">따뜻한 어둠 · 구릿빛</string>
 </resources>

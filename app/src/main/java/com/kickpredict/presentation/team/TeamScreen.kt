@@ -1,5 +1,7 @@
 package com.kickpredict.presentation.team
 
+import androidx.compose.ui.res.stringResource
+import com.kickpredict.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -84,11 +86,11 @@ private fun TeamContent(team: TeamDetail, onMatchClick: (String) -> Unit) {
     LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         item { Header(team) }
         if (team.recentResults.isNotEmpty()) {
-            item { SectionTitle("최근 폼") }
+            item { SectionTitle(stringResource(R.string.team_recent_form)) }
             item { FormRow(team) }
         }
         if (team.fixtures.isNotEmpty()) {
-            item { SectionTitle("경기 일정 · 예측") }
+            item { SectionTitle(stringResource(R.string.team_fixtures)) }
         }
         items(team.fixtures, key = { it.id }) { m -> FixtureRow(m, team.teamId) { onMatchClick(m.id) } }
     }
@@ -108,8 +110,8 @@ private fun Header(team: TeamDetail) {
             }
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Stat("순위", team.standingRank?.let { "#$it" } ?: "-")
-            Stat("승점", team.standing?.points?.toString() ?: "-")
+            Stat(stringResource(R.string.team_rank), team.standingRank?.let { "#$it" } ?: "-")
+            Stat(stringResource(R.string.team_points), team.standing?.points?.toString() ?: "-")
             Stat("Elo", "${team.eloRating}")
         }
     }
@@ -139,7 +141,7 @@ private fun FormRow(team: TeamDetail) {
 @Composable
 private fun FixtureRow(match: Match, teamId: String, onClick: () -> Unit) {
     val opponent = if (match.homeTeam.id == teamId) match.awayTeam else match.homeTeam
-    val homeAway = if (match.homeTeam.id == teamId) "홈" else "원정"
+    val homeAway = stringResource(if (match.homeTeam.id == teamId) R.string.team_home else R.string.team_away)
     Row(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(MaterialTheme.colorScheme.surface).clickable(onClick = onClick).padding(14.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -149,7 +151,7 @@ private fun FixtureRow(match: Match, teamId: String, onClick: () -> Unit) {
             Text("$homeAway · ${opponent.displayName}", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface, maxLines = 1)
             Text("R${match.round} · ${match.kickoff.format(fixtureFormatter)}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        match.predictedResult?.let { Text("적중률 ${it.confidenceScore}%", style = MaterialTheme.typography.labelSmall, color = AccentPrimary) }
+        match.predictedResult?.let { Text(stringResource(R.string.hit_rate, it.confidenceScore), style = MaterialTheme.typography.labelSmall, color = AccentPrimary) }
     }
 }
 

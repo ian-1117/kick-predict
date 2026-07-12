@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.annotation.StringRes
 import com.kickpredict.KickPredictApplication
+import com.kickpredict.R
 import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.simulation.SeasonProjection
 import com.kickpredict.domain.usecase.SeasonData
@@ -23,10 +25,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /** Which probability the team rows rank and bar themselves by. */
-enum class ProjectionMetric(val label: String) {
-    TITLE("우승"),
-    CONTINENTAL("상위권"),
-    RELEGATION("강등"),
+enum class ProjectionMetric(@StringRes val labelRes: Int) {
+    TITLE(R.string.sim_metric_title),
+    CONTINENTAL(R.string.sim_metric_top),
+    RELEGATION(R.string.sim_metric_relegation),
 }
 
 data class SeasonSimulationUiState(
