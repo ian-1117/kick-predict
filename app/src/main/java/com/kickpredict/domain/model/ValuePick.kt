@@ -21,6 +21,8 @@ data class ValuePick(
     val odds: Double,
     val kickoffEpochMillis: Long,
     val status: ValuePickStatus = ValuePickStatus.PENDING,
+    /** Latest observed price (the closing line); equals [odds] until the market moves. */
+    val closingOdds: Double = odds,
 ) {
     /** Profit on a 1-unit stake: (odds − 1) if the pick won, −1 if it lost, 0 while pending. */
     val profit: Double
@@ -29,6 +31,14 @@ data class ValuePick(
             ValuePickStatus.LOST -> -1.0
             ValuePickStatus.PENDING -> 0.0
         }
+
+    /**
+     * Closing-line value: how much better the price we took was than the closing line, in percent.
+     * Positive means we beat the close (took higher odds than the market settled at) — the sharpest
+     * result-independent signal that a pick had genuine edge.
+     */
+    val clvPercent: Double
+        get() = if (closingOdds <= 0.0) 0.0 else (odds / closingOdds - 1.0) * 100.0
 }
 
 /**
@@ -43,9 +53,13 @@ data class ValuePicksReport(
     val pendingCount: Int = 0,
     /** Cumulative ROI (whole percent) after each settled pick, in kickoff order — the trend curve. */
     val roiTrend: List<Int> = emptyList(),
+    /** Average closing-line value across picks, in tenths of a percent (e.g. 18 = +1.8%). */
+    val clvTenths: Int = 0,
 ) {
     val lostCount: Int get() = settledCount - wonCount
     val totalCount: Int get() = picks.size
+    /** Whether a meaningful CLV exists (any observed line movement across the ledger). */
+    val hasClv: Boolean get() = picks.any { it.closingOdds != it.odds }
 }
 
 /** Roll a set of settled picks up into a report: sort strongest edge first, tally ROI over settled picks. */
@@ -60,6 +74,9 @@ fun buildValuePicksReport(picks: List<ValuePick>): ValuePicksReport {
         runningProfit += pick.profit
         (runningProfit / (i + 1) * 100).roundToInt()
     }
+    // Average closing-line value across all logged picks, in tenths of a percent for one-decimal display.
+    val clvTenths = if (sorted.isEmpty()) 0
+    else (sorted.sumOf { it.clvPercent } / sorted.size * 10).roundToInt()
     return ValuePicksReport(
         picks = sorted,
         roiPercent = roi,
@@ -67,5 +84,6 @@ fun buildValuePicksReport(picks: List<ValuePick>): ValuePicksReport {
         wonCount = settled.count { it.status == ValuePickStatus.WON },
         pendingCount = sorted.count { it.status == ValuePickStatus.PENDING },
         roiTrend = trend,
+        clvTenths = clvTenths,
     )
 }

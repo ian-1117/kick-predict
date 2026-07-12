@@ -49,7 +49,7 @@ class ValuePicksViewModel(
             // Log any picks the model flags right now (best-effort) so the ledger stays current.
             runCatching {
                 val matches = getPredictedMatches.cached() ?: getPredictedMatches()
-                getValuePicks.record(matches, oddsProvider())
+                getValuePicks.record(matches, oddsProvider(), System.currentTimeMillis())
             }
             allPicks = runCatching { getValuePicks.report().picks }.getOrDefault(emptyList())
             val leagues = LeagueType.entries.filter { l -> allPicks.any { it.league == l } }

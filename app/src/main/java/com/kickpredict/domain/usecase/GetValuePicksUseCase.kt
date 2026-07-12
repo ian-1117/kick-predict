@@ -21,12 +21,18 @@ class GetValuePicksUseCase(
     private val calibrationRepository: CalibrationRepository,
 ) {
 
-    /** Log any fixtures the model currently flags as value (model edge ≥ threshold) that aren't yet in the ledger. */
-    suspend fun record(matches: List<Match>, odds: Map<String, MarketOdds>) {
+    /**
+     * Log any fixtures the model currently flags as value (model edge ≥ threshold), and advance the
+     * closing line for those not yet kicked off. Matches already kicked off are skipped so their
+     * closing line stays frozen at the last pre-kickoff price — the reference point for CLV.
+     */
+    suspend fun record(matches: List<Match>, odds: Map<String, MarketOdds>, nowMillis: Long) {
         if (odds.isEmpty()) return
         val picks = matches.mapNotNull { match ->
             val prediction = match.predictedResult ?: return@mapNotNull null
             val market = odds[match.id] ?: return@mapNotNull null
+            val kickoffMillis = match.kickoff.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            if (kickoffMillis <= nowMillis) return@mapNotNull null
             val outcome = prediction.predictedOutcome
             val edge = modelPercent(prediction, outcome) - market.percentFor(outcome)
             if (edge < VALUE_EDGE_THRESHOLD) return@mapNotNull null

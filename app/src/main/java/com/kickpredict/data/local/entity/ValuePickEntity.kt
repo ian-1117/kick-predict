@@ -21,8 +21,10 @@ data class ValuePickEntity(
     val pickedOutcome: String,
     /** Model probability minus market implied probability, whole percent, at flag time. */
     val edge: Int,
-    /** Decimal odds for the backed outcome, captured at flag time. */
+    /** Decimal odds for the backed outcome, captured at flag time (locked, never overwritten). */
     val odds: Double,
+    /** Latest observed decimal odds for the backed outcome — the closing line, updated until kickoff. */
+    val closingOdds: Double,
     val kickoffEpochMillis: Long,
     val createdAt: Long,
 )

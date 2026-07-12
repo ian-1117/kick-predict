@@ -22,7 +22,7 @@ import com.kickpredict.data.local.entity.ValuePickEntity
         MatchResultEntity::class,
         ValuePickEntity::class,
     ],
-    version = 8,
+    version = 9,
     exportSchema = false,
 )
 @TypeConverters(Converters::class)

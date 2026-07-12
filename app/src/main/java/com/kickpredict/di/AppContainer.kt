@@ -218,7 +218,7 @@ class AppContainer(context: Context) {
                 recalibrate() // refit confidence/league calibration against the real outcomes
                 // Log any currently-flagged value picks so the ROI ledger fills even before the hub
                 // is opened, capturing today's odds while they're still in the live window.
-                getValuePicks.record(matches, odds())
+                getValuePicks.record(matches, odds(), System.currentTimeMillis())
                 // Re-arm the periodic notification scan if the user left notifications on.
                 if (notificationPreference.enabled.value) NotificationScheduler.schedule(appContext)
             }

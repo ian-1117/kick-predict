@@ -87,6 +87,8 @@
     <string name="value_won">적중</string>
     <string name="value_lost">실패</string>
     <string name="value_pending_count">대기</string>
+    <string name="value_clv_label">CLV %1$s%%</string>
+    <string name="value_clv_caption">마감 배당 대비</string>
 
     <!-- Standings screen -->
     <string name="standings_simulate">시즌 시뮬레이션</string>

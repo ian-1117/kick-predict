@@ -87,6 +87,8 @@
     <string name="value_won">won</string>
     <string name="value_lost">lost</string>
     <string name="value_pending_count">pending</string>
+    <string name="value_clv_label">CLV %1$s%%</string>
+    <string name="value_clv_caption">vs the closing line</string>
 
     <!-- Standings screen -->
     <string name="standings_simulate">Season simulation</string>

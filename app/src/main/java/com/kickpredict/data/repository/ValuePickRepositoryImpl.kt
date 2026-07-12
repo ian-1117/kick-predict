@@ -11,7 +11,12 @@ class ValuePickRepositoryImpl(
 ) : ValuePickRepository {
 
     override suspend fun record(picks: List<ValuePick>) {
-        picks.forEach { valuePickDao.insertIfAbsent(it.toEntity()) }
+        picks.forEach { pick ->
+            // Lock the flag-time price on first sighting, then always advance the closing line to the
+            // currently-observed price so CLV reflects how the market moved after we took our price.
+            valuePickDao.insertIfAbsent(pick.toEntity())
+            valuePickDao.updateClosing(pick.matchId, pick.odds)
+        }
     }
 
     override suspend fun all(): List<ValuePick> = valuePickDao.getAll().map { it.toDomain() }
@@ -27,6 +32,7 @@ class ValuePickRepositoryImpl(
         pickedOutcome = pickedOutcome.name,
         edge = edge,
         odds = odds,
+        closingOdds = odds,
         kickoffEpochMillis = kickoffEpochMillis,
         createdAt = System.currentTimeMillis(),
     )
@@ -41,5 +47,6 @@ class ValuePickRepositoryImpl(
         edge = edge,
         odds = odds,
         kickoffEpochMillis = kickoffEpochMillis,
+        closingOdds = closingOdds,
     )
 }

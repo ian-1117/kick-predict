@@ -145,6 +145,26 @@ private fun RoiHeader(report: ValuePicksReport) {
             CountStat(stringResource(R.string.value_lost), report.lostCount, LossColor)
             CountStat(stringResource(R.string.value_pending_count), report.pendingCount, AccentPrimary)
         }
+        if (report.hasClv) {
+            val clvColor = when {
+                report.clvTenths > 0 -> WinColor
+                report.clvTenths < 0 -> LossColor
+                else -> MaterialTheme.colorScheme.onSurfaceVariant
+            }
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(
+                    stringResource(R.string.value_clv_label, String.format("%+.1f", report.clvTenths / 10.0)),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = clvColor,
+                )
+                Text(
+                    stringResource(R.string.value_clv_caption),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
         if (report.roiTrend.size >= 2) {
             Spacer(Modifier.height(6.dp))
             RoiTrendChart(report.roiTrend, roiColor)
