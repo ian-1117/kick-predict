@@ -1,5 +1,6 @@
 package com.kickpredict.presentation.valuepicks
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -8,8 +9,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -34,7 +37,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -136,6 +145,62 @@ private fun RoiHeader(report: ValuePicksReport) {
             CountStat(stringResource(R.string.value_lost), report.lostCount, LossColor)
             CountStat(stringResource(R.string.value_pending_count), report.pendingCount, AccentPrimary)
         }
+        if (report.roiTrend.size >= 2) {
+            Spacer(Modifier.height(6.dp))
+            RoiTrendChart(report.roiTrend, roiColor)
+        }
+    }
+}
+
+/**
+ * Cumulative-ROI sparkline: how the flat-stake ROI has moved as each settled pick landed, oldest to
+ * newest. A dashed zero baseline separates profit from loss; the curve is win- or loss-coloured by
+ * where it currently sits, with a soft area fill down to break-even.
+ */
+@Composable
+private fun RoiTrendChart(trend: List<Int>, lineColor: Color) {
+    val baselineColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val maxV = trend.max().coerceAtLeast(0)
+    val minV = trend.min().coerceAtMost(0)
+    val span = (maxV - minV).coerceAtLeast(1).toFloat()
+    Canvas(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(110.dp)
+            .padding(top = 4.dp),
+    ) {
+        val w = size.width
+        val h = size.height
+        fun px(i: Int) = if (trend.size == 1) 0f else w * i / (trend.size - 1)
+        fun py(v: Int) = h - (v - minV) / span * h
+        val zeroY = py(0)
+
+        // Dashed break-even line.
+        drawLine(
+            color = baselineColor.copy(alpha = 0.4f),
+            start = Offset(0f, zeroY),
+            end = Offset(w, zeroY),
+            strokeWidth = 1.dp.toPx(),
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f)),
+        )
+
+        val line = Path().apply {
+            moveTo(px(0), py(trend[0]))
+            trend.forEachIndexed { i, v -> lineTo(px(i), py(v)) }
+        }
+        // Area fill from the curve down to break-even.
+        val fill = Path().apply {
+            addPath(line)
+            lineTo(px(trend.lastIndex), zeroY)
+            lineTo(px(0), zeroY)
+            close()
+        }
+        drawPath(
+            fill,
+            Brush.verticalGradient(listOf(lineColor.copy(alpha = 0.28f), lineColor.copy(alpha = 0.02f))),
+        )
+        drawPath(line, lineColor, style = Stroke(width = 2.5.dp.toPx(), cap = StrokeCap.Round))
+        drawCircle(lineColor, radius = 4.dp.toPx(), center = Offset(px(trend.lastIndex), py(trend.last())))
     }
 }
 

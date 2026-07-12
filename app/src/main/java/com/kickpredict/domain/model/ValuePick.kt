@@ -41,6 +41,8 @@ data class ValuePicksReport(
     val settledCount: Int = 0,
     val wonCount: Int = 0,
     val pendingCount: Int = 0,
+    /** Cumulative ROI (whole percent) after each settled pick, in kickoff order — the trend curve. */
+    val roiTrend: List<Int> = emptyList(),
 ) {
     val lostCount: Int get() = settledCount - wonCount
     val totalCount: Int get() = picks.size
@@ -52,11 +54,18 @@ fun buildValuePicksReport(picks: List<ValuePick>): ValuePicksReport {
     val settled = sorted.filter { it.status != ValuePickStatus.PENDING }
     val roi = if (settled.isEmpty()) 0
     else (settled.sumOf { it.profit } / settled.size * 100).roundToInt()
+    // Running ROI after each settled pick, oldest→newest, so the chart reads left to right over time.
+    var runningProfit = 0.0
+    val trend = settled.sortedBy { it.kickoffEpochMillis }.mapIndexed { i, pick ->
+        runningProfit += pick.profit
+        (runningProfit / (i + 1) * 100).roundToInt()
+    }
     return ValuePicksReport(
         picks = sorted,
         roiPercent = roi,
         settledCount = settled.size,
         wonCount = settled.count { it.status == ValuePickStatus.WON },
         pendingCount = sorted.count { it.status == ValuePickStatus.PENDING },
+        roiTrend = trend,
     )
 }
