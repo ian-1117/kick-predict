@@ -109,6 +109,11 @@
     <string name="backtest_empty">백테스트할 번들 데이터가 없습니다.</string>
     <string name="backtest_league_stats">%1$d경기 · 정확도 %2$d%%</string>
     <string name="backtest_league_value">ROI %1$+d%% · %2$d베팅 · CLV %3$s%%</string>
+    <string name="backtest_models">Elo vs 시장 vs 블렌드</string>
+    <string name="backtest_models_note">동일한 배당 보유 경기 기준. 모델과 시장가를 섞으면 정식 채점이 더 날카로워집니다 — 시장은 배울 가치가 있는 강력한 사전확률입니다.</string>
+    <string name="backtest_model_elo">Elo</string>
+    <string name="backtest_model_market">시장</string>
+    <string name="backtest_model_blend">블렌드</string>
 
     <!-- Standings screen -->
     <string name="standings_simulate">시즌 시뮬레이션</string>

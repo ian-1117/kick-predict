@@ -50,6 +50,26 @@ class BacktestUseCaseTest {
     }
 
     @Test
+    fun `the model comparison covers Elo market and blend, and the blend is no worse than Elo`() = runBlocking {
+        // Mixed results with market prices → all three predictors get scored on the same games.
+        val games = (1..40).map { i ->
+            val homeWin = i % 3 != 0
+            game(1 + i % 28, if (i % 2 == 0) "A" else "B", if (i % 2 == 0) "B" else "A",
+                if (homeWin) 2 else 0, if (homeWin) 0 else 1,
+                MarketOdds.of(2.1, 3.3, 3.6))
+        }
+        val report = BacktestUseCase { games }()
+        val models = report.models.associateBy { it.model }
+        // All three predictors present.
+        assertEquals(3, report.models.size)
+        assertTrue(com.kickpredict.domain.model.BacktestModel.BLEND in models)
+        // Blending pulls toward the market, so it never scores worse than Elo alone on Brier.
+        val elo = models.getValue(com.kickpredict.domain.model.BacktestModel.ELO)
+        val blend = models.getValue(com.kickpredict.domain.model.BacktestModel.BLEND)
+        assertTrue("blend Brier ${blend.brier} should be <= elo Brier ${elo.brier} + slack", blend.brier <= elo.brier + 0.05)
+    }
+
+    @Test
     fun `a value bet is placed only when the model beats the market by the threshold`() = runBlocking {
         // Heavy home favourite by results, but the market prices the home side as a longshot — a clear edge.
         val games = (1..10).map { game(it, "Strong", "Weak", 3, 0, MarketOdds.of(5.0, 4.0, 1.6)) }

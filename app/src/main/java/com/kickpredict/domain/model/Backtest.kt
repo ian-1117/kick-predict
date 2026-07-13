@@ -44,8 +44,30 @@ data class BacktestLeagueResult(
     val accuracy: Double get() = if (games == 0) 0.0 else correct.toDouble() / games
 }
 
-/** The full backtest: an overall row plus a per-league breakdown. */
+/** The predictors compared in the backtest. */
+enum class BacktestModel { ELO, MARKET, BLEND }
+
+/** Backtest metrics for one predictor, over the games that carry market odds (apples-to-apples). */
+data class BacktestModelResult(
+    val model: BacktestModel,
+    val games: Int,
+    val correct: Int,
+    val brier: Double,
+    val logLoss: Double,
+    val bets: Int,
+    val betsWon: Int,
+    val roiPercent: Int,
+    val clvTenths: Int,
+) {
+    val accuracy: Double get() = if (games == 0) 0.0 else correct.toDouble() / games
+}
+
+/**
+ * The full backtest: the learned-Elo overall + per-league breakdown, plus a predictor comparison
+ * (Elo vs the market's implied prices vs a blend of the two) over the odds-bearing games.
+ */
 data class BacktestReport(
     val overall: BacktestLeagueResult,
     val byLeague: List<BacktestLeagueResult>,
+    val models: List<BacktestModelResult> = emptyList(),
 )

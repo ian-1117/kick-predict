@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -86,6 +87,17 @@ fun BacktestScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
+                    if (report.models.isNotEmpty()) {
+                        item {
+                            Text(
+                                stringResource(R.string.backtest_models),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onBackground,
+                            )
+                        }
+                        item { ModelComparisonCard(report.models) }
+                    }
                     item {
                         Text(
                             stringResource(R.string.backtest_by_league),
@@ -128,6 +140,76 @@ private fun OverallCard(r: BacktestLeagueResult) {
             }
         }
     }
+}
+
+@Composable
+private fun ModelComparisonCard(models: List<com.kickpredict.domain.model.BacktestModelResult>) {
+    Card {
+        Text(
+            stringResource(R.string.backtest_models_note),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 12.dp),
+        )
+        // Header row.
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Spacer(Modifier.weight(1.2f))
+            ColHeader(stringResource(R.string.dash_stat_accuracy))
+            ColHeader(stringResource(R.string.dash_brier))
+            ColHeader(stringResource(R.string.backtest_roi))
+        }
+        val bestBrier = models.minOfOrNull { it.brier }
+        models.forEach { m ->
+            Row(Modifier.fillMaxWidth().padding(top = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    modelName(m.model),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = if (m.brier == bestBrier) FontWeight.Bold else FontWeight.Normal,
+                    color = if (m.brier == bestBrier) AccentPrimary else MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.weight(1.2f),
+                )
+                Cell("${(m.accuracy * 100).roundToInt()}%", MaterialTheme.colorScheme.onSurface)
+                Cell(String.format("%.3f", m.brier), if (m.brier == bestBrier) AccentPrimary else MaterialTheme.colorScheme.onSurface, bold = m.brier == bestBrier)
+                if (m.bets > 0) {
+                    Cell(String.format("%+d%%", m.roiPercent), if (m.roiPercent >= 0) WinColor else LossColor)
+                } else {
+                    Cell("—", MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun modelName(model: com.kickpredict.domain.model.BacktestModel): String = stringResource(
+    when (model) {
+        com.kickpredict.domain.model.BacktestModel.ELO -> R.string.backtest_model_elo
+        com.kickpredict.domain.model.BacktestModel.MARKET -> R.string.backtest_model_market
+        com.kickpredict.domain.model.BacktestModel.BLEND -> R.string.backtest_model_blend
+    },
+)
+
+@Composable
+private fun androidx.compose.foundation.layout.RowScope.ColHeader(text: String) {
+    Text(
+        text,
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = TextAlign.End,
+        modifier = Modifier.weight(1f),
+    )
+}
+
+@Composable
+private fun androidx.compose.foundation.layout.RowScope.Cell(text: String, color: Color, bold: Boolean = false) {
+    Text(
+        text,
+        style = MaterialTheme.typography.bodyMedium,
+        fontWeight = if (bold) FontWeight.Bold else FontWeight.Normal,
+        color = color,
+        textAlign = TextAlign.End,
+        modifier = Modifier.weight(1f),
+    )
 }
 
 @Composable

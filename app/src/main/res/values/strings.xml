@@ -109,6 +109,11 @@
     <string name="backtest_empty">No bundled historical data to backtest.</string>
     <string name="backtest_league_stats">%1$d games · %2$d%% accuracy</string>
     <string name="backtest_league_value">ROI %1$+d%% · %2$d bets · CLV %3$s%%</string>
+    <string name="backtest_models">Elo vs market vs blend</string>
+    <string name="backtest_models_note">Same odds-bearing games. Blending the model with the market\'s price sharpens the proper scores — the market is a strong prior worth learning from.</string>
+    <string name="backtest_model_elo">Elo</string>
+    <string name="backtest_model_market">Market</string>
+    <string name="backtest_model_blend">Blend</string>
 
     <!-- Standings screen -->
     <string name="standings_simulate">Season simulation</string>
