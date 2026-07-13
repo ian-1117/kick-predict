@@ -10,11 +10,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.kickpredict.KickPredictApplication
 import com.kickpredict.presentation.locale.LocalizedContent
 import com.kickpredict.presentation.navigation.KickPredictNavHost
+import com.kickpredict.presentation.onboarding.OnboardingScreen
 import com.kickpredict.presentation.theme.KickPredictTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,18 +35,27 @@ private fun KickPredictApp() {
     val theme by container.themePreference.theme.collectAsState()
     val language by container.languagePreference.language.collectAsState()
 
+    var showOnboarding by remember { mutableStateOf(!container.onboardingPreference.seen) }
+
     KickPredictTheme(theme = theme) {
         LocalizedContent(language) {
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background,
             ) {
-                KickPredictNavHost(
-                    currentTheme = theme,
-                    onSelectTheme = container.themePreference::select,
-                    currentLanguage = language,
-                    onSelectLanguage = container.languagePreference::select,
-                )
+                if (showOnboarding) {
+                    OnboardingScreen(onFinish = {
+                        container.onboardingPreference.markSeen()
+                        showOnboarding = false
+                    })
+                } else {
+                    KickPredictNavHost(
+                        currentTheme = theme,
+                        onSelectTheme = container.themePreference::select,
+                        currentLanguage = language,
+                        onSelectLanguage = container.languagePreference::select,
+                    )
+                }
             }
         }
     }

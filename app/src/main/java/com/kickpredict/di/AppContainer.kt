@@ -62,6 +62,9 @@ class AppContainer(context: Context) {
     /** In-app language override; read synchronously so the app opens in the chosen language. */
     val languagePreference = LanguagePreference(context)
 
+    /** Whether the one-time onboarding has been shown. */
+    val onboardingPreference = com.kickpredict.presentation.onboarding.OnboardingPreference(context)
+
     private val database: KickPredictDatabase = Room.databaseBuilder(
         context.applicationContext,
         KickPredictDatabase::class.java,
