@@ -100,6 +100,7 @@
     <!-- Home-screen widget -->
     <string name="widget_description">Upcoming picks and value edges at a glance</string>
     <string name="widget_empty">No upcoming picks yet — open the app to load fixtures.</string>
+    <string name="widget_config_title">Show in widget</string>
 
     <!-- Backtest -->
     <string name="backtest_title">Backtest</string>

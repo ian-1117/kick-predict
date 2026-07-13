@@ -100,6 +100,7 @@
     <!-- Home-screen widget -->
     <string name="widget_description">다가오는 픽과 밸류 엣지를 한눈에</string>
     <string name="widget_empty">아직 예정된 픽이 없습니다 — 앱을 열어 일정을 불러오세요.</string>
+    <string name="widget_config_title">위젯에 표시</string>
 
     <!-- Backtest -->
     <string name="backtest_title">백테스트</string>

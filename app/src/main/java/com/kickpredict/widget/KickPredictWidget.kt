@@ -56,11 +56,17 @@ class KickPredictWidget : GlanceAppWidget() {
         val results = runCatching { container.calibrationRepository.recordedResults().associateBy { it.matchId } }
             .getOrDefault(emptyMap())
         val followed = runCatching { container.followPreference.followed.value }.getOrDefault(emptySet())
+        val config = WidgetConfigPreference(context).filter
+        fun include(m: Match): Boolean = when (config) {
+            WidgetConfigPreference.FILTER_ALL -> true
+            WidgetConfigPreference.FILTER_FOLLOWED -> m.homeTeam.id in followed || m.awayTeam.id in followed
+            else -> m.league.name == config
+        }
         val now = LocalDateTime.now()
 
         // In-play matches come first, with their current score.
         val liveRows = live.mapNotNull { (id, score) ->
-            val match = byId[id] ?: return@mapNotNull null
+            val match = byId[id]?.takeIf { include(it) } ?: return@mapNotNull null
             WidgetRow(
                 matchup = "${match.homeTeam.shortName} vs ${match.awayTeam.shortName}",
                 prediction = match.predictedResult?.let {
@@ -77,7 +83,7 @@ class KickPredictWidget : GlanceAppWidget() {
         // Recently-finished predictions with their result — followed teams first, most recent first.
         val recentCutoff = now.minusDays(RESULT_WINDOW_DAYS)
         val resultRows = matches
-            .filter { it.id !in live && it.kickoff.isAfter(recentCutoff) && results.containsKey(it.id) }
+            .filter { it.id !in live && it.kickoff.isAfter(recentCutoff) && results.containsKey(it.id) && include(it) }
             .sortedWith(
                 compareByDescending<Match> { followed.isNotEmpty() && (it.homeTeam.id in followed || it.awayTeam.id in followed) }
                     .thenByDescending { it.kickoff },
@@ -98,7 +104,7 @@ class KickPredictWidget : GlanceAppWidget() {
 
         // Then upcoming picks, value picks first.
         val upcomingRows = matches
-            .filter { it.predictedResult != null && it.kickoff.isAfter(now) && it.id !in live }
+            .filter { it.predictedResult != null && it.kickoff.isAfter(now) && it.id !in live && include(it) }
             .map { match ->
                 val prediction = match.predictedResult!!
                 val outcome = prediction.predictedOutcome
