@@ -115,6 +115,11 @@
     <string name="backtest_model_market">Market</string>
     <string name="backtest_model_blend">Blend</string>
 
+    <!-- Team comparison -->
+    <string name="compare_title">Compare teams</string>
+    <string name="nav_compare">Compare teams</string>
+    <string name="compare_no_matchup">These two teams have no fixture this season to compare.</string>
+
     <!-- Standings screen -->
     <string name="standings_simulate">Season simulation</string>
     <string name="standings_empty">No results yet. Enter results or fill samples from the dashboard to build the table.</string>

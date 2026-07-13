@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Compare
 import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,6 +53,7 @@ fun StandingsScreen(
     onBack: () -> Unit,
     onTeamClick: (String) -> Unit,
     onSimulate: () -> Unit,
+    onCompare: () -> Unit,
     viewModel: StandingsViewModel = viewModel(factory = StandingsViewModel.Factory),
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -65,6 +67,9 @@ fun StandingsScreen(
                     IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") }
                 },
                 actions = {
+                    IconButton(onClick = onCompare) {
+                        Icon(Icons.Filled.Compare, contentDescription = stringResource(R.string.nav_compare), tint = AccentPrimary)
+                    }
                     IconButton(onClick = onSimulate) {
                         Icon(Icons.Filled.Timeline, contentDescription = stringResource(R.string.standings_simulate), tint = AccentPrimary)
                     }

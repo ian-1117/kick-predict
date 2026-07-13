@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.kickpredict.presentation.backtest.BacktestScreen
+import com.kickpredict.presentation.compare.CompareScreen
 import com.kickpredict.presentation.dashboard.DashboardScreen
 import com.kickpredict.presentation.detail.PredictionDetailScreen
 import com.kickpredict.presentation.matchlist.MatchListScreen
@@ -27,6 +28,7 @@ object Routes {
     const val SIMULATION = "simulation"
     const val VALUE_PICKS = "value_picks"
     const val BACKTEST = "backtest"
+    const val COMPARE = "compare"
     const val TEAM = "team/{teamId}"
     fun team(teamId: String) = "team/$teamId"
     const val ARG_TEAM_ID = "teamId"
@@ -63,11 +65,15 @@ fun KickPredictNavHost(
         composable(Routes.BACKTEST) {
             BacktestScreen(onBack = { navController.popBackStack() })
         }
+        composable(Routes.COMPARE) {
+            CompareScreen(onBack = { navController.popBackStack() })
+        }
         composable(Routes.STANDINGS) {
             StandingsScreen(
                 onBack = { navController.popBackStack() },
                 onTeamClick = { teamId -> navController.navigate(Routes.team(teamId)) },
                 onSimulate = { navController.navigate(Routes.SIMULATION) },
+                onCompare = { navController.navigate(Routes.COMPARE) },
             )
         }
         composable(Routes.SIMULATION) {

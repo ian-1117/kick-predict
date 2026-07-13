@@ -193,6 +193,7 @@ class AppContainer(context: Context) {
     )
     val getStandings = GetStandingsUseCase(calibrationRepository)
     val getTeam = GetTeamUseCase(getPredictedMatches, getStandings, calibrationRepository, eloProvider)
+    val compareTeams = com.kickpredict.domain.usecase.CompareTeamsUseCase(getPredictedMatches)
     // Seeds the current season's real scores into the results store (live where available, else bundled).
     val syncResults = SyncResultsUseCase(
         liveResults = { liveSource.lastResults() },
