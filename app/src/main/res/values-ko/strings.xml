@@ -97,6 +97,19 @@
     <string name="widget_description">다가오는 픽과 밸류 엣지를 한눈에</string>
     <string name="widget_empty">아직 예정된 픽이 없습니다 — 앱을 열어 일정을 불러오세요.</string>
 
+    <!-- Backtest -->
+    <string name="backtest_title">백테스트</string>
+    <string name="nav_backtest">과거 백테스트 실행</string>
+    <string name="backtest_subtitle">%1$d경기 · walk-forward(예측 후 학습)</string>
+    <string name="backtest_note">정직한 out-of-sample: 각 경기를 이전 경기만으로 예측한 뒤 학습합니다. ROI·CLV는 배당이 있는 리그에서 시장 평균가 대비 균등 베팅한 밸류 베팅 기준입니다.</string>
+    <string name="backtest_roi">밸류 ROI</string>
+    <string name="backtest_bets">%1$d베팅</string>
+    <string name="backtest_clv">CLV</string>
+    <string name="backtest_by_league">리그별</string>
+    <string name="backtest_empty">백테스트할 번들 데이터가 없습니다.</string>
+    <string name="backtest_league_stats">%1$d경기 · 정확도 %2$d%%</string>
+    <string name="backtest_league_value">ROI %1$+d%% · %2$d베팅 · CLV %3$s%%</string>
+
     <!-- Standings screen -->
     <string name="standings_simulate">시즌 시뮬레이션</string>
     <string name="standings_empty">아직 결과가 없습니다. 결과를 입력하거나 대시보드에서 샘플을 채우면 순위표가 만들어집니다.</string>

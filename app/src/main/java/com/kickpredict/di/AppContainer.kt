@@ -187,6 +187,10 @@ class AppContainer(context: Context) {
         trainModelsOnRecordedResults = !realData.hasData,
     )
     val getCalibrationDashboard = GetCalibrationDashboardUseCase(calibrationRepository, recalibrate)
+    // Walk-forward backtest over the bundled historical seasons (accuracy, Brier/log-loss, ROI, CLV).
+    val backtest = com.kickpredict.domain.usecase.BacktestUseCase(
+        games = { if (realData.hasData) realData.backtestGames() else emptyList() },
+    )
     val getStandings = GetStandingsUseCase(calibrationRepository)
     val getTeam = GetTeamUseCase(getPredictedMatches, getStandings, calibrationRepository, eloProvider)
     // Seeds the current season's real scores into the results store (live where available, else bundled).

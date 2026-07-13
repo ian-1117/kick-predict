@@ -97,6 +97,19 @@
     <string name="widget_description">Upcoming picks and value edges at a glance</string>
     <string name="widget_empty">No upcoming picks yet — open the app to load fixtures.</string>
 
+    <!-- Backtest -->
+    <string name="backtest_title">Backtest</string>
+    <string name="nav_backtest">Run historical backtest</string>
+    <string name="backtest_subtitle">%1$d matches · walk-forward (predict, then learn)</string>
+    <string name="backtest_note">Honest out-of-sample: each match is predicted from only earlier games, then the model learns it. ROI &amp; CLV are flat-stake value bets vs the market average price, over leagues that ship odds.</string>
+    <string name="backtest_roi">Value ROI</string>
+    <string name="backtest_bets">%1$d bets</string>
+    <string name="backtest_clv">CLV</string>
+    <string name="backtest_by_league">By league</string>
+    <string name="backtest_empty">No bundled historical data to backtest.</string>
+    <string name="backtest_league_stats">%1$d games · %2$d%% accuracy</string>
+    <string name="backtest_league_value">ROI %1$+d%% · %2$d bets · CLV %3$s%%</string>
+
     <!-- Standings screen -->
     <string name="standings_simulate">Season simulation</string>
     <string name="standings_empty">No results yet. Enter results or fill samples from the dashboard to build the table.</string>

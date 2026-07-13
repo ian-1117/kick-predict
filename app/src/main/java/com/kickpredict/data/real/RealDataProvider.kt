@@ -1,10 +1,12 @@
 package com.kickpredict.data.real
 
 import android.content.res.AssetManager
+import com.kickpredict.domain.model.BacktestGame
 import com.kickpredict.domain.model.H2HMeeting
 import com.kickpredict.domain.model.H2HOutcome
 import com.kickpredict.domain.model.HeadToHead
 import com.kickpredict.domain.model.LeagueType
+import com.kickpredict.domain.model.MarketOdds
 import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.MatchOutcome
 import com.kickpredict.domain.model.PriorResult
@@ -292,6 +294,54 @@ class RealDataProvider(private val openAsset: (String) -> InputStream) {
                 H2HMeeting(outcome = outcome, atHomeVenue = r.home == home)
             }
         return HeadToHead(meetings)
+    }
+
+    /**
+     * Every bundled historical match with its result and (where the CSV carries them) average +
+     * closing 1X2 odds — the input to the walk-forward backtest. Odds-less leagues (K League) still
+     * contribute to accuracy/proper scores, just not to ROI/CLV.
+     */
+    fun backtestGames(): List<BacktestGame> = leagueCodes.flatMap { (code, league) ->
+        seasons.flatMap { season -> parseBacktest(code, season, league) }
+    }
+
+    private fun parseBacktest(code: String, season: String, league: LeagueType): List<BacktestGame> {
+        val text = runCatching { openAsset("realdata/${code}_$season.csv").bufferedReader().use { it.readText() } }.getOrNull() ?: return emptyList()
+        val lines = text.split("\n").map { it.trim() }.filter { it.isNotEmpty() }
+        if (lines.size < 2) return emptyList()
+        val h = lines.first().split(",")
+        val di = h.indexOf("Date"); val hi = h.indexOf("HomeTeam"); val ai = h.indexOf("AwayTeam")
+        val hgi = h.indexOf("FTHG"); val agi = h.indexOf("FTAG")
+        if (listOf(di, hi, ai, hgi, agi).any { it < 0 }) return emptyList()
+        val avgH = h.indexOf("AvgH"); val avgD = h.indexOf("AvgD"); val avgA = h.indexOf("AvgA")
+        val avgCH = h.indexOf("AvgCH"); val avgCD = h.indexOf("AvgCD"); val avgCA = h.indexOf("AvgCA")
+        return lines.drop(1).mapNotNull { line ->
+            val f = line.split(",")
+            if (maxOf(di, hi, ai, hgi, agi) >= f.size) return@mapNotNull null
+            val date = parseDate(f[di]) ?: return@mapNotNull null
+            val hg = f[hgi].toIntOrNull() ?: return@mapNotNull null
+            val ag = f[agi].toIntOrNull() ?: return@mapNotNull null
+            val home = f[hi].trim(); val away = f[ai].trim()
+            if (home.isEmpty() || away.isEmpty()) return@mapNotNull null
+            BacktestGame(
+                league = league,
+                date = date,
+                homeId = teamId(code, home),
+                awayId = teamId(code, away),
+                homeGoals = hg,
+                awayGoals = ag,
+                avgOdds = oddsAt(f, avgH, avgD, avgA),
+                closeOdds = oddsAt(f, avgCH, avgCD, avgCA),
+            )
+        }
+    }
+
+    private fun oddsAt(f: List<String>, hi: Int, di: Int, ai: Int): MarketOdds? {
+        if (hi < 0 || di < 0 || ai < 0 || maxOf(hi, di, ai) >= f.size) return null
+        val home = f[hi].toDoubleOrNull() ?: return null
+        val draw = f[di].toDoubleOrNull() ?: return null
+        val away = f[ai].toDoubleOrNull() ?: return null
+        return MarketOdds.of(home, draw, away)
     }
 
     private fun parse(code: String, season: String): List<Row> {

@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.kickpredict.presentation.backtest.BacktestScreen
 import com.kickpredict.presentation.dashboard.DashboardScreen
 import com.kickpredict.presentation.detail.PredictionDetailScreen
 import com.kickpredict.presentation.matchlist.MatchListScreen
@@ -25,6 +26,7 @@ object Routes {
     const val STANDINGS = "standings"
     const val SIMULATION = "simulation"
     const val VALUE_PICKS = "value_picks"
+    const val BACKTEST = "backtest"
     const val TEAM = "team/{teamId}"
     fun team(teamId: String) = "team/$teamId"
     const val ARG_TEAM_ID = "teamId"
@@ -53,7 +55,13 @@ fun KickPredictNavHost(
             )
         }
         composable(Routes.DASHBOARD) {
-            DashboardScreen(onBack = { navController.popBackStack() })
+            DashboardScreen(
+                onBack = { navController.popBackStack() },
+                onBacktest = { navController.navigate(Routes.BACKTEST) },
+            )
+        }
+        composable(Routes.BACKTEST) {
+            BacktestScreen(onBack = { navController.popBackStack() })
         }
         composable(Routes.STANDINGS) {
             StandingsScreen(
