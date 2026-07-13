@@ -61,6 +61,7 @@ import com.kickpredict.presentation.components.PowerComparisonReport
 import com.kickpredict.presentation.components.PredictionDonutChart
 import com.kickpredict.presentation.components.ProbabilityGauges
 import com.kickpredict.presentation.theme.AccentPrimary
+import com.kickpredict.presentation.theme.DrawColor
 import com.kickpredict.presentation.theme.LossColor
 import com.kickpredict.presentation.theme.OutlineColor
 import com.kickpredict.presentation.theme.WinColor
@@ -412,6 +413,12 @@ private fun ScorelineDistribution(prediction: PredictionResult) {
     ) {
         Text(stringResource(R.string.detail_score_prob), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
         lines.forEach { s ->
+            // Colour each score by its result so it's visible how they add up per outcome.
+            val color = when {
+                s.homeGoals > s.awayGoals -> WinColor
+                s.homeGoals < s.awayGoals -> LossColor
+                else -> DrawColor
+            }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     s.label,
@@ -423,16 +430,42 @@ private fun ScorelineDistribution(prediction: PredictionResult) {
                 Box(
                     Modifier.weight(1f).height(10.dp).clip(RoundedCornerShape(50)).background(OutlineColor.copy(alpha = 0.45f)),
                 ) {
-                    Box(Modifier.fillMaxWidth((s.probabilityPercent.toFloat() / maxPercent).coerceIn(0f, 1f)).height(10.dp).clip(RoundedCornerShape(50)).background(AccentPrimary))
+                    Box(Modifier.fillMaxWidth((s.probabilityPercent.toFloat() / maxPercent).coerceIn(0f, 1f)).height(10.dp).clip(RoundedCornerShape(50)).background(color))
                 }
                 Text(
                     "${s.probabilityPercent}%",
                     style = MaterialTheme.typography.labelLarge,
-                    color = AccentPrimary,
+                    color = color,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.End,
                     modifier = Modifier.width(44.dp).padding(start = 8.dp),
                 )
+            }
+        }
+
+        // Totals: the pick is the outcome whose scores sum highest — not the single tallest score.
+        Text(
+            stringResource(R.string.score_totals_note),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(top = 6.dp),
+        )
+        Row(Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+            listOf(
+                Triple(PredictedOutcome.HOME_WIN, prediction.homeWinPercent, WinColor),
+                Triple(PredictedOutcome.DRAW, prediction.drawPercent, DrawColor),
+                Triple(PredictedOutcome.AWAY_WIN, prediction.awayWinPercent, LossColor),
+            ).forEach { (outcome, percent, color) ->
+                val isPick = outcome == prediction.predictedOutcome
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("$percent%", style = MaterialTheme.typography.titleMedium, fontWeight = if (isPick) FontWeight.Black else FontWeight.Bold, color = color)
+                    Text(
+                        outcomeName(outcome),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = if (isPick) FontWeight.Bold else FontWeight.Normal,
+                    )
+                }
             }
         }
     }

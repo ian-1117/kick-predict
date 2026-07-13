@@ -74,6 +74,7 @@
     <string name="detail_btts">Both teams to score</string>
     <string name="detail_no_goal">No goal</string>
     <string name="detail_score_prob">Scoreline probability</string>
+    <string name="score_totals_note">Each score is coloured by its result. The pick is the result whose scores add up highest — not the single most-likely score (a draw often has the tallest single bar).</string>
     <string name="share_prediction">Share prediction</string>
     <string name="share_confidence">AI confidence %1$d%% · %2$s</string>
     <string name="share_footer">Predicted by Kick Predict</string>
