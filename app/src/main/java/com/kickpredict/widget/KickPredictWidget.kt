@@ -27,6 +27,7 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.kickpredict.KickPredictApplication
 import com.kickpredict.R
+import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.PredictionResult
 import com.kickpredict.domain.usecase.GetValuePicksUseCase
@@ -52,6 +53,9 @@ class KickPredictWidget : GlanceAppWidget() {
         val byId = matches.associateBy { it.id }
         val odds = runCatching { container.odds() }.getOrDefault(emptyMap())
         val live = runCatching { container.liveScores() }.getOrDefault(emptyMap())
+        val results = runCatching { container.calibrationRepository.recordedResults().associateBy { it.matchId } }
+            .getOrDefault(emptyMap())
+        val followed = runCatching { container.followPreference.followed.value }.getOrDefault(emptySet())
         val now = LocalDateTime.now()
 
         // In-play matches come first, with their current score.
@@ -69,6 +73,28 @@ class KickPredictWidget : GlanceAppWidget() {
                 liveMinute = score.minute,
             )
         }
+
+        // Recently-finished predictions with their result — followed teams first, most recent first.
+        val recentCutoff = now.minusDays(RESULT_WINDOW_DAYS)
+        val resultRows = matches
+            .filter { it.id !in live && it.kickoff.isAfter(recentCutoff) && results.containsKey(it.id) }
+            .sortedWith(
+                compareByDescending<Match> { followed.isNotEmpty() && (it.homeTeam.id in followed || it.awayTeam.id in followed) }
+                    .thenByDescending { it.kickoff },
+            )
+            .mapNotNull { match ->
+                val result = results[match.id] ?: return@mapNotNull null
+                WidgetRow(
+                    matchup = "${match.homeTeam.shortName} vs ${match.awayTeam.shortName}",
+                    prediction = "",
+                    kickoff = "",
+                    edge = null,
+                    kickoffMillis = match.kickoff,
+                    resultScore = "${result.homeGoals} – ${result.awayGoals}",
+                    resultHit = result.wasCorrect,
+                )
+            }
+            .take(MAX_RESULT_ROWS)
 
         // Then upcoming picks, value picks first.
         val upcomingRows = matches
@@ -90,7 +116,7 @@ class KickPredictWidget : GlanceAppWidget() {
             }
             .sortedWith(compareByDescending<WidgetRow> { it.edge != null }.thenBy { it.kickoffMillis })
 
-        return (liveRows + upcomingRows).take(MAX_ROWS)
+        return (liveRows + resultRows + upcomingRows).take(MAX_ROWS)
     }
 
     private fun predictionLabel(context: Context, outcome: PredictedOutcome, home: String, away: String): String =
@@ -108,6 +134,8 @@ class KickPredictWidget : GlanceAppWidget() {
 
     companion object {
         private const val MAX_ROWS = 3
+        private const val MAX_RESULT_ROWS = 2
+        private const val RESULT_WINDOW_DAYS = 2L
         private val KICKOFF_FORMAT = DateTimeFormatter.ofPattern("d MMM · HH:mm")
     }
 }
@@ -121,6 +149,9 @@ private data class WidgetRow(
     /** Non-null when the match is in play — its current scoreline. */
     val liveScore: String? = null,
     val liveMinute: String = "",
+    /** Non-null when the match has finished — its final scoreline. */
+    val resultScore: String? = null,
+    val resultHit: Boolean = false,
 )
 
 // Palette — kept self-contained so the widget doesn't depend on the in-app Compose theme.
@@ -128,6 +159,7 @@ private val Ground = Color(0xFF0E1420)
 private val Surface = Color(0xFF18202F)
 private val Accent = Color(0xFF35C2F5)
 private val Live = Color(0xFFE5484D)
+private val Hit = Color(0xFF3FB98A)
 private val TextPrimary = Color(0xFFF2F5F8)
 private val TextSecondary = Color(0xFF9AA7B8)
 private val OnAccent = Color(0xFF06121C)
@@ -191,6 +223,15 @@ private fun WidgetRowItem(row: WidgetRow) {
                     style = TextStyle(color = ColorProvider(Color.White), fontWeight = FontWeight.Bold, fontSize = 10.sp),
                     modifier = GlanceModifier.background(Live).cornerRadius(8.dp).padding(horizontal = 6.dp, vertical = 2.dp),
                 )
+            } else if (row.resultScore != null) {
+                Text(
+                    LocalContextText(if (row.resultHit) R.string.result_hit else R.string.result_miss),
+                    style = TextStyle(color = ColorProvider(Color.White), fontWeight = FontWeight.Bold, fontSize = 10.sp),
+                    modifier = GlanceModifier
+                        .background(if (row.resultHit) Hit else Live)
+                        .cornerRadius(8.dp)
+                        .padding(horizontal = 6.dp, vertical = 2.dp),
+                )
             } else {
                 Text(
                     row.kickoff,
@@ -213,6 +254,13 @@ private fun WidgetRowItem(row: WidgetRow) {
                         style = TextStyle(color = ColorProvider(TextSecondary), fontSize = 11.sp),
                     )
                 }
+            } else if (row.resultScore != null) {
+                // Finished: the final score; the tag above says hit or miss.
+                Text(
+                    row.resultScore,
+                    style = TextStyle(color = ColorProvider(TextPrimary), fontWeight = FontWeight.Bold, fontSize = 15.sp),
+                    modifier = GlanceModifier.defaultWeight(),
+                )
             } else {
                 Text(
                     row.prediction,
