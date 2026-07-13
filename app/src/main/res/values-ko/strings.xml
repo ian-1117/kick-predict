@@ -73,6 +73,9 @@
     <string name="detail_btts">양팀 득점</string>
     <string name="detail_no_goal">노골</string>
     <string name="detail_score_prob">스코어 확률</string>
+    <string name="share_prediction">예측 공유</string>
+    <string name="share_confidence">AI 적중 확률 %1$d%% · %2$s</string>
+    <string name="share_footer">Kick Predict 예측</string>
     <string name="detail_value_title">모델 vs 시장</string>
     <string name="detail_value_note">모델 확률과 배당에 내재된 시장 확률 비교. 초록색 우위는 모델이 북메이커보다 높게 본다는 뜻입니다.</string>
     <string name="detail_value_col_odds">배당</string>

@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -100,6 +101,38 @@ fun PredictionDetailScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    val shareContext = androidx.compose.ui.platform.LocalContext.current
+                    val match = state.match
+                    val prediction = match?.predictedResult
+                    if (match != null && prediction != null) {
+                        val outcome = when (prediction.predictedOutcome) {
+                            PredictedOutcome.HOME_WIN -> stringResource(R.string.outcome_win, match.homeTeam.displayName)
+                            PredictedOutcome.AWAY_WIN -> stringResource(R.string.outcome_win, match.awayTeam.displayName)
+                            PredictedOutcome.DRAW -> stringResource(R.string.outcome_draw)
+                        }
+                        val shareData = com.kickpredict.presentation.share.PredictionShareData(
+                            league = match.league.displayName,
+                            matchup = "${match.homeTeam.displayName}  vs  ${match.awayTeam.displayName}",
+                            predictionLabel = stringResource(R.string.prediction_label, outcome),
+                            confidenceLabel = stringResource(
+                                R.string.share_confidence,
+                                prediction.confidenceScore,
+                                com.kickpredict.presentation.common.confidenceTierName(prediction.confidenceTier),
+                            ),
+                            bars = listOf(
+                                match.homeTeam.shortName to prediction.homeWinPercent,
+                                stringResource(R.string.outcome_draw) to prediction.drawPercent,
+                                match.awayTeam.shortName to prediction.awayWinPercent,
+                            ),
+                            chooserTitle = stringResource(R.string.share_prediction),
+                            footer = stringResource(R.string.share_footer),
+                        )
+                        IconButton(onClick = { com.kickpredict.presentation.share.sharePredictionCard(shareContext, shareData) }) {
+                            Icon(Icons.Filled.Share, contentDescription = stringResource(R.string.share_prediction), tint = AccentPrimary)
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
