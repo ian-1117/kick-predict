@@ -87,6 +87,7 @@ fun ThemePickerDialog(
                 }
 
                 NotificationToggle()
+                BlendSelector()
             }
         },
         containerColor = MaterialTheme.colorScheme.surface,
@@ -140,6 +141,39 @@ private fun NotificationToggle() {
                 checkedTrackColor = AccentPrimary.copy(alpha = 0.4f),
             ),
         )
+    }
+}
+
+/** Lets the user choose how strongly live predictions temper toward the market price. */
+@Composable
+private fun BlendSelector() {
+    val container = (LocalContext.current.applicationContext as KickPredictApplication).container
+    val weight by container.blendPreference.modelWeightPercent.collectAsState()
+    // Model weight → label. Highest weight keeps the model pure; lower leans on the market.
+    val options = listOf(100 to R.string.blend_model, 50 to R.string.blend_balanced, 25 to R.string.blend_market)
+
+    Column(Modifier.fillMaxWidth().padding(top = 10.dp)) {
+        Text(
+            stringResource(R.string.settings_blend),
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        Text(
+            stringResource(R.string.settings_blend_desc),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            options.forEach { (value, labelRes) ->
+                LanguageChip(
+                    label = stringResource(labelRes),
+                    selected = weight == value,
+                    onClick = { container.blendPreference.setModelWeight(value) },
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
     }
 }
 

@@ -235,6 +235,11 @@
     <string name="weather_heat">폭염</string>
 
     <!-- Match notifications -->
+    <string name="settings_blend">시장 블렌드</string>
+    <string name="settings_blend_desc">예측을 시장가로 얼마나 보정할지</string>
+    <string name="blend_model">모델</string>
+    <string name="blend_balanced">균형</string>
+    <string name="blend_market">시장 중심</string>
     <string name="settings_notifications">경기 알림</string>
     <string name="settings_notifications_desc">강한 픽 킥오프·라이브 시작·결과 알림</string>
     <string name="notif_channel_name">경기 알림</string>

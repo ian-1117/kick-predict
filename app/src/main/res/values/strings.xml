@@ -235,6 +235,11 @@
     <string name="weather_heat">Heat</string>
 
     <!-- Match notifications -->
+    <string name="settings_blend">Market blend</string>
+    <string name="settings_blend_desc">How much predictions temper toward the market price</string>
+    <string name="blend_model">Model</string>
+    <string name="blend_balanced">Balanced</string>
+    <string name="blend_market">Market-led</string>
     <string name="settings_notifications">Match notifications</string>
     <string name="settings_notifications_desc">Kickoff alerts for strong picks, live starts, and results</string>
     <string name="notif_channel_name">Match alerts</string>

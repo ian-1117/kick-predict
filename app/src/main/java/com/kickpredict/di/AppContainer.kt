@@ -65,6 +65,9 @@ class AppContainer(context: Context) {
     /** Whether the one-time onboarding has been shown. */
     val onboardingPreference = com.kickpredict.presentation.onboarding.OnboardingPreference(context)
 
+    /** How much live predictions temper toward the market price (100 = pure model). */
+    val blendPreference = com.kickpredict.presentation.settings.BlendPreference(context)
+
     private val database: KickPredictDatabase = Room.databaseBuilder(
         context.applicationContext,
         KickPredictDatabase::class.java,
@@ -173,8 +176,9 @@ class AppContainer(context: Context) {
         }
     }
 
-    val getPredictedMatches = GetPredictedMatchesUseCase(repository, engine, calibrationRepository, odds)
-    val getPredictedMatch = GetPredictedMatchUseCase(repository, engine, calibrationRepository, odds)
+    private val blendWeight: () -> Double = { blendPreference.modelWeightPercent.value / 100.0 }
+    val getPredictedMatches = GetPredictedMatchesUseCase(repository, engine, calibrationRepository, odds, blendWeight)
+    val getPredictedMatch = GetPredictedMatchUseCase(repository, engine, calibrationRepository, odds, blendWeight)
     val recordMatchResult = RecordMatchResultUseCase(calibrationRepository)
     // Production thresholds are the RecalibrateUseCase defaults (20 / 10). For a quick demo, pass
     // minConfidenceSamples = 3, minLeagueSamples = 3 so calibration applies after only a few results.

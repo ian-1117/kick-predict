@@ -15,12 +15,15 @@ class GetPredictedMatchUseCase(
     private val engine: PredictionEngine,
     private val calibrationRepository: CalibrationRepository,
     private val odds: () -> Map<String, MarketOdds> = { emptyMap() },
+    private val modelWeight: () -> Double = { 1.0 },
 ) {
     suspend operator fun invoke(id: String): Match? {
         val market = runCatching { odds() }.getOrDefault(emptyMap())
+        val weight = modelWeight().coerceIn(0.0, 1.0)
         val match = repository.getMatch(id)?.let {
             val p = engine.predict(it)
-            it.copy(predictedResult = market[it.id]?.let { o -> p.blendedWithMarket(o) } ?: p)
+            val o = market[it.id]
+            it.copy(predictedResult = if (o != null && weight < 1.0) p.blendedWithMarket(o, weight) else p)
         }
         if (match != null) runCatching { calibrationRepository.recordPredictions(listOf(match)) }
         return match

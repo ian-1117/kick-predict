@@ -3,6 +3,7 @@ package com.kickpredict.domain.usecase
 import com.kickpredict.domain.engine.PredictionEngine
 import com.kickpredict.domain.model.MarketOdds
 import com.kickpredict.domain.model.Match
+import com.kickpredict.domain.model.PredictionResult
 import com.kickpredict.domain.model.blendedWithMarket
 import com.kickpredict.domain.repository.CalibrationRepository
 import com.kickpredict.domain.repository.MatchRepository
@@ -16,6 +17,7 @@ class GetPredictedMatchesUseCase(
     private val engine: PredictionEngine,
     private val calibrationRepository: CalibrationRepository,
     private val odds: () -> Map<String, MarketOdds> = { emptyMap() },
+    private val modelWeight: () -> Double = { 1.0 },
 ) {
     suspend operator fun invoke(forceRefresh: Boolean = false): List<Match> {
         val matches = repository.getMatches(forceRefresh)
@@ -33,6 +35,10 @@ class GetPredictedMatchesUseCase(
         return repository.cachedMatches()?.map { match -> match.copy(predictedResult = predictBlended(match, market)) }
     }
 
-    private fun predictBlended(match: Match, market: Map<String, MarketOdds>) =
-        engine.predict(match).let { p -> market[match.id]?.let { p.blendedWithMarket(it) } ?: p }
+    private fun predictBlended(match: Match, market: Map<String, MarketOdds>): PredictionResult {
+        val p = engine.predict(match)
+        val weight = modelWeight().coerceIn(0.0, 1.0)
+        val odds = market[match.id]
+        return if (odds != null && weight < 1.0) p.blendedWithMarket(odds, weight) else p
+    }
 }
