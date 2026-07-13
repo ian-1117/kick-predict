@@ -124,6 +124,11 @@
     <string name="dash_accuracy_by_round">Accuracy by round</string>
     <string name="dash_model_compare">Model comparison</string>
     <string name="dash_reliability">Actual hit rate by confidence band</string>
+    <string name="dash_scorecard">Model scorecard</string>
+    <string name="dash_scorecard_note">Proper scores over %1$d settled predictions. Lower is better: Brier &amp; log-loss reward sharp, honest probabilities (not lucky calls); calibration error is how far the model\'s confidence sits from its real hit rate.</string>
+    <string name="dash_brier">Brier</string>
+    <string name="dash_logloss">Log-loss</string>
+    <string name="dash_calib_err">Calib. error</string>
     <string name="dash_recent">Recent results</string>
     <string name="dash_stat_records">Records</string>
     <string name="dash_records_value">%1$d</string>

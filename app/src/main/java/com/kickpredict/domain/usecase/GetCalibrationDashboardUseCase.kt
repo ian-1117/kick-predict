@@ -1,7 +1,9 @@
 package com.kickpredict.domain.usecase
 
+import com.kickpredict.domain.model.ModelScorecard
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.RecordedResult
+import com.kickpredict.domain.model.computeScorecard
 import com.kickpredict.domain.rating.EloModel
 import com.kickpredict.domain.repository.CalibrationRepository
 
@@ -45,6 +47,7 @@ data class CalibrationDashboard(
     val reliability: List<ReliabilityBucket>,
     val accuracyByRound: List<RoundAccuracy>,
     val modelComparison: List<ModelScore>,
+    val scorecard: ModelScorecard?,
     val recent: List<RecordedResult>,
 )
 
@@ -83,6 +86,7 @@ class GetCalibrationDashboardUseCase(
             status = status,
             reliability = buckets,
             accuracyByRound = byRound,
+            scorecard = computeScorecard(calibrationRepository.scoringSamples()),
             recent = results.take(30),
         )
     }

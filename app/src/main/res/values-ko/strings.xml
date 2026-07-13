@@ -124,6 +124,11 @@
     <string name="dash_accuracy_by_round">라운드별 예측 정확도</string>
     <string name="dash_model_compare">모델 비교</string>
     <string name="dash_reliability">신뢰도 구간별 실제 적중률</string>
+    <string name="dash_scorecard">모델 성적표</string>
+    <string name="dash_scorecard_note">정산 %1$d건 기준 정식 채점. 낮을수록 좋음: Brier·log-loss는 운이 아닌 날카롭고 정직한 확률에 보상하고, 보정오차는 모델 신뢰도가 실제 적중률에서 얼마나 벗어났는지입니다.</string>
+    <string name="dash_brier">Brier</string>
+    <string name="dash_logloss">Log-loss</string>
+    <string name="dash_calib_err">보정오차</string>
     <string name="dash_recent">최근 기록</string>
     <string name="dash_stat_records">기록</string>
     <string name="dash_records_value">%1$d건</string>

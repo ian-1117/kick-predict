@@ -10,6 +10,7 @@ import com.kickpredict.domain.model.ActualResult
 import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.RecordedResult
+import com.kickpredict.domain.model.ScoringSample
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -106,6 +107,19 @@ class CalibrationRepositoryImpl(
                 round = log.round,
             )
         }.sortedByDescending { it.recordedAt }
+    }
+
+    override suspend fun scoringSamples(): List<ScoringSample> = withContext(Dispatchers.IO) {
+        val logs = predictionLogDao.getAll().associateBy { it.matchId }
+        matchResultDao.getAll().mapNotNull { result ->
+            val log = logs[result.matchId] ?: return@mapNotNull null
+            ScoringSample(
+                homeWinPercent = log.homeWinPercent,
+                drawPercent = log.drawPercent,
+                awayWinPercent = log.awayWinPercent,
+                actual = outcomeOf(result.homeGoals, result.awayGoals),
+            )
+        }
     }
 
     override suspend fun history(): List<HistoricalMatch> = withContext(Dispatchers.IO) {

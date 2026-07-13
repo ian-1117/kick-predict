@@ -137,6 +137,10 @@ private fun DashboardContent(dash: CalibrationDashboard) {
             item { SectionTitle(stringResource(R.string.dash_model_compare)) }
             item { ModelComparisonCard(dash.modelComparison) }
         }
+        dash.scorecard?.let { scorecard ->
+            item { SectionTitle(stringResource(R.string.dash_scorecard)) }
+            item { ScorecardCard(scorecard) }
+        }
         if (dash.reliability.isNotEmpty()) {
             item { SectionTitle(stringResource(R.string.dash_reliability)) }
             item { ReliabilityCard(dash.reliability) }
@@ -170,6 +174,23 @@ private fun Stat(label: String, value: String, valueColor: Color) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(value, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Black, color = valueColor)
         Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+@Composable
+private fun ScorecardCard(sc: com.kickpredict.domain.model.ModelScorecard) {
+    Card {
+        Text(
+            stringResource(R.string.dash_scorecard_note, sc.sampleCount),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 12.dp),
+        )
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Stat(stringResource(R.string.dash_brier), String.format("%.3f", sc.brierScore), AccentPrimary)
+            Stat(stringResource(R.string.dash_logloss), String.format("%.3f", sc.logLoss), AccentPrimary)
+            Stat(stringResource(R.string.dash_calib_err), String.format("%.1f%%", sc.calibrationError * 100), AccentPrimary)
+        }
     }
 }
 

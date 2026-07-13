@@ -5,6 +5,7 @@ import com.kickpredict.domain.calibration.PredictionRecord
 import com.kickpredict.domain.model.ActualResult
 import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.RecordedResult
+import com.kickpredict.domain.model.ScoringSample
 
 /**
  * Persists prediction snapshots + user-entered results and turns the accumulated data into
@@ -31,6 +32,12 @@ interface CalibrationRepository {
 
     /** All recorded results joined with their predictions, most recent first (for the dashboard). */
     suspend fun recordedResults(): List<RecordedResult>
+
+    /**
+     * Settled predictions with their full 1X2 probability vector + actual outcome, for proper
+     * scoring (Brier / log-loss / calibration). Defaults to empty for fakes that don't log one.
+     */
+    suspend fun scoringSamples(): List<ScoringSample> = emptyList()
 
     /** Confidence-vs-hit-rate pairs for [com.kickpredict.domain.calibration.ConfidenceCalibrator]. */
     suspend fun predictionRecords(): List<PredictionRecord>
