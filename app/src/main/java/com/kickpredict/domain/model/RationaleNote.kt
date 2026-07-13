@@ -16,4 +16,7 @@ sealed interface RationaleNote {
     data class Weakened(val team: String, val out: Int, val xiPercent: Int) : RationaleNote
     data class Weather(val weather: com.kickpredict.domain.model.Weather) : RationaleNote
     data class ExpectedScore(val scoreline: String, val homeLambda: Double, val awayLambda: Double) : RationaleNote
+
+    /** The engine's probabilities were tempered toward the market's price by [marketWeightPercent]. */
+    data class MarketBlend(val marketWeightPercent: Int) : RationaleNote
 }

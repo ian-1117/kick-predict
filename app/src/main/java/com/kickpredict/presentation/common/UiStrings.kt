@@ -53,6 +53,7 @@ fun rationaleText(note: RationaleNote): String = when (note) {
     is RationaleNote.Weather -> stringResource(R.string.rationale_weather, weatherName(note.weather))
     is RationaleNote.ExpectedScore ->
         stringResource(R.string.rationale_expected_score, note.scoreline, lambda(note.homeLambda), lambda(note.awayLambda))
+    is RationaleNote.MarketBlend -> stringResource(R.string.rationale_market_blend, note.marketWeightPercent)
 }
 
 private fun lambda(v: Double): String = ((v * 100).roundToInt() / 100.0).toString()

@@ -212,6 +212,7 @@
     <string name="rationale_weakened">%1$s 전력 약화 (%2$d명 결장, %3$d%% 라인업).</string>
     <string name="rationale_weather">%1$s: 득점 감소 예상.</string>
     <string name="rationale_expected_score">예상 스코어 %1$s (λ %2$s / %3$s).</string>
+    <string name="rationale_market_blend">시장가로 보정 (시장 %1$d%%).</string>
 
     <!-- Power comparison report -->
     <string name="power_title">전력 비교 리포트</string>

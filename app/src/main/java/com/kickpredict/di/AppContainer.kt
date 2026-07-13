@@ -173,8 +173,8 @@ class AppContainer(context: Context) {
         }
     }
 
-    val getPredictedMatches = GetPredictedMatchesUseCase(repository, engine, calibrationRepository)
-    val getPredictedMatch = GetPredictedMatchUseCase(repository, engine, calibrationRepository)
+    val getPredictedMatches = GetPredictedMatchesUseCase(repository, engine, calibrationRepository, odds)
+    val getPredictedMatch = GetPredictedMatchUseCase(repository, engine, calibrationRepository, odds)
     val recordMatchResult = RecordMatchResultUseCase(calibrationRepository)
     // Production thresholds are the RecalibrateUseCase defaults (20 / 10). For a quick demo, pass
     // minConfidenceSamples = 3, minLeagueSamples = 3 so calibration applies after only a few results.

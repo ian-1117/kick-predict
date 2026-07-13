@@ -212,6 +212,7 @@
     <string name="rationale_weakened">%1$s weakened (%2$d out, %3$d%% XI).</string>
     <string name="rationale_weather">%1$s: fewer goals expected.</string>
     <string name="rationale_expected_score">Expected score %1$s (λ %2$s / %3$s).</string>
+    <string name="rationale_market_blend">Tempered toward the market price (%1$d%% market).</string>
 
     <!-- Power comparison report -->
     <string name="power_title">Power comparison</string>
