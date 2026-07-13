@@ -38,6 +38,8 @@ sealed interface MatchNotification {
         val away: String,
         val scoreline: String,
         val hit: Boolean,
+        /** Value edge if this match was a flagged value pick, in whole percent — else null. */
+        val edge: Int? = null,
     ) : MatchNotification {
         override val key: String get() = "result:$matchId"
     }

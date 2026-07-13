@@ -58,7 +58,9 @@ class MatchNotifier(private val context: Context) {
             val title = context.getString(
                 if (n.hit) R.string.notif_result_hit else R.string.notif_result_miss,
             )
-            title to "${n.home} ${n.scoreline} ${n.away}"
+            val base = "${n.home} ${n.scoreline} ${n.away}"
+            val body = if (n.edge != null) "$base · ${context.getString(R.string.notif_value_suffix, n.edge)}" else base
+            title to body
         }
     }
 

@@ -146,6 +146,7 @@ class AppContainer(context: Context) {
         odds = odds,
         calibrationRepository = calibrationRepository,
         followedTeams = { followPreference.followed.value },
+        valueEdges = { valuePickRepository.all().associate { it.matchId to it.edge } },
     )
 
     /**

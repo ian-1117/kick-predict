@@ -20,6 +20,7 @@ class GetPendingNotificationsUseCase(
     private val odds: () -> Map<String, MarketOdds>,
     private val calibrationRepository: CalibrationRepository,
     private val followedTeams: () -> Set<String> = { emptySet() },
+    private val valueEdges: suspend () -> Map<String, Int> = { emptyMap() },
 ) {
 
     suspend operator fun invoke(matches: List<Match>, nowMillis: Long): List<MatchNotification> {
@@ -30,10 +31,12 @@ class GetPendingNotificationsUseCase(
         val byId = matches.associateBy { it.id }
         // Once the user follows any team, only notify about matches involving a followed team.
         val followed = runCatching { followedTeams() }.getOrDefault(emptySet())
+        // Value-pick edges keyed by match id, so a settled value pick's alert can be tagged.
+        val edges = runCatching { valueEdges() }.getOrDefault(emptyMap())
 
         val out = mutableListOf<MatchNotification>()
 
-        // Finished predictions → hit / miss.
+        // Finished predictions → hit / miss (tagged with the value edge if it was a value pick).
         results.values.forEach { r ->
             if (followed.isNotEmpty() && r.homeTeamId !in followed && r.awayTeamId !in followed) return@forEach
             out += MatchNotification.Result(
@@ -42,6 +45,7 @@ class GetPendingNotificationsUseCase(
                 away = r.awayTeam,
                 scoreline = r.scoreline,
                 hit = r.wasCorrect,
+                edge = edges[r.matchId],
             )
         }
 
