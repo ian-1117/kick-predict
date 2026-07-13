@@ -76,6 +76,33 @@ class ValuePicksReportTest {
     }
 
     @Test
+    fun `bankroll compounds a win and is flat with no settled picks`() {
+        val empty = buildValuePicksReport(
+            listOf(pick("p", 2.0, ValuePickStatus.PENDING, 1, edge = 10)),
+        )
+        assertEquals(1.0, empty.finalBankroll, 1e-9)
+        assertTrue(empty.bankrollTrend.isEmpty())
+
+        val won = buildValuePicksReport(
+            listOf(pick("w", 2.0, ValuePickStatus.WON, 1, edge = 10)),
+        )
+        // Kelly f* = (0.10 * 2.0) / (2.0 - 1) = 0.20 ; half-Kelly stake = 0.10 of 1.0 = 0.10
+        // win pays stake * (odds-1) = 0.10 * 1.0 = 0.10 → bankroll 1.10
+        assertEquals(1.10, won.finalBankroll, 1e-9)
+        assertEquals(listOf(10), won.bankrollTrend)
+    }
+
+    @Test
+    fun `bankroll shrinks on a loss`() {
+        val lost = buildValuePicksReport(
+            listOf(pick("l", 2.0, ValuePickStatus.LOST, 1, edge = 10)),
+        )
+        // stake 0.10 lost → bankroll 0.90
+        assertEquals(0.90, lost.finalBankroll, 1e-9)
+        assertEquals(listOf(-10), lost.bankrollTrend)
+    }
+
+    @Test
     fun `no clv when the closing line never moved`() {
         val report = buildValuePicksReport(
             listOf(pick("a", 2.10, ValuePickStatus.PENDING, 1)),

@@ -165,11 +165,41 @@ private fun RoiHeader(report: ValuePicksReport) {
                 )
             }
         }
+        if (report.settledCount > 0) {
+            val bankrollColor = if (report.finalBankroll >= 1.0) WinColor else LossColor
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(
+                    "×${String.format("%.2f", report.finalBankroll)}",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = bankrollColor,
+                )
+                Text(
+                    stringResource(R.string.value_bankroll_caption),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
         if (report.roiTrend.size >= 2) {
             Spacer(Modifier.height(6.dp))
-            RoiTrendChart(report.roiTrend, roiColor)
+            ChartBlock(stringResource(R.string.value_roi_chart), report.roiTrend, roiColor)
+            Spacer(Modifier.height(10.dp))
+            val bankrollColor = if (report.finalBankroll >= 1.0) WinColor else LossColor
+            ChartBlock(stringResource(R.string.value_bankroll_chart), report.bankrollTrend, bankrollColor)
         }
     }
+}
+
+/** A small captioned sparkline block used for the ROI and bankroll curves. */
+@Composable
+private fun ChartBlock(label: String, trend: List<Int>, color: Color) {
+    Text(
+        label,
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+    RoiTrendChart(trend, color)
 }
 
 /**
@@ -186,7 +216,7 @@ private fun RoiTrendChart(trend: List<Int>, lineColor: Color) {
     Canvas(
         modifier = Modifier
             .fillMaxWidth()
-            .height(110.dp)
+            .height(84.dp)
             .padding(top = 4.dp),
     ) {
         val w = size.width

@@ -89,6 +89,9 @@
     <string name="value_pending_count">대기</string>
     <string name="value_clv_label">CLV %1$s%%</string>
     <string name="value_clv_caption">마감 배당 대비</string>
+    <string name="value_bankroll_caption">뱅크롤 · 하프켈리 베팅</string>
+    <string name="value_roi_chart">누적 ROI</string>
+    <string name="value_bankroll_chart">뱅크롤 성장</string>
 
     <!-- Home-screen widget -->
     <string name="widget_description">다가오는 픽과 밸류 엣지를 한눈에</string>

@@ -89,6 +89,9 @@
     <string name="value_pending_count">pending</string>
     <string name="value_clv_label">CLV %1$s%%</string>
     <string name="value_clv_caption">vs the closing line</string>
+    <string name="value_bankroll_caption">bankroll · half-Kelly staking</string>
+    <string name="value_roi_chart">Cumulative ROI</string>
+    <string name="value_bankroll_chart">Bankroll growth</string>
 
     <!-- Home-screen widget -->
     <string name="widget_description">Upcoming picks and value edges at a glance</string>

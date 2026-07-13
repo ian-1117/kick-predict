@@ -2,6 +2,10 @@ package com.kickpredict.domain.model
 
 import kotlin.math.roundToInt
 
+/** Half-Kelly staking, capped at a quarter of the bankroll — the standard tame-the-variance defaults. */
+private const val KELLY_FRACTION = 0.5
+private const val MAX_STAKE_FRACTION = 0.25
+
 /** Settlement state of a logged value pick, derived by joining it against recorded results. */
 enum class ValuePickStatus { PENDING, WON, LOST }
 
@@ -55,6 +59,10 @@ data class ValuePicksReport(
     val roiTrend: List<Int> = emptyList(),
     /** Average closing-line value across picks, in tenths of a percent (e.g. 18 = +1.8%). */
     val clvTenths: Int = 0,
+    /** Bankroll growth (percent above the 1.0 start) after each settled pick, half-Kelly staked. */
+    val bankrollTrend: List<Int> = emptyList(),
+    /** Final bankroll as a multiple of the starting stake (1.0 = break even). */
+    val finalBankroll: Double = 1.0,
 ) {
     val lostCount: Int get() = settledCount - wonCount
     val totalCount: Int get() = picks.size
@@ -68,11 +76,27 @@ fun buildValuePicksReport(picks: List<ValuePick>): ValuePicksReport {
     val settled = sorted.filter { it.status != ValuePickStatus.PENDING }
     val roi = if (settled.isEmpty()) 0
     else (settled.sumOf { it.profit } / settled.size * 100).roundToInt()
-    // Running ROI after each settled pick, oldest→newest, so the chart reads left to right over time.
+    // Oldest→newest so both curves read left to right over time.
+    val chronological = settled.sortedBy { it.kickoffEpochMillis }
+    // Running ROI after each settled pick (flat 1-unit stake).
     var runningProfit = 0.0
-    val trend = settled.sortedBy { it.kickoffEpochMillis }.mapIndexed { i, pick ->
+    val trend = chronological.mapIndexed { i, pick ->
         runningProfit += pick.profit
         (runningProfit / (i + 1) * 100).roundToInt()
+    }
+    // Bankroll simulation: half-Kelly staking, compounding from a 1.0 start.
+    var bankroll = 1.0
+    val bankrollTrend = chronological.map { pick ->
+        val b = pick.odds - 1.0
+        // Edge-based Kelly: EV per unit ≈ (edge/100)·odds, so f* = EV / b.
+        val kelly = if (b <= 0.0) 0.0 else (pick.edge / 100.0) * pick.odds / b
+        val stake = bankroll * (kelly * KELLY_FRACTION).coerceIn(0.0, MAX_STAKE_FRACTION)
+        bankroll += when (pick.status) {
+            ValuePickStatus.WON -> stake * b
+            ValuePickStatus.LOST -> -stake
+            ValuePickStatus.PENDING -> 0.0
+        }
+        ((bankroll - 1.0) * 100).roundToInt()
     }
     // Average closing-line value across all logged picks, in tenths of a percent for one-decimal display.
     val clvTenths = if (sorted.isEmpty()) 0
@@ -85,5 +109,7 @@ fun buildValuePicksReport(picks: List<ValuePick>): ValuePicksReport {
         pendingCount = sorted.count { it.status == ValuePickStatus.PENDING },
         roiTrend = trend,
         clvTenths = clvTenths,
+        bankrollTrend = bankrollTrend,
+        finalBankroll = bankroll,
     )
 }
