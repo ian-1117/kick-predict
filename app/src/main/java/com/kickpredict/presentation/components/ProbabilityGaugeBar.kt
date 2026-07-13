@@ -43,7 +43,7 @@ fun ProbabilityGauges(
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         GaugeRow(homeName, result.homeWinPercent, WinColor)
-        GaugeRow("Draw", result.drawPercent, DrawColor)
+        GaugeRow(androidx.compose.ui.res.stringResource(com.kickpredict.R.string.outcome_draw), result.drawPercent, DrawColor)
         GaugeRow(awayName, result.awayWinPercent, LossColor)
     }
 }

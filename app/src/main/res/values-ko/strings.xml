@@ -27,6 +27,7 @@
     <string name="prediction_label">예측: %1$s</string>
     <string name="outcome_win">%1$s 승</string>
     <string name="outcome_draw">무승부</string>
+    <string name="a11y_prediction">예측: 홈 승 %1$d%%, 무 %2$d%%, 원정 승 %3$d%%</string>
     <string name="hit_rate">적중률 %1$d%%</string>
     <string name="matchup_edge">상성</string>
     <string name="jump_current_round">현재 라운드</string>

@@ -2,6 +2,7 @@ package com.kickpredict.presentation.matchlist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -397,6 +398,7 @@ private fun MatchCard(
             .clip(RoundedCornerShape(20.dp))
             .background(MaterialTheme.colorScheme.surface)
             .clickable(onClick = onClick)
+            .semantics(mergeDescendants = true) {}
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {

@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -48,10 +50,17 @@ fun PredictionDonutChart(
     val topLabel = result.predictedOutcome.label
     val topValue = maxOf(home, draw, away).toInt()
 
+    val description = androidx.compose.ui.res.stringResource(
+        com.kickpredict.R.string.a11y_prediction,
+        result.homeWinPercent,
+        result.drawPercent,
+        result.awayWinPercent,
+    )
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .aspectRatio(1f),
+            .aspectRatio(1f)
+            .clearAndSetSemantics { contentDescription = description },
         contentAlignment = Alignment.Center,
     ) {
         // A Canvas draw lambda is not a composition, so the palette is read out here and captured.

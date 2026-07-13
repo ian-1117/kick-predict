@@ -27,6 +27,7 @@
     <string name="prediction_label">Prediction: %1$s</string>
     <string name="outcome_win">%1$s win</string>
     <string name="outcome_draw">Draw</string>
+    <string name="a11y_prediction">Prediction: home win %1$d%%, draw %2$d%%, away win %3$d%%</string>
     <string name="hit_rate">Hit rate %1$d%%</string>
     <string name="matchup_edge">Edge</string>
     <string name="jump_current_round">Current round</string>

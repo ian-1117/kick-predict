@@ -64,7 +64,7 @@ fun StandingsScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.nav_standings), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") }
+                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.nav_back)) }
                 },
                 actions = {
                     IconButton(onClick = onCompare) {

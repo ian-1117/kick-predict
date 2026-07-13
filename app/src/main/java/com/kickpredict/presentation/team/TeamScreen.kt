@@ -74,7 +74,7 @@ fun TeamScreen(
         topBar = {
             TopAppBar(
                 title = { Text(state.team?.name ?: "Team", fontWeight = FontWeight.Bold) },
-                navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") } },
+                navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.nav_back)) } },
                 actions = {
                     IconButton(onClick = { followPreference.toggle(teamId) }) {
                         Icon(
