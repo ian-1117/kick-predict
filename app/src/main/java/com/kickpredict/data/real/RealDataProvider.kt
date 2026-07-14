@@ -1,6 +1,7 @@
 package com.kickpredict.data.real
 
 import android.content.res.AssetManager
+import com.kickpredict.data.TeamNamesKo
 import com.kickpredict.domain.model.BacktestGame
 import com.kickpredict.domain.model.H2HMeeting
 import com.kickpredict.domain.model.H2HOutcome
@@ -231,7 +232,7 @@ class RealDataProvider(private val openAsset: (String) -> InputStream) {
             goalsScoredAvg = (shrunk.goalsFor * 10).toInt() / 10.0,
             goalsConcededAvg = (shrunk.goalsAgainst * 10).toInt() / 10.0,
             daysSinceLastMatch = 7,
-            koreanName = displayNameOverrides[name].orEmpty(),
+            koreanName = TeamNamesKo.of(name) ?: displayNameOverrides[name].orEmpty(),
             crestPrimary = primary,
             crestSecondary = secondary,
         )
@@ -270,7 +271,7 @@ class RealDataProvider(private val openAsset: (String) -> InputStream) {
             goalsScoredAvg = (s.gf.toDouble() / games * 10).toInt() / 10.0,
             goalsConcededAvg = (s.ga.toDouble() / games * 10).toInt() / 10.0,
             daysSinceLastMatch = 7,
-            koreanName = displayNameOverrides[name].orEmpty(),
+            koreanName = TeamNamesKo.of(name) ?: displayNameOverrides[name].orEmpty(),
             crestPrimary = primary,
             crestSecondary = secondary,
         )

@@ -1,5 +1,6 @@
 package com.kickpredict.data.remote.live
 
+import com.kickpredict.data.TeamNamesKo
 import com.kickpredict.domain.model.MatchOutcome
 import com.kickpredict.domain.model.TeamProfile
 import kotlin.math.abs
@@ -26,13 +27,14 @@ object LiveProfileBuilder {
 
     fun profile(id: String, name: String, shortName: String, stats: TeamStats?): TeamProfile {
         val (primary, secondary) = crest(id)
+        val korean = TeamNamesKo.of(name).orEmpty()
         if (stats == null) {
             // No standings row yet (e.g. a just-promoted side before matchday 1): a neutral profile.
             return TeamProfile(
                 id = id, name = name, shortName = shortName,
                 leaguePosition = 0, recentForm = emptyList(),
                 overallRating = 60.0, goalsScoredAvg = 1.3, goalsConcededAvg = 1.3,
-                daysSinceLastMatch = 7, crestPrimary = primary, crestSecondary = secondary,
+                daysSinceLastMatch = 7, koreanName = korean, crestPrimary = primary, crestSecondary = secondary,
             )
         }
         val games = stats.played.coerceAtLeast(1)
@@ -47,6 +49,7 @@ object LiveProfileBuilder {
             goalsScoredAvg = round1(stats.goalsFor.toDouble() / games),
             goalsConcededAvg = round1(stats.goalsAgainst.toDouble() / games),
             daysSinceLastMatch = 7,
+            koreanName = korean,
             crestPrimary = primary,
             crestSecondary = secondary,
         )

@@ -23,8 +23,13 @@ data class TeamProfile(
     val crestPrimary: Long = 0xFF2E7D32,
     val crestSecondary: Long = 0xFFFFFFFF,
 ) {
-    /** Korean display name when available, else the English name. */
-    val displayName: String get() = koreanName.ifBlank { name }
+    /**
+     * The team's name in the active language: the Korean name when the current locale is Korean and we
+     * have one, else the English name. Tracks both the device locale and the in-app language override,
+     * which is mirrored onto [java.util.Locale.getDefault] when the user switches.
+     */
+    val displayName: String
+        get() = if (koreanName.isNotBlank() && java.util.Locale.getDefault().language == "ko") koreanName else name
 
     /** True when the team is playing on short rest (within 4 days of its previous game). */
     val isFatigued: Boolean get() = daysSinceLastMatch in 0..4
