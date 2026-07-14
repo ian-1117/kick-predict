@@ -26,6 +26,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -53,6 +54,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -68,6 +70,8 @@ import com.kickpredict.domain.model.SettledParlay
 import com.kickpredict.domain.model.ValuePick
 import com.kickpredict.domain.model.ValuePickStatus
 import com.kickpredict.domain.model.ValuePicksReport
+import com.kickpredict.presentation.share.ParlayShareData
+import com.kickpredict.presentation.share.shareParlayCard
 import com.kickpredict.presentation.theme.AccentPrimary
 import com.kickpredict.presentation.theme.LossColor
 import com.kickpredict.presentation.theme.OutlineColor
@@ -425,11 +429,33 @@ private fun ParlaysHeader(report: ParlaysReport) {
 /** A saved parlay: its legs, the frozen combined price, and its settlement (won / lost / pending). */
 @Composable
 private fun SavedParlayCard(settled: SettledParlay, onDelete: () -> Unit) {
+    val context = LocalContext.current
     val (statusLabel, statusColor) = when (settled.status) {
         ParlayStatus.WON -> stringResource(R.string.result_hit) to WinColor
         ParlayStatus.LOST -> stringResource(R.string.result_miss) to LossColor
         ParlayStatus.PENDING -> stringResource(R.string.value_pending_count) to AccentPrimary
     }
+    // Resolve the shareable slip's text now (in composition), so the click handler just fires the sheet.
+    val shareLegs = settled.legs.map { sl ->
+        legPickLabel(sl.leg.pickedOutcome, sl.leg.homeTeam, sl.leg.awayTeam) to "@${String.format("%.2f", sl.leg.odds)}"
+    }
+    val edgeLabel = String.format("%+d%% ", settled.parlay.edgePercent) + stringResource(R.string.acca_edge)
+    val statusBanner = if (settled.status == ParlayStatus.PENDING) null
+    else "$statusLabel · ${String.format("%+.2f", settled.profit)}"
+    val shareData = ParlayShareData(
+        title = stringResource(R.string.acca_title_legs, settled.parlay.legs.size),
+        legs = shareLegs,
+        comboOddsLabel = "@${String.format("%.2f", settled.parlay.comboOdds)}",
+        edgeLabel = edgeLabel,
+        statusLabel = statusBanner,
+        won = when (settled.status) {
+            ParlayStatus.WON -> true
+            ParlayStatus.LOST -> false
+            ParlayStatus.PENDING -> null
+        },
+        chooserTitle = stringResource(R.string.acca_share),
+        footer = stringResource(R.string.share_footer),
+    )
     Column(
         Modifier
             .fillMaxWidth()
@@ -450,6 +476,9 @@ private fun SavedParlayCard(settled: SettledParlay, onDelete: () -> Unit) {
                 else "$statusLabel · ${String.format("%+.2f", settled.profit)}"
                 Box(Modifier.clip(RoundedCornerShape(50)).background(statusColor.copy(alpha = 0.16f)).padding(horizontal = 10.dp, vertical = 4.dp)) {
                     Text(pillText, style = MaterialTheme.typography.labelSmall, color = statusColor, fontWeight = FontWeight.Bold)
+                }
+                IconButton(onClick = { shareParlayCard(context, shareData) }, modifier = Modifier.size(28.dp)) {
+                    Icon(Icons.Filled.Share, contentDescription = stringResource(R.string.acca_share), tint = AccentPrimary)
                 }
                 IconButton(onClick = onDelete, modifier = Modifier.size(28.dp)) {
                     Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.acca_delete), tint = MaterialTheme.colorScheme.onSurfaceVariant)
