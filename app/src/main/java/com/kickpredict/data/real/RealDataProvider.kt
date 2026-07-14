@@ -1,6 +1,7 @@
 package com.kickpredict.data.real
 
 import android.content.res.AssetManager
+import com.kickpredict.data.TeamColors
 import com.kickpredict.data.TeamNamesKo
 import com.kickpredict.domain.model.BacktestGame
 import com.kickpredict.domain.model.H2HMeeting
@@ -221,7 +222,7 @@ class RealDataProvider(private val openAsset: (String) -> InputStream) {
         form: List<MatchOutcome>,
         position: Int,
     ): TeamProfile {
-        val (primary, secondary) = crest(teamId(code, name))
+        val (primary, secondary) = crest(teamId(code, name), name)
         return TeamProfile(
             id = teamId(code, name),
             name = name,
@@ -259,7 +260,7 @@ class RealDataProvider(private val openAsset: (String) -> InputStream) {
     private fun profile(code: String, league: LeagueType, name: String, s: Stats, position: Int): TeamProfile {
         val ppg = if (s.played == 0) 1.0 else s.points.toDouble() / s.played
         val rating = ratingFrom(ppg)
-        val (primary, secondary) = crest(teamId(code, name))
+        val (primary, secondary) = crest(teamId(code, name), name)
         val games = s.played.coerceAtLeast(1)
         return TeamProfile(
             id = teamId(code, name),
@@ -391,8 +392,9 @@ class RealDataProvider(private val openAsset: (String) -> InputStream) {
         return (if (letters.length >= 3) letters.take(3) else letters.padEnd(3, 'X')).uppercase()
     }
 
-    /** Deterministic vibrant crest colour from the team id. */
-    private fun crest(id: String): Pair<Long, Long> {
+    /** The club's real brand colour (text derived from luminance) when known, else a hashed colour. */
+    private fun crest(id: String, name: String): Pair<Long, Long> {
+        TeamColors.of(name)?.let { return it to TeamColors.foregroundFor(it) }
         val hue = Random(id.hashCode()).nextInt(0, 360)
         return hsvToArgb(hue, 0.62, 0.72) to 0xFFFFFFFF
     }

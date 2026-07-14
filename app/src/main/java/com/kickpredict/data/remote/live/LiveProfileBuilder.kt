@@ -1,5 +1,6 @@
 package com.kickpredict.data.remote.live
 
+import com.kickpredict.data.TeamColors
 import com.kickpredict.data.TeamNamesKo
 import com.kickpredict.domain.model.MatchOutcome
 import com.kickpredict.domain.model.TeamProfile
@@ -26,7 +27,7 @@ object LiveProfileBuilder {
     )
 
     fun profile(id: String, name: String, shortName: String, stats: TeamStats?): TeamProfile {
-        val (primary, secondary) = crest(id)
+        val (primary, secondary) = crest(id, name)
         val korean = TeamNamesKo.of(name).orEmpty()
         if (stats == null) {
             // No standings row yet (e.g. a just-promoted side before matchday 1): a neutral profile.
@@ -84,8 +85,13 @@ object LiveProfileBuilder {
 
     private fun round1(v: Double) = (v * 10).toInt() / 10.0
 
-    /** Deterministic vibrant crest colour from the team id (same scheme as the bundled provider). */
-    private fun crest(id: String): Pair<Long, Long> {
+    /**
+     * The crest's (disc, text) colours: the club's real brand colour when we know it (with a text
+     * colour derived from its luminance so light brands still read), else a deterministic vibrant
+     * colour hashed from the team id (same scheme as the bundled provider) with white text.
+     */
+    private fun crest(id: String, name: String): Pair<Long, Long> {
+        TeamColors.of(name)?.let { return it to TeamColors.foregroundFor(it) }
         val hue = Random(id.hashCode()).nextInt(0, 360)
         return hsvToArgb(hue, 0.62, 0.72) to 0xFFFFFFFF
     }

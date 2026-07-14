@@ -12,46 +12,10 @@ package com.kickpredict.data
  */
 object TeamNamesKo {
 
-    /**
-     * Korean name for [englishName], or null when we don't have one (caller falls back to English).
-     * Two passes: first a **strict** key that keeps every token, so distinct clubs that differ only by
-     * a club-type token stay apart (수원 FC vs 수원 삼성 / FC 서울 vs the bare "Seoul"); only if that
-     * misses do we fall back to a **loose** key that drops generic tokens, to catch the feeds' long
-     * forms ("Real Madrid CF" → "Real Madrid").
-     */
-    fun of(englishName: String): String? =
-        strictMap[strictKey(englishName)] ?: looseMap[looseKey(englishName)]
+    private val lookup by lazy { TeamLookup(entries) }
 
-    /** Generic club-type tokens the feeds tack on ("Real Madrid CF", "SSC Napoli", "TSG 1899 …"). */
-    private val generic = setOf(
-        "fc", "cf", "sc", "afc", "cd", "ud", "cp", "rc", "rcd", "ac", "as",
-        "ss", "ssc", "cfc", "acf", "ca", "fsv", "bc", "sv", "vfb", "tsg", "us",
-        "club", "de", "del", "calcio", "futbol", "football", "balompie",
-    )
-
-    private fun deaccentTokens(name: String): List<String> =
-        java.text.Normalizer.normalize(name, java.text.Normalizer.Form.NFD)
-            .replace("\\p{Mn}+".toRegex(), "")
-            .lowercase()
-            .split(Regex("[^a-z0-9]+"))
-            .filter { it.isNotBlank() }
-
-    /** Every token kept — distinguishes clubs that differ only by "FC"/"SK"/etc. */
-    private fun strictKey(name: String): String = deaccentTokens(name).joinToString("")
-
-    /**
-     * Generic club tokens and standalone founding-year numbers dropped — collapses the feeds' long
-     * forms ("Bologna FC 1909", "TSG 1899 Hoffenheim", "1. FC Köln") onto the plain name.
-     */
-    private fun looseKey(name: String): String =
-        deaccentTokens(name)
-            .filter { it !in generic && !it.all(Char::isDigit) }
-            .joinToString("")
-
-    private val strictMap: Map<String, String> by lazy { entries.associate { strictKey(it.first) to it.second } }
-    // Loose keys can collide (e.g. "Suwon" vs "Suwon FC" both → "suwon"); the strict pass resolves
-    // those, so an arbitrary winner here is only a last-resort fallback.
-    private val looseMap: Map<String, String> by lazy { entries.associate { looseKey(it.first) to it.second } }
+    /** Korean name for [englishName], or null when we don't have one (caller falls back to English). */
+    fun of(englishName: String): String? = lookup.of(englishName)
 
     private infix fun String.ko(korean: String): Pair<String, String> = this to korean
 
