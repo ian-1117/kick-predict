@@ -1,11 +1,51 @@
 # Kick Predict
 
-An Android app that predicts match outcomes for five football leagues — **EPL, LaLiga, Serie A,
-Bundesliga, K League** — and visualises the result, with first-class support for the **Galaxy Z Fold 3**
-(cover screen and unfolded main screen).
+An Android app that predicts match outcomes for six football leagues — **EPL, LaLiga, Serie A,
+Bundesliga, K League 1 & 2** — from **live current-season data**, evaluates itself honestly, and
+surfaces where the model beats the market. First-class support for the **Galaxy Z Fold 3** (cover
+screen and unfolded main screen).
 
-Built with **Kotlin + Jetpack Compose**, **MVVM + Clean Architecture**, Compose Navigation, Retrofit/OkHttp
-(API-ready) and Room (team/form caching). Four switchable colour themes, defaulting to **Floodlight**.
+Built with **Kotlin + Jetpack Compose**, **MVVM + Clean Architecture**, Compose Navigation,
+Retrofit/OkHttp, Room, WorkManager and Glance. Four switchable colour themes (defaulting to
+**Floodlight**) and a live **Korean / English** switch.
+
+## Features
+
+- **Live current-season predictions** across six leagues — Europe from football-data.org, K League
+  from APIFootball, with a bundled-history fallback so it runs with zero, one or both API keys.
+- **Prediction engine** — a Poisson scoreline grid (Dixon-Coles) × learned Elo × recency/venue-weighted
+  head-to-head, a separate confidence score, and injury/lineup/weather context. Probabilities are
+  **tempered toward the market price** where odds exist (Model / Balanced / Market-led in settings).
+- **Honest evaluation** — a calibration dashboard (accuracy, reliability, per-model comparison), a
+  **proper-scoring scorecard** (Brier / log-loss / calibration error), and a **walk-forward backtest**
+  over four bundled seasons that compares Elo vs the market vs a blend.
+- **Value picks** — flags fixtures where the model beats the market, with a hub that logs each pick at
+  its price and settles a **ROI ledger**: cumulative-ROI trend, **CLV** (closing-line value) and a
+  **half-Kelly bankroll** curve.
+- **Engagement** — background **match notifications** (kickoff / live / result, value-tagged), **team
+  follows** (Followed filter + scoped notifications), a resizable **home-screen widget** (live / results
+  / upcoming, configurable per league or followed), **share a prediction** as a branded image, and a
+  first-run **onboarding**.
+- **Depth** — Monte-Carlo season simulation, team pages (season record, form detail, head-to-head),
+  team comparison, and standings.
+- **Polish** — four themes, Korean / English with an in-app switch, foldable-responsive layouts, and an
+  accessibility pass (screen-reader descriptions on the charts).
+- **Tested** — 67 unit tests (engine, calibration, value / ROI / CLV / Kelly, scorecard, backtest,
+  notifications, market blend).
+
+## Screenshots
+
+| Fixtures & predictions | Match detail | Scoreline aggregation |
+|---|---|---|
+| ![Fixtures](docs/screenshots/fixtures.png) | ![Match detail](docs/screenshots/detail.png) | ![Scoreline aggregation](docs/screenshots/scorelines.png) |
+
+| Value-pick hub — ROI · CLV · Kelly | Walk-forward backtest | Accuracy dashboard |
+|---|---|---|
+| ![Value hub](docs/screenshots/value-hub.png) | ![Backtest](docs/screenshots/backtest.png) | ![Dashboard](docs/screenshots/dashboard.png) |
+
+| Team comparison | Home-screen widget | Onboarding |
+|---|---|---|
+| ![Compare](docs/screenshots/compare.png) | ![Widget](docs/screenshots/widget.png) | ![Onboarding](docs/screenshots/onboarding.png) |
 
 ## Architecture
 
