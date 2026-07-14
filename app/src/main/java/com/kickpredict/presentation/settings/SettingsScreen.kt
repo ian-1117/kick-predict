@@ -1,28 +1,38 @@
-package com.kickpredict.presentation.theme
+package com.kickpredict.presentation.settings
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.material3.AlertDialog
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -39,45 +49,54 @@ import androidx.core.content.ContextCompat
 import com.kickpredict.KickPredictApplication
 import com.kickpredict.R
 import com.kickpredict.presentation.locale.AppLanguage
+import com.kickpredict.presentation.theme.AccentPrimary
+import com.kickpredict.presentation.theme.AppTheme
 
 /**
- * Lets the user pick a palette (shown, not described — each row is painted in the theme it offers)
- * and the app language.
+ * One screen for every app-wide preference — theme, language, notifications and the market blend —
+ * plus a read-out of how many teams are followed. Replaces the cramped picker dialog so the settings
+ * have room to breathe and grow.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ThemePickerDialog(
-    current: AppTheme,
-    onSelect: (AppTheme) -> Unit,
+fun SettingsScreen(
+    currentTheme: AppTheme,
+    onSelectTheme: (AppTheme) -> Unit,
     currentLanguage: AppLanguage,
     onSelectLanguage: (AppLanguage) -> Unit,
-    onDismiss: () -> Unit,
+    onBack: () -> Unit,
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_close), color = AccentPrimary) }
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.nav_settings), fontWeight = FontWeight.Bold) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.nav_back))
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
+            )
         },
-        title = { Text(stringResource(R.string.settings_theme), fontWeight = FontWeight.Bold) },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    ) { padding ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            SettingsCard(stringResource(R.string.settings_theme)) {
                 AppTheme.entries.forEach { theme ->
-                    ThemeRow(
-                        theme = theme,
-                        selected = theme == current,
-                        onClick = { onSelect(theme) },
-                    )
+                    ThemeRow(theme = theme, selected = theme == currentTheme, onClick = { onSelectTheme(theme) })
                 }
-
-                Text(
-                    stringResource(R.string.settings_language),
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(top = 6.dp),
-                )
+            }
+            SettingsCard(stringResource(R.string.settings_language)) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     AppLanguage.entries.forEach { language ->
-                        LanguageChip(
+                        ChoiceChip(
                             label = stringResource(language.labelRes),
                             selected = language == currentLanguage,
                             onClick = { onSelectLanguage(language) },
@@ -85,13 +104,29 @@ fun ThemePickerDialog(
                         )
                     }
                 }
-
-                NotificationToggle()
-                BlendSelector()
             }
-        },
-        containerColor = MaterialTheme.colorScheme.surface,
-    )
+            SettingsCard(stringResource(R.string.settings_notifications)) {
+                NotificationRow()
+            }
+            SettingsCard(stringResource(R.string.settings_blend)) {
+                BlendRow()
+            }
+            SettingsCard(stringResource(R.string.settings_followed)) {
+                FollowedRow()
+            }
+        }
+    }
+}
+
+@Composable
+private fun SettingsCard(title: String, content: @Composable ColumnScope.() -> Unit) {
+    Column(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(MaterialTheme.colorScheme.surface).padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+        content()
+    }
 }
 
 /**
@@ -99,7 +134,7 @@ fun ThemePickerDialog(
  * the container primes the fire-once log and schedules the periodic scan.
  */
 @Composable
-private fun NotificationToggle() {
+private fun NotificationRow() {
     val context = LocalContext.current
     val container = (context.applicationContext as KickPredictApplication).container
     val enabled by container.notificationPreference.enabled.collectAsState()
@@ -116,23 +151,13 @@ private fun NotificationToggle() {
         else container.setNotificationsEnabled(true)
     }
 
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Column(Modifier.weight(1f)) {
-            Text(
-                stringResource(R.string.settings_notifications),
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            Text(
-                stringResource(R.string.settings_notifications_desc),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            stringResource(R.string.settings_notifications_desc),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.weight(1f),
+        )
         Switch(
             checked = enabled,
             onCheckedChange = { on -> if (on) requestEnable() else container.setNotificationsEnabled(false) },
@@ -146,34 +171,46 @@ private fun NotificationToggle() {
 
 /** Lets the user choose how strongly live predictions temper toward the market price. */
 @Composable
-private fun BlendSelector() {
+private fun BlendRow() {
     val container = (LocalContext.current.applicationContext as KickPredictApplication).container
     val weight by container.blendPreference.modelWeightPercent.collectAsState()
-    // Model weight → label. Highest weight keeps the model pure; lower leans on the market.
     val options = listOf(100 to R.string.blend_model, 50 to R.string.blend_balanced, 25 to R.string.blend_market)
 
-    Column(Modifier.fillMaxWidth().padding(top = 10.dp)) {
-        Text(
-            stringResource(R.string.settings_blend),
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-        Text(
-            stringResource(R.string.settings_blend_desc),
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            options.forEach { (value, labelRes) ->
-                LanguageChip(
-                    label = stringResource(labelRes),
-                    selected = weight == value,
-                    onClick = { container.blendPreference.setModelWeight(value) },
-                    modifier = Modifier.weight(1f),
-                )
-            }
+    Text(
+        stringResource(R.string.settings_blend_desc),
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+    Row(Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        options.forEach { (value, labelRes) ->
+            ChoiceChip(
+                label = stringResource(labelRes),
+                selected = weight == value,
+                onClick = { container.blendPreference.setModelWeight(value) },
+                modifier = Modifier.weight(1f),
+            )
         }
+    }
+}
+
+/** Read-out of how many teams are followed; following happens contextually on each team's page. */
+@Composable
+private fun FollowedRow() {
+    val container = (LocalContext.current.applicationContext as KickPredictApplication).container
+    val followed by container.followPreference.followed.collectAsState()
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            stringResource(R.string.settings_followed_desc),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.weight(1f),
+        )
+        Text(
+            stringResource(R.string.settings_followed_count, followed.size),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = AccentPrimary,
+        )
     }
 }
 
@@ -185,7 +222,7 @@ private val AppLanguage.labelRes: Int
     }
 
 @Composable
-private fun LanguageChip(label: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun ChoiceChip(label: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val border = if (selected) AccentPrimary else Color.Transparent
     Box(
         modifier = modifier
@@ -209,7 +246,6 @@ private fun LanguageChip(label: String, selected: Boolean, onClick: () -> Unit, 
 private fun ThemeRow(theme: AppTheme, selected: Boolean, onClick: () -> Unit) {
     val palette = theme.palette
     val borderColor = if (selected) palette.accent else Color.Transparent
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -221,33 +257,16 @@ private fun ThemeRow(theme: AppTheme, selected: Boolean, onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f)) {
-            Text(
-                theme.displayName,
-                style = MaterialTheme.typography.titleSmall,
-                color = palette.textPrimary,
-                fontWeight = FontWeight.Bold,
-            )
-            Text(
-                stringResource(theme.descriptionRes),
-                style = MaterialTheme.typography.labelSmall,
-                color = palette.textSecondary,
-            )
+            Text(theme.displayName, style = MaterialTheme.typography.titleSmall, color = palette.textPrimary, fontWeight = FontWeight.Bold)
+            Text(stringResource(theme.descriptionRes), style = MaterialTheme.typography.labelSmall, color = palette.textSecondary)
         }
-
-        // The three colours that carry meaning everywhere in the app: win, draw, loss.
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Swatch(palette.win)
             Swatch(palette.draw)
             Swatch(palette.loss)
         }
-
         if (selected) {
-            Text(
-                "✓",
-                color = palette.accent,
-                fontWeight = FontWeight.Black,
-                modifier = Modifier.padding(start = 12.dp),
-            )
+            Text("✓", color = palette.accent, fontWeight = FontWeight.Black, modifier = Modifier.padding(start = 12.dp))
         }
     }
 }

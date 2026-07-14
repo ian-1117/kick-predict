@@ -23,7 +23,7 @@ import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Insights
-import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material.icons.filled.Today
 import androidx.compose.material.icons.filled.LocalFireDepartment
@@ -76,12 +76,9 @@ import com.kickpredict.domain.model.RecordedResult
 import com.kickpredict.presentation.components.TeamCrest
 import com.kickpredict.presentation.theme.DrawColor
 import com.kickpredict.presentation.theme.AccentPrimary
-import com.kickpredict.presentation.theme.AppTheme
-import com.kickpredict.presentation.theme.ThemePickerDialog
 import com.kickpredict.presentation.theme.LossColor
 import com.kickpredict.presentation.theme.WinColor
 import com.kickpredict.presentation.theme.OnAccent
-import com.kickpredict.presentation.locale.AppLanguage
 import androidx.compose.ui.res.stringResource
 import com.kickpredict.R
 import java.time.Instant
@@ -101,25 +98,11 @@ fun MatchListScreen(
     onDashboard: () -> Unit,
     onStandings: () -> Unit,
     onValuePicks: () -> Unit,
-    currentTheme: AppTheme,
-    onSelectTheme: (AppTheme) -> Unit,
-    currentLanguage: AppLanguage,
-    onSelectLanguage: (AppLanguage) -> Unit,
+    onSettings: () -> Unit,
     viewModel: MatchListViewModel = viewModel(factory = MatchListViewModel.Factory),
 ) {
     val state by viewModel.uiState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
-    var showThemePicker by remember { mutableStateOf(false) }
-
-    if (showThemePicker) {
-        ThemePickerDialog(
-            current = currentTheme,
-            onSelect = onSelectTheme,
-            currentLanguage = currentLanguage,
-            onSelectLanguage = onSelectLanguage,
-            onDismiss = { showThemePicker = false },
-        )
-    }
 
     // Load on first show; silently refresh when returning from the detail screen so newly entered
     // results and any recalibration they triggered are reflected.
@@ -148,8 +131,8 @@ fun MatchListScreen(
                     IconButton(onClick = onDashboard) {
                         Icon(Icons.Filled.Insights, contentDescription = stringResource(R.string.nav_dashboard), tint = AccentPrimary)
                     }
-                    IconButton(onClick = { showThemePicker = true }) {
-                        Icon(Icons.Filled.Palette, contentDescription = stringResource(R.string.nav_theme), tint = AccentPrimary)
+                    IconButton(onClick = onSettings) {
+                        Icon(Icons.Filled.Settings, contentDescription = stringResource(R.string.nav_settings), tint = AccentPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),

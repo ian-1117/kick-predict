@@ -11,6 +11,7 @@ import com.kickpredict.presentation.compare.CompareScreen
 import com.kickpredict.presentation.dashboard.DashboardScreen
 import com.kickpredict.presentation.detail.PredictionDetailScreen
 import com.kickpredict.presentation.matchlist.MatchListScreen
+import com.kickpredict.presentation.settings.SettingsScreen
 import com.kickpredict.presentation.simulation.SeasonSimulationScreen
 import com.kickpredict.presentation.standings.StandingsScreen
 import com.kickpredict.presentation.valuepicks.ValuePicksScreen
@@ -29,6 +30,7 @@ object Routes {
     const val VALUE_PICKS = "value_picks"
     const val BACKTEST = "backtest"
     const val COMPARE = "compare"
+    const val SETTINGS = "settings"
     const val TEAM = "team/{teamId}"
     fun team(teamId: String) = "team/$teamId"
     const val ARG_TEAM_ID = "teamId"
@@ -50,10 +52,16 @@ fun KickPredictNavHost(
                 onDashboard = { navController.navigate(Routes.DASHBOARD) },
                 onStandings = { navController.navigate(Routes.STANDINGS) },
                 onValuePicks = { navController.navigate(Routes.VALUE_PICKS) },
+                onSettings = { navController.navigate(Routes.SETTINGS) },
+            )
+        }
+        composable(Routes.SETTINGS) {
+            SettingsScreen(
                 currentTheme = currentTheme,
                 onSelectTheme = onSelectTheme,
                 currentLanguage = currentLanguage,
                 onSelectLanguage = onSelectLanguage,
+                onBack = { navController.popBackStack() },
             )
         }
         composable(Routes.DASHBOARD) {

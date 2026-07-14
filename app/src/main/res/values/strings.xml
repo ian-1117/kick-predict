@@ -18,6 +18,7 @@
     <string name="nav_dashboard">Accuracy dashboard</string>
     <string name="nav_value_picks">Value picks</string>
     <string name="nav_theme">Theme</string>
+    <string name="nav_settings">Settings</string>
 
     <!-- Section headers -->
     <string name="section_round">Round %1$d</string>
@@ -281,6 +282,9 @@
     <!-- Match notifications -->
     <string name="settings_blend">Market blend</string>
     <string name="settings_blend_desc">How much predictions temper toward the market price</string>
+    <string name="settings_followed">Followed teams</string>
+    <string name="settings_followed_desc">Follow teams from their page to prioritise them and scope alerts</string>
+    <string name="settings_followed_count">%1$d followed</string>
     <string name="blend_model">Model</string>
     <string name="blend_balanced">Balanced</string>
     <string name="blend_market">Market-led</string>

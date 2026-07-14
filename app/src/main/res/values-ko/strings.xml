@@ -18,6 +18,7 @@
     <string name="nav_dashboard">적중·보정 대시보드</string>
     <string name="nav_value_picks">밸류 픽</string>
     <string name="nav_theme">테마</string>
+    <string name="nav_settings">설정</string>
 
     <!-- Section headers -->
     <string name="section_round">라운드 %1$d</string>
@@ -281,6 +282,9 @@
     <!-- Match notifications -->
     <string name="settings_blend">시장 블렌드</string>
     <string name="settings_blend_desc">예측을 시장가로 얼마나 보정할지</string>
+    <string name="settings_followed">팔로우한 팀</string>
+    <string name="settings_followed_desc">팀 페이지에서 팔로우하면 우선 표시되고 알림 범위가 좁혀집니다</string>
+    <string name="settings_followed_count">%1$d팀 팔로우</string>
     <string name="blend_model">모델</string>
     <string name="blend_balanced">균형</string>
     <string name="blend_market">시장 중심</string>
