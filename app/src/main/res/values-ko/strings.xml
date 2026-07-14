@@ -190,6 +190,13 @@
     <string name="dash_by_league">리그별 성적</string>
     <string name="dash_by_league_note">모델이 어디서 날카로운지. 막대는 적중률이고, Brier가 가장 낮은(운을 걷어낸 가장 날카로운) 리그를 강조합니다.</string>
     <string name="dash_league_meta">%1$d경기 · Brier %2$s</string>
+    <string name="dash_drift">모델 드리프트</string>
+    <string name="dash_drift_note">동일한 시간순 창별 Brier — 모델이 날카로워지는지 무뎌지는지. 선은 반전되어 위로 갈수록 날카로움(낮은 Brier)입니다.</string>
+    <string name="dash_drift_sharper">날카로워짐 ↑</string>
+    <string name="dash_drift_drifting">무뎌짐 ↓</string>
+    <string name="dash_drift_delta">Brier %1$s → %2$s</string>
+    <string name="dash_drift_oldest">과거</string>
+    <string name="dash_drift_newest">최근</string>
     <string name="dash_brier">Brier</string>
     <string name="dash_logloss">Log-loss</string>
     <string name="dash_calib_err">보정오차</string>

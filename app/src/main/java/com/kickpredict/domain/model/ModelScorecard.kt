@@ -13,6 +13,8 @@ data class ScoringSample(
     val actual: PredictedOutcome,
     /** Which league this settled prediction belongs to — used for the per-league scorecard. */
     val league: LeagueType = LeagueType.EPL,
+    /** When the result was recorded — orders samples for the drift-over-time view. */
+    val recordedAt: Long = 0L,
 )
 
 /**
@@ -30,6 +32,39 @@ data class ModelScorecard(
     val calibrationError: Double,
     val sampleCount: Int,
 )
+
+/**
+ * One chronological slice of the settled history and how sharp the model was over it. Comparing the
+ * newest window's [brierScore] to the oldest shows whether the model is improving or drifting.
+ */
+data class DriftWindow(
+    val index: Int, // 0 = oldest
+    val sampleCount: Int,
+    val brierScore: Double,
+)
+
+/**
+ * Split the settled samples into up to [maxWindows] equal chronological windows (oldest → newest) and
+ * score each with Brier. Returns empty when there isn't enough history to form at least two windows of
+ * [minPerWindow], since a one-window "trend" says nothing. Lower Brier = sharper.
+ */
+fun brierDrift(
+    samples: List<ScoringSample>,
+    maxWindows: Int = 6,
+    minPerWindow: Int = 10,
+): List<DriftWindow> {
+    val ordered = samples.sortedBy { it.recordedAt }
+    val n = ordered.size
+    val windowCount = minOf(maxWindows, n / minPerWindow)
+    if (windowCount < 2) return emptyList()
+    val size = n / windowCount
+    return (0 until windowCount).mapNotNull { w ->
+        val start = w * size
+        val end = if (w == windowCount - 1) n else start + size
+        val brier = computeScorecard(ordered.subList(start, end))?.brierScore ?: return@mapNotNull null
+        DriftWindow(index = w, sampleCount = end - start, brierScore = brier)
+    }
+}
 
 /** Compute the scorecard from settled samples; null when there's nothing to score. */
 fun computeScorecard(samples: List<ScoringSample>): ModelScorecard? {

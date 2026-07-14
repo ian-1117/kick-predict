@@ -2,6 +2,7 @@ package com.kickpredict.domain
 
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.ScoringSample
+import com.kickpredict.domain.model.brierDrift
 import com.kickpredict.domain.model.computeScorecard
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -49,5 +50,24 @@ class ModelScorecardTest {
         )!!
         assertTrue(overconfident.logLoss > hedged.logLoss)
         assertTrue(overconfident.brierScore > hedged.brierScore)
+    }
+
+    @Test
+    fun `brier drift needs enough history to form two windows`() {
+        val few = List(15) { ScoringSample(60, 30, 10, PredictedOutcome.HOME_WIN, recordedAt = it.toLong()) }
+        assertTrue("15 samples can't make two 10-wide windows", brierDrift(few).isEmpty())
+    }
+
+    @Test
+    fun `brier drift splits chronologically and tracks a model that sharpens over time`() {
+        // Oldest 20: confidently wrong (high Brier). Newest 20: confidently right (low Brier).
+        val old = List(20) { ScoringSample(90, 5, 5, PredictedOutcome.AWAY_WIN, recordedAt = it.toLong()) }
+        val new = List(20) { ScoringSample(90, 5, 5, PredictedOutcome.HOME_WIN, recordedAt = (100 + it).toLong()) }
+        // Feed them out of order to prove the function sorts by recordedAt.
+        val windows = brierDrift(new + old, maxWindows = 2, minPerWindow = 10)
+        assertEquals(2, windows.size)
+        assertEquals(20, windows.first().sampleCount)
+        assertTrue("newest window should be sharper (lower Brier) than the oldest",
+            windows.last().brierScore < windows.first().brierScore)
     }
 }

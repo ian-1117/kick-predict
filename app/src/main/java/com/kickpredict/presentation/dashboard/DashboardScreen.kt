@@ -4,6 +4,7 @@ import androidx.compose.ui.res.stringResource
 import com.kickpredict.R
 import com.kickpredict.presentation.common.outcomeName
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,11 +42,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kickpredict.domain.model.DriftWindow
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.RecordedResult
 import com.kickpredict.domain.usecase.CalibrationDashboard
@@ -147,6 +154,10 @@ private fun DashboardContent(dash: CalibrationDashboard) {
             item { SectionTitle(stringResource(R.string.dash_scorecard)) }
             item { ScorecardCard(scorecard) }
         }
+        if (dash.drift.size >= 2) {
+            item { SectionTitle(stringResource(R.string.dash_drift)) }
+            item { DriftCard(dash.drift) }
+        }
         if (dash.byLeague.size > 1) {
             item { SectionTitle(stringResource(R.string.dash_by_league)) }
             item { LeagueBreakdownCard(dash.byLeague) }
@@ -184,6 +195,76 @@ private fun Stat(label: String, value: String, valueColor: Color) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(value, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Black, color = valueColor)
         Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+/**
+ * Brier over chronological windows — is the model getting sharper or drifting? The line is inverted
+ * so *up = sharper* (lower Brier sits higher); a verdict compares the newest window to the oldest.
+ */
+@Composable
+private fun DriftCard(windows: List<DriftWindow>) {
+    val oldest = windows.first().brierScore
+    val newest = windows.last().brierScore
+    val sharper = newest < oldest
+    val verdictColor = if (sharper) WinColor else LossColor
+    Card {
+        Text(
+            stringResource(R.string.dash_drift_note),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 12.dp),
+        )
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Text(
+                stringResource(if (sharper) R.string.dash_drift_sharper else R.string.dash_drift_drifting),
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = verdictColor,
+            )
+            Text(
+                stringResource(R.string.dash_drift_delta, String.format("%.3f", oldest), String.format("%.3f", newest)),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        Spacer(Modifier.height(8.dp))
+        DriftChart(windows.map { it.brierScore }, verdictColor)
+        Row(Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(stringResource(R.string.dash_drift_oldest), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.dash_drift_newest), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+    }
+}
+
+/** Line of Brier across windows, drawn inverted so a lower (sharper) Brier sits higher on the chart. */
+@Composable
+private fun DriftChart(brier: List<Double>, lineColor: Color) {
+    val maxV = brier.max()
+    val minV = brier.min()
+    val span = (maxV - minV).coerceAtLeast(1e-6)
+    Canvas(Modifier.fillMaxWidth().height(90.dp)) {
+        val w = size.width
+        val h = size.height
+        fun px(i: Int) = if (brier.size == 1) 0f else w * i / (brier.size - 1)
+        // Invert: highest Brier (worst) at the bottom, lowest (sharpest) at the top.
+        fun py(v: Double) = (h * ((v - minV) / span)).toFloat()
+
+        val line = Path().apply {
+            moveTo(px(0), py(brier[0]))
+            brier.forEachIndexed { i, v -> lineTo(px(i), py(v)) }
+        }
+        val fill = Path().apply {
+            addPath(line)
+            lineTo(px(brier.lastIndex), h)
+            lineTo(px(0), h)
+            close()
+        }
+        drawPath(fill, Brush.verticalGradient(listOf(lineColor.copy(alpha = 0.26f), lineColor.copy(alpha = 0.02f))))
+        drawPath(line, lineColor, style = Stroke(width = 2.5.dp.toPx(), cap = StrokeCap.Round))
+        brier.indices.forEach { i ->
+            drawCircle(lineColor, radius = 3.dp.toPx(), center = Offset(px(i), py(brier[i])))
+        }
     }
 }
 

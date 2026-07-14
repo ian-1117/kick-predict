@@ -119,6 +119,7 @@ class CalibrationRepositoryImpl(
                 awayWinPercent = log.awayWinPercent,
                 actual = outcomeOf(result.homeGoals, result.awayGoals),
                 league = log.league,
+                recordedAt = result.recordedAt,
             )
         }
     }

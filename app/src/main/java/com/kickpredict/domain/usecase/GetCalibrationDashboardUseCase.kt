@@ -1,9 +1,11 @@
 package com.kickpredict.domain.usecase
 
+import com.kickpredict.domain.model.DriftWindow
 import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.model.ModelScorecard
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.RecordedResult
+import com.kickpredict.domain.model.brierDrift
 import com.kickpredict.domain.model.computeScorecard
 import com.kickpredict.domain.rating.EloModel
 import com.kickpredict.domain.repository.CalibrationRepository
@@ -62,6 +64,7 @@ data class CalibrationDashboard(
     val modelComparison: List<ModelScore>,
     val scorecard: ModelScorecard?,
     val byLeague: List<LeagueScore>,
+    val drift: List<DriftWindow>,
     val recent: List<RecordedResult>,
 )
 
@@ -118,6 +121,7 @@ class GetCalibrationDashboardUseCase(
             accuracyByRound = byRound,
             scorecard = computeScorecard(samples),
             byLeague = byLeague,
+            drift = brierDrift(samples),
             recent = results.take(30),
         )
     }
