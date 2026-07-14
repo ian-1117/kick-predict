@@ -110,6 +110,10 @@
     <string name="acca_saved_header">Saved parlays</string>
     <string name="acca_saved_roi">%1$s%% ROI · %2$d settled</string>
     <string name="acca_picks_header">Value picks</string>
+    <string name="value_by_league">Value by league</string>
+    <string name="value_by_league_note">ROI where the edge actually paid. Bars grow right for profit, left for loss; the most profitable settled league is highlighted.</string>
+    <string name="value_league_meta">%1$d bets · %2$d settled</string>
+    <string name="value_league_meta_clv">%1$d bets · CLV %2$s%%</string>
 
     <!-- Home-screen widget -->
     <string name="widget_description">Upcoming picks and value edges at a glance</string>

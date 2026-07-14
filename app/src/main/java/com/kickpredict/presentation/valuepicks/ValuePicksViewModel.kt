@@ -10,11 +10,13 @@ import com.kickpredict.KickPredictApplication
 import com.kickpredict.domain.model.AccumulatorSummary
 import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.model.MarketOdds
+import com.kickpredict.domain.model.LeagueValuePerformance
 import com.kickpredict.domain.model.ParlaysReport
 import com.kickpredict.domain.model.ValuePick
 import com.kickpredict.domain.model.ValuePickStatus
 import com.kickpredict.domain.model.ValuePicksReport
 import com.kickpredict.domain.model.buildAccumulator
+import com.kickpredict.domain.model.buildLeaguePerformance
 import com.kickpredict.domain.model.buildValuePicksReport
 import com.kickpredict.domain.usecase.GetParlaysUseCase
 import com.kickpredict.domain.usecase.GetPredictedMatchesUseCase
@@ -37,6 +39,8 @@ data class ValuePicksUiState(
     val accumulator: AccumulatorSummary? = null,
     /** Saved parlays, settled against results — newest first, with ROI. */
     val parlays: ParlaysReport = ParlaysReport(),
+    /** Per-league value performance (ROI/CLV), strongest first — for the "By league" comparison. */
+    val leaguePerformance: List<LeagueValuePerformance> = emptyList(),
 )
 
 class ValuePicksViewModel(
@@ -76,6 +80,7 @@ class ValuePicksViewModel(
                 selectedLegIds = keptLegs,
                 accumulator = accumulatorFor(keptLegs),
                 parlays = parlays,
+                leaguePerformance = buildLeaguePerformance(allPicks),
             )
         }
     }

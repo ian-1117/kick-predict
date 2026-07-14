@@ -70,6 +70,40 @@ data class ValuePicksReport(
     val hasClv: Boolean get() = picks.any { it.closingOdds != it.odds }
 }
 
+/**
+ * One league's value-betting performance — where the edge actually pays. ROI is over the settled
+ * picks; CLV (in tenths of a percent) is over every logged pick and is the result-independent read on
+ * whether the league's picks had genuine edge.
+ */
+data class LeagueValuePerformance(
+    val league: LeagueType,
+    val betCount: Int,
+    val settledCount: Int,
+    val roiPercent: Int,
+    val clvTenths: Int,
+) {
+    val hasClv: Boolean get() = clvTenths != 0
+}
+
+/**
+ * Break the ledger down by league, strongest ROI first. Only leagues with at least one settled pick
+ * are ranked by ROI meaningfully, so unsettled leagues sink to the bottom. Reuses
+ * [buildValuePicksReport] per league so the per-league ROI/CLV match the filtered view exactly.
+ */
+fun buildLeaguePerformance(picks: List<ValuePick>): List<LeagueValuePerformance> =
+    picks.groupBy { it.league }
+        .map { (league, leaguePicks) ->
+            val report = buildValuePicksReport(leaguePicks)
+            LeagueValuePerformance(
+                league = league,
+                betCount = report.totalCount,
+                settledCount = report.settledCount,
+                roiPercent = report.roiPercent,
+                clvTenths = report.clvTenths,
+            )
+        }
+        .sortedWith(compareByDescending<LeagueValuePerformance> { it.settledCount > 0 }.thenByDescending { it.roiPercent })
+
 /** Roll a set of settled picks up into a report: sort strongest edge first, tally ROI over settled picks. */
 fun buildValuePicksReport(picks: List<ValuePick>): ValuePicksReport {
     val sorted = picks.sortedByDescending { it.edge }

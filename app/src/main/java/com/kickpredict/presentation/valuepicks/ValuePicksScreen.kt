@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kickpredict.R
 import com.kickpredict.domain.model.AccumulatorSummary
+import com.kickpredict.domain.model.LeagueValuePerformance
 import com.kickpredict.domain.model.ParlayStatus
 import com.kickpredict.domain.model.ParlaysReport
 import com.kickpredict.domain.model.PredictedOutcome
@@ -125,6 +126,10 @@ fun ValuePicksScreen(
                             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = bottomPad),
                             verticalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
+                            if (state.leagueFilter == null && state.leaguePerformance.size > 1) {
+                                item { SectionLabel(stringResource(R.string.value_by_league)) }
+                                item { LeagueValueCard(state.leaguePerformance) }
+                            }
                             if (state.parlays.totalCount > 0) {
                                 item { ParlaysHeader(state.parlays) }
                                 items(state.parlays.parlays, key = { it.parlay.id }) { settled ->
@@ -319,6 +324,67 @@ private fun LeagueFilterRow(
         FilterChip(selected = selected == null, onClick = { onSelect(null) }, label = { Text(stringResource(R.string.filter_all)) }, colors = colors)
         leagues.forEach { league ->
             FilterChip(selected = selected == league, onClick = { onSelect(league) }, label = { Text(league.displayName) }, colors = colors)
+        }
+    }
+}
+
+/**
+ * Value performance broken out by league — where the edge actually pays. ROI bars diverge from a
+ * centre baseline (profit right / loss left); the most profitable settled league is highlighted.
+ */
+@Composable
+private fun LeagueValueCard(leagues: List<LeagueValuePerformance>) {
+    val best = leagues.filter { it.settledCount > 0 }.maxByOrNull { it.roiPercent }?.league
+    val maxAbs = leagues.maxOfOrNull { kotlin.math.abs(it.roiPercent) }?.coerceAtLeast(1) ?: 1
+    Column(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(MaterialTheme.colorScheme.surface).padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
+        Text(
+            stringResource(R.string.value_by_league_note),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        leagues.forEach { l ->
+            val settled = l.settledCount > 0
+            val roiColor = when {
+                !settled -> MaterialTheme.colorScheme.onSurfaceVariant
+                l.roiPercent >= 0 -> WinColor
+                else -> LossColor
+            }
+            val isBest = l.league == best
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Text(l.league.displayName, style = MaterialTheme.typography.labelLarge, color = if (isBest) AccentPrimary else MaterialTheme.colorScheme.onSurface, fontWeight = if (isBest) FontWeight.Bold else FontWeight.Medium)
+                    Text(
+                        if (settled) String.format("%+d%%", l.roiPercent) else "—",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = roiColor,
+                    )
+                }
+                DivergingRoiBar(roiPercent = if (settled) l.roiPercent else 0, maxAbs = maxAbs, color = roiColor)
+                val clv = if (l.hasClv) stringResource(R.string.value_league_meta_clv, l.betCount, String.format("%+.1f", l.clvTenths / 10.0))
+                else stringResource(R.string.value_league_meta, l.betCount, l.settledCount)
+                Text(clv, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
+    }
+}
+
+/** A horizontal ROI bar that grows right of centre for profit and left of centre for loss. */
+@Composable
+private fun DivergingRoiBar(roiPercent: Int, maxAbs: Int, color: Color) {
+    val fraction = (kotlin.math.abs(roiPercent).toFloat() / maxAbs).coerceIn(0f, 1f)
+    Box(Modifier.fillMaxWidth().height(10.dp).clip(RoundedCornerShape(50)).background(OutlineColor.copy(alpha = 0.4f))) {
+        Row(Modifier.fillMaxSize()) {
+            // Left half (losses) fills from the centre leftward; right half (profit) from the centre rightward.
+            Box(Modifier.weight(1f), contentAlignment = Alignment.CenterEnd) {
+                if (roiPercent < 0) Box(Modifier.fillMaxWidth(fraction).height(10.dp).clip(RoundedCornerShape(50)).background(color))
+            }
+            Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
+                if (roiPercent > 0) Box(Modifier.fillMaxWidth(fraction).height(10.dp).clip(RoundedCornerShape(50)).background(color))
+            }
         }
     }
 }
