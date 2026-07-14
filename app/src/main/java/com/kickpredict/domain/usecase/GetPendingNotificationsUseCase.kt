@@ -37,8 +37,15 @@ class GetPendingNotificationsUseCase(
         val out = mutableListOf<MatchNotification>()
 
         // Finished predictions → hit / miss (tagged with the value edge if it was a value pick).
+        // Only for *recently* finished matches: the current season carries hundreds of settled games,
+        // and a result push for one that kicked off weeks ago is noise — so gate on the match's kickoff
+        // being within the recency window. This bounds the backlog independently of the fire-once log.
         results.values.forEach { r ->
             if (followed.isNotEmpty() && r.homeTeamId !in followed && r.awayTeamId !in followed) return@forEach
+            val match = byId[r.matchId] ?: return@forEach
+            val kickoffMillis = match.kickoff.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            val ageMillis = nowMillis - kickoffMillis
+            if (ageMillis < 0L || ageMillis > RESULT_RECENCY_MILLIS) return@forEach
             out += MatchNotification.Result(
                 matchId = r.matchId,
                 home = r.homeTeam,
@@ -92,6 +99,9 @@ class GetPendingNotificationsUseCase(
     companion object {
         /** Fire a kickoff notification once a strong pick is within this many minutes of kicking off. */
         const val KICKOFF_WINDOW_MINUTES = 60L
+
+        /** Only notify a result if the match kicked off within this window — keeps old finishes out. */
+        const val RESULT_RECENCY_MILLIS = 48L * 60L * 60L * 1000L // 48 hours
 
         private fun modelPercent(p: PredictionResult, outcome: PredictedOutcome): Int = when (outcome) {
             PredictedOutcome.HOME_WIN -> p.homeWinPercent
