@@ -16,22 +16,28 @@ Retrofit/OkHttp, Room, WorkManager and Glance. Four switchable colour themes (de
 - **Prediction engine** — a Poisson scoreline grid (Dixon-Coles) × learned Elo × recency/venue-weighted
   head-to-head, a separate confidence score, and injury/lineup/weather context. Probabilities are
   **tempered toward the market price** where odds exist (Model / Balanced / Market-led in settings).
+- **Explainable** — every prediction decomposes into a **"what moved this"** breakdown (per-stage
+  log-ratio deltas: base, quality, rules, matchup, Elo, goal model, context) with home-ward / away-ward
+  bars, and the scoreline distribution shows *why* the pick can differ from the single likeliest score.
 - **Honest evaluation** — a calibration dashboard (accuracy, reliability, per-model comparison), a
-  **proper-scoring scorecard** (Brier / log-loss / calibration error), and a **walk-forward backtest**
-  over four bundled seasons that compares Elo vs the market vs a blend.
-- **Value picks** — flags fixtures where the model beats the market, with a hub that logs each pick at
-  its price and settles a **ROI ledger**: cumulative-ROI trend, **CLV** (closing-line value) and a
-  **half-Kelly bankroll** curve.
+  **proper-scoring scorecard** (Brier / log-loss / calibration error) broken out **per league** and
+  tracked over time as **model drift** (Brier across chronological windows), and a **walk-forward
+  backtest** over four bundled seasons that compares Elo vs the market vs a blend.
+- **Value picks & parlays** — flags fixtures where the model beats the market, with a hub that logs each
+  pick at its price and settles a **ROI ledger** (cumulative-ROI trend, **CLV**, **half-Kelly bankroll**,
+  and ROI **broken out by league**). Pending picks combine into an **accumulator** (combined odds, joint
+  probability, parlay edge, Kelly stake); parlays can be **saved & settled** into their own ledger and
+  **shared as a branded slip**.
 - **Engagement** — background **match notifications** (kickoff / live / result, value-tagged), **team
   follows** (Followed filter + scoped notifications), a resizable **home-screen widget** (live / results
   / upcoming, configurable per league or followed), **share a prediction** as a branded image, and a
   first-run **onboarding**.
 - **Depth** — Monte-Carlo season simulation, team pages (season record, form detail, head-to-head),
   team comparison, and standings.
-- **Polish** — four themes, Korean / English with an in-app switch, foldable-responsive layouts, and an
-  accessibility pass (screen-reader descriptions on the charts).
-- **Tested** — 67 unit tests (engine, calibration, value / ROI / CLV / Kelly, scorecard, backtest,
-  notifications, market blend).
+- **Polish** — four themes, Korean / English with an in-app switch, one consolidated **Settings** screen,
+  foldable-responsive layouts, and an accessibility pass (screen-reader descriptions on the charts).
+- **Tested** — 79 unit tests (engine, calibration, value / ROI / CLV / Kelly, per-league performance,
+  accumulator + saved parlays, scorecard + drift, backtest, notifications, market blend).
 
 ## Screenshots
 
@@ -46,6 +52,14 @@ Retrofit/OkHttp, Room, WorkManager and Glance. Four switchable colour themes (de
 | Team comparison | Home-screen widget | Onboarding |
 |---|---|---|
 | ![Compare](docs/screenshots/compare.png) | ![Widget](docs/screenshots/widget.png) | ![Onboarding](docs/screenshots/onboarding.png) |
+
+| Explainability — what moved it | Model drift (Brier over time) | Saved parlays & value-by-league |
+|---|---|---|
+| ![Explainability](docs/screenshots/explainability.png) | ![Model drift](docs/screenshots/model-drift.png) | ![Parlays](docs/screenshots/parlays.png) |
+
+| Accumulator builder | Shareable parlay slip | Settings |
+|---|---|---|
+| ![Accumulator](docs/screenshots/accumulator.png) | ![Parlay share](docs/screenshots/parlay-share.png) | ![Settings](docs/screenshots/settings.png) |
 
 ## Architecture
 
@@ -68,10 +82,13 @@ com.kickpredict
 │   └── repository  # MatchRepositoryImpl
 ├── di              # AppContainer (manual DI)
 └── presentation
-    ├── theme       # AppPalette/AppTheme, LocalPalette, picker + persisted choice
+    ├── theme       # AppPalette/AppTheme, LocalPalette, persisted choice
+    ├── settings    # consolidated Settings screen (theme · language · notifications · blend · follows)
     ├── navigation  # KickPredictNavHost
     ├── matchlist   # list screen + ViewModel
     ├── detail      # responsive prediction screen + ViewModel
+    ├── valuepicks  # value-pick hub, accumulator builder + saved parlays
+    ├── dashboard   # calibration dashboard (scorecard, per-league, model drift)
     ├── simulation  # season projection screen (cutoff slider) + ViewModel
     └── components  # ConfidenceBadge, PredictionDonutChart, ProbabilityGauges, PowerComparisonReport
 ```
