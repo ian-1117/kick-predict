@@ -102,6 +102,11 @@ object TeamNamesKo {
         "Seongnam FC" ko "성남 FC",
         "Chungbuk Cheongju" ko "충북 청주",
         "Cheongju" ko "청주",
+        "Paju Frontier" ko "파주",
+        "Paju" ko "파주",
+        "Yongin" ko "용인",
+        "Hwaseong" ko "화성",
+        "Gimhae" ko "김해",
         // The feeds call Suwon FC just "Suwon"; the Samsung side always carries "Bluewings"/"Samsung".
         "Suwon" ko "수원 FC",
         "Suwon Bluewings" ko "수원 삼성",
