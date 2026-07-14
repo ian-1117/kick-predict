@@ -170,6 +170,9 @@
     <string name="dash_reliability">Actual hit rate by confidence band</string>
     <string name="dash_scorecard">Model scorecard</string>
     <string name="dash_scorecard_note">Proper scores over %1$d settled predictions. Lower is better: Brier &amp; log-loss reward sharp, honest probabilities (not lucky calls); calibration error is how far the model\'s confidence sits from its real hit rate.</string>
+    <string name="dash_by_league">By league</string>
+    <string name="dash_by_league_note">Where the model is sharp. Bars show hit rate; the league with the lowest Brier (the sharpest, luck aside) is highlighted.</string>
+    <string name="dash_league_meta">%1$d games · Brier %2$s</string>
     <string name="dash_brier">Brier</string>
     <string name="dash_logloss">Log-loss</string>
     <string name="dash_calib_err">Calib. error</string>

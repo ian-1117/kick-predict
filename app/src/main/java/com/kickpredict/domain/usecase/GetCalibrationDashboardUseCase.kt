@@ -1,5 +1,6 @@
 package com.kickpredict.domain.usecase
 
+import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.model.ModelScorecard
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.RecordedResult
@@ -27,6 +28,18 @@ data class RoundAccuracy(
     val accuracy: Double get() = if (total == 0) 0.0 else correct.toDouble() / total
 }
 
+/**
+ * The model's record in one league — how sharp it is where. Hit rate is the headline; Brier reads
+ * through lucky calls and rewards honest probabilities, so a league can have a decent hit rate yet a
+ * poor Brier if the wins came from coin-flips.
+ */
+data class LeagueScore(
+    val league: LeagueType,
+    val count: Int,
+    val hitRate: Double, // 0..1
+    val brierScore: Double,
+)
+
 /** One predictor's out-of-sample accuracy over the recorded results. */
 /** Which model a [ModelScore] describes; the display name is resolved in the UI layer. */
 enum class ModelKind { ENGINE, ELO, BASELINE }
@@ -48,6 +61,7 @@ data class CalibrationDashboard(
     val accuracyByRound: List<RoundAccuracy>,
     val modelComparison: List<ModelScore>,
     val scorecard: ModelScorecard?,
+    val byLeague: List<LeagueScore>,
     val recent: List<RecordedResult>,
 )
 
@@ -79,6 +93,22 @@ class GetCalibrationDashboardUseCase(
             .groupBy { it.round }
             .toSortedMap()
             .map { (round, rs) -> RoundAccuracy(round, rs.size, rs.count { it.wasCorrect }) }
+        val samples = calibrationRepository.scoringSamples()
+        val byLeague = results
+            .groupBy { it.league }
+            .map { (league, rs) ->
+                // Brier reads through lucky calls; fall back to the hit-rate proxy if a league has no
+                // logged probability vectors (e.g. K League fixtures logged before the vector existed).
+                val brier = computeScorecard(samples.filter { it.league == league })?.brierScore
+                    ?: (1.0 - rs.count { it.wasCorrect }.toDouble() / rs.size)
+                LeagueScore(
+                    league = league,
+                    count = rs.size,
+                    hitRate = rs.count { it.wasCorrect }.toDouble() / rs.size,
+                    brierScore = brier,
+                )
+            }
+            .sortedByDescending { it.count }
         return CalibrationDashboard(
             modelComparison = compareModels(results),
             totalResults = results.size,
@@ -86,7 +116,8 @@ class GetCalibrationDashboardUseCase(
             status = status,
             reliability = buckets,
             accuracyByRound = byRound,
-            scorecard = computeScorecard(calibrationRepository.scoringSamples()),
+            scorecard = computeScorecard(samples),
+            byLeague = byLeague,
             recent = results.take(30),
         )
     }

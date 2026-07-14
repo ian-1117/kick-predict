@@ -170,6 +170,9 @@
     <string name="dash_reliability">신뢰도 구간별 실제 적중률</string>
     <string name="dash_scorecard">모델 성적표</string>
     <string name="dash_scorecard_note">정산 %1$d건 기준 정식 채점. 낮을수록 좋음: Brier·log-loss는 운이 아닌 날카롭고 정직한 확률에 보상하고, 보정오차는 모델 신뢰도가 실제 적중률에서 얼마나 벗어났는지입니다.</string>
+    <string name="dash_by_league">리그별 성적</string>
+    <string name="dash_by_league_note">모델이 어디서 날카로운지. 막대는 적중률이고, Brier가 가장 낮은(운을 걷어낸 가장 날카로운) 리그를 강조합니다.</string>
+    <string name="dash_league_meta">%1$d경기 · Brier %2$s</string>
     <string name="dash_brier">Brier</string>
     <string name="dash_logloss">Log-loss</string>
     <string name="dash_calib_err">보정오차</string>

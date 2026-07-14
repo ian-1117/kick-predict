@@ -49,6 +49,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.RecordedResult
 import com.kickpredict.domain.usecase.CalibrationDashboard
+import com.kickpredict.domain.usecase.LeagueScore
 import com.kickpredict.domain.usecase.ModelKind
 import com.kickpredict.domain.usecase.ModelScore
 import com.kickpredict.domain.usecase.ReliabilityBucket
@@ -146,6 +147,10 @@ private fun DashboardContent(dash: CalibrationDashboard) {
             item { SectionTitle(stringResource(R.string.dash_scorecard)) }
             item { ScorecardCard(scorecard) }
         }
+        if (dash.byLeague.size > 1) {
+            item { SectionTitle(stringResource(R.string.dash_by_league)) }
+            item { LeagueBreakdownCard(dash.byLeague) }
+        }
         if (dash.reliability.isNotEmpty()) {
             item { SectionTitle(stringResource(R.string.dash_reliability)) }
             item { ReliabilityCard(dash.reliability) }
@@ -195,6 +200,41 @@ private fun ScorecardCard(sc: com.kickpredict.domain.model.ModelScorecard) {
             Stat(stringResource(R.string.dash_brier), String.format("%.3f", sc.brierScore), AccentPrimary)
             Stat(stringResource(R.string.dash_logloss), String.format("%.3f", sc.logLoss), AccentPrimary)
             Stat(stringResource(R.string.dash_calib_err), String.format("%.1f%%", sc.calibrationError * 100), AccentPrimary)
+        }
+    }
+}
+
+@Composable
+private fun LeagueBreakdownCard(leagues: List<LeagueScore>) {
+    // Lowest Brier = sharpest league; flag it so "where do I trust the model" reads at a glance.
+    val sharpest = leagues.minByOrNull { it.brierScore }?.league
+    Card {
+        Text(
+            stringResource(R.string.dash_by_league_note),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 12.dp),
+        )
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            leagues.forEach { l ->
+                val best = l.league == sharpest
+                Column(Modifier.fillMaxWidth()) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                        Text(l.league.displayName, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
+                        Text("${(l.hitRate * 100).roundToInt()}%", style = MaterialTheme.typography.labelLarge, color = if (best) AccentPrimary else MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
+                    }
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        stringResource(R.string.dash_league_meta, l.count, String.format("%.3f", l.brierScore)),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Box(Modifier.fillMaxWidth().height(12.dp).clip(RoundedCornerShape(50)).background(OutlineColor.copy(alpha = 0.45f))) {
+                        Box(Modifier.fillMaxWidth(l.hitRate.toFloat().coerceIn(0f, 1f)).height(12.dp).clip(RoundedCornerShape(50)).background(if (best) AccentPrimary else AccentPrimary.copy(alpha = 0.4f)))
+                    }
+                }
+            }
         }
     }
 }

@@ -11,6 +11,8 @@ data class ScoringSample(
     val drawPercent: Int,
     val awayWinPercent: Int,
     val actual: PredictedOutcome,
+    /** Which league this settled prediction belongs to — used for the per-league scorecard. */
+    val league: LeagueType = LeagueType.EPL,
 )
 
 /**
