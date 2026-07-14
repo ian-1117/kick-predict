@@ -51,9 +51,19 @@ class MatchRepositoryImpl(
         if (!forceRefresh) cached?.takeIf { now() - cachedAt < cacheTtlMillis }?.let { return@withContext it }
         mutex.withLock {
             if (!forceRefresh) cached?.takeIf { now() - cachedAt < cacheTtlMillis }?.let { return@withContext it }
-            val live = runCatching { liveSource.getFixtures() }.getOrNull()?.takeIf { it.isNotEmpty() }
-            val matches = live ?: cachedMatches()?.takeIf { it.isNotEmpty() } ?: offlineFallback()
-            if (live != null) persist(live)
+            val fetch = runCatching { liveSource.getFixtures() }.getOrNull()
+            val fresh = fetch?.matches?.takeIf { it.isNotEmpty() }
+            val degraded = fetch?.degraded ?: true
+            val cachedGood = cachedMatches()?.takeIf { it.isNotEmpty() }
+            // A clean live fetch is authoritative and gets cached. A *degraded* fetch (a keyed league
+            // fell back to bundled history) must NOT clobber a good cached season — keep the cache so a
+            // transient outage or rate-limit doesn't drop the user from the live season to bundled data.
+            val matches = when {
+                fresh != null && !degraded -> { persist(fresh); fresh }
+                cachedGood != null -> cachedGood
+                fresh != null -> fresh // no cache yet: show the degraded result so the UI isn't empty
+                else -> offlineFallback()
+            }
             cacheTeams(matches)
             cached = matches
             cachedAt = now()

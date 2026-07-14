@@ -73,7 +73,14 @@ class LiveFixtureRemoteSource(
     /** One fetched fixture with its final score (if played) and its live score (if in play now). */
     private data class LiveFixture(val match: Match, val result: Pair<Int, Int>?, val live: LiveScore?)
 
-    suspend fun getFixtures(): List<Match> {
+    /**
+     * The fixtures plus whether the fetch was **degraded** — i.e. a league we hold a key for failed
+     * (or came back empty) and had to be filled from bundled history. The repository uses this to
+     * avoid overwriting a good cached season with a bundled fallback on a transient outage.
+     */
+    data class FetchResult(val matches: List<Match>, val degraded: Boolean)
+
+    suspend fun getFixtures(): FetchResult {
         val today = clock()
         val europeSeason = europeanSeason(today)
         val kSeason = today.year
@@ -81,26 +88,33 @@ class LiveFixtureRemoteSource(
         val resultsAcc = HashMap<String, Pair<Int, Int>>()
         val liveAcc = HashMap<String, LiveScore>()
         val oddsAcc = HashMap<String, MarketOdds>()
+        var degraded = false
 
         europe.forEach { (code, league) ->
             val live = if (footballDataKey.isNotBlank()) {
                 runCatching { europeFixtures(code, league, europeSeason) }.getOrNull()?.takeIf { it.isNotEmpty() }
             } else null
+            if (footballDataKey.isNotBlank() && live == null) degraded = true
             out += collect(live, resultsAcc, liveAcc) ?: bundledByLeague(league)
         }
         kLeagues.forEach { (id, league) ->
             val live = if (apiFootballKey.isNotBlank()) {
                 runCatching { kLeagueFixtures(id, league, kSeason) }.getOrNull()?.takeIf { it.isNotEmpty() }
             } else null
+            if (apiFootballKey.isNotBlank() && live == null) degraded = true
             out += collect(live, resultsAcc, liveAcc) ?: bundledByLeague(league)
             if (apiFootballKey.isNotBlank()) {
                 runCatching { kLeagueOdds(id, today) }.getOrNull()?.let { oddsAcc.putAll(it) }
             }
         }
-        results = resultsAcc
-        liveScores = liveAcc
-        odds = oddsAcc
-        return out
+        // Only publish fresh results/live/odds on a clean fetch; on a degraded one keep the last good
+        // maps so a transient outage doesn't wipe recorded results or drop value-pick odds.
+        if (!degraded) {
+            results = resultsAcc
+            liveScores = liveAcc
+            odds = oddsAcc
+        }
+        return FetchResult(out, degraded)
     }
 
     /** Average 1X2 odds across bookmakers for the next few days, keyed by the app's match id. */
