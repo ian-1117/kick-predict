@@ -97,6 +97,14 @@
     <string name="value_bankroll_caption">뱅크롤 · 하프켈리 베팅</string>
     <string name="value_roi_chart">누적 ROI</string>
     <string name="value_bankroll_chart">뱅크롤 성장</string>
+    <string name="acca_add_leg">누적 베팅에 추가</string>
+    <string name="acca_remove_leg">누적 베팅에서 제거</string>
+    <string name="acca_title_legs">누적 베팅 · %1$d경기</string>
+    <string name="acca_clear">비우기</string>
+    <string name="acca_combo_odds">결합 배당</string>
+    <string name="acca_joint_prob">결합 확률</string>
+    <string name="acca_edge">엣지</string>
+    <string name="acca_kelly">켈리 스테이크</string>
 
     <!-- Home-screen widget -->
     <string name="widget_description">다가오는 픽과 밸류 엣지를 한눈에</string>

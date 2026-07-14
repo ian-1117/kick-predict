@@ -97,6 +97,14 @@
     <string name="value_bankroll_caption">bankroll · half-Kelly staking</string>
     <string name="value_roi_chart">Cumulative ROI</string>
     <string name="value_bankroll_chart">Bankroll growth</string>
+    <string name="acca_add_leg">Add to accumulator</string>
+    <string name="acca_remove_leg">Remove from accumulator</string>
+    <string name="acca_title_legs">Accumulator · %1$d legs</string>
+    <string name="acca_clear">Clear</string>
+    <string name="acca_combo_odds">Combo odds</string>
+    <string name="acca_joint_prob">Joint prob</string>
+    <string name="acca_edge">Edge</string>
+    <string name="acca_kelly">Kelly stake</string>
 
     <!-- Home-screen widget -->
     <string name="widget_description">Upcoming picks and value edges at a glance</string>

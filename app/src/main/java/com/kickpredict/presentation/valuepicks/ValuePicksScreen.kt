@@ -2,6 +2,7 @@ package com.kickpredict.presentation.valuepicks
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -14,12 +15,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -29,6 +34,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -50,6 +56,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kickpredict.R
+import com.kickpredict.domain.model.AccumulatorSummary
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.ValuePick
 import com.kickpredict.domain.model.ValuePickStatus
@@ -105,9 +112,28 @@ fun ValuePicksScreen(
                             onSelect = viewModel::setLeague,
                         )
                     }
-                    LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        items(state.report.picks, key = { it.matchId }) { pick ->
-                            ValuePickRow(pick, onClick = { onMatchClick(pick.matchId) })
+                    Box(Modifier.fillMaxSize()) {
+                        // Leave room at the bottom so the accumulator bar never covers the last pick.
+                        val bottomPad = if (state.accumulator != null) 200.dp else 16.dp
+                        LazyColumn(
+                            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = bottomPad),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                        ) {
+                            items(state.report.picks, key = { it.matchId }) { pick ->
+                                ValuePickRow(
+                                    pick = pick,
+                                    selected = pick.matchId in state.selectedLegIds,
+                                    onClick = { onMatchClick(pick.matchId) },
+                                    onToggle = { viewModel.toggleLeg(pick) },
+                                )
+                            }
+                        }
+                        state.accumulator?.let { acca ->
+                            AccumulatorBar(
+                                acca = acca,
+                                onClear = viewModel::clearAccumulator,
+                                modifier = Modifier.align(Alignment.BottomCenter),
+                            )
                         }
                     }
                 }
@@ -283,17 +309,77 @@ private fun LeagueFilterRow(
     }
 }
 
+/**
+ * Sticky "bet slip" for the accumulator being built: combined odds, joint probability, the parlay
+ * edge, and the half-Kelly stake. Appears once two or more legs are selected.
+ */
 @Composable
-private fun ValuePickRow(pick: ValuePick, onClick: () -> Unit) {
+private fun AccumulatorBar(acca: AccumulatorSummary, onClear: () -> Unit, modifier: Modifier = Modifier) {
+    val edgeColor = if (acca.edgePercent >= 0) WinColor else LossColor
+    Column(
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, AccentPrimary.copy(alpha = 0.5f), RoundedCornerShape(20.dp))
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                stringResource(R.string.acca_title_legs, acca.legCount),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            TextButton(onClick = onClear) { Text(stringResource(R.string.acca_clear)) }
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            AccaStat(stringResource(R.string.acca_combo_odds), "@${String.format("%.2f", acca.comboOdds)}", MaterialTheme.colorScheme.onSurface)
+            AccaStat(stringResource(R.string.acca_joint_prob), "${acca.jointModelPercent}%", MaterialTheme.colorScheme.onSurface)
+            AccaStat(stringResource(R.string.acca_edge), String.format("%+d%%", acca.edgePercent), edgeColor)
+            AccaStat(stringResource(R.string.acca_kelly), "${acca.kellyStakePercent}%", AccentPrimary)
+        }
+    }
+}
+
+@Composable
+private fun AccaStat(label: String, value: String, valueColor: Color) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(value, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black, color = valueColor)
+        Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+@Composable
+private fun ValuePickRow(
+    pick: ValuePick,
+    selected: Boolean,
+    onClick: () -> Unit,
+    onToggle: () -> Unit,
+) {
+    val selectable = pick.status == ValuePickStatus.PENDING
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surface)
+            .then(if (selected) Modifier.border(1.5.dp, AccentPrimary, RoundedCornerShape(16.dp)) else Modifier)
             .clickable(onClick = onClick)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        if (selectable) {
+            IconButton(onClick = onToggle, modifier = Modifier.size(32.dp)) {
+                Icon(
+                    if (selected) Icons.Filled.CheckCircle else Icons.Filled.RadioButtonUnchecked,
+                    contentDescription = stringResource(if (selected) R.string.acca_remove_leg else R.string.acca_add_leg),
+                    tint = if (selected) AccentPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            Spacer(Modifier.width(12.dp))
+        }
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
                 pickLabel(pick),
