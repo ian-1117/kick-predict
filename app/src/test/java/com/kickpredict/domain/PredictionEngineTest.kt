@@ -47,6 +47,22 @@ class PredictionEngineTest {
     }
 
     @Test
+    fun `factor contributions are present, above the threshold, and led by the base`() {
+        matches.keys.forEach { id ->
+            val r = predict(id)
+            // Every prediction has at least the base (home edge + scoring) factor.
+            assertTrue("has base factor for $id", r.factorContributions.any { it.kind == com.kickpredict.domain.model.FactorKind.BASE })
+            // Later factors are kept only when they move the ratio meaningfully (base is always shown).
+            r.factorContributions.forEach { c ->
+                assertTrue("factor ${c.kind} for $id is finite", c.tilt.isFinite())
+                if (c.kind != com.kickpredict.domain.model.FactorKind.BASE) {
+                    assertTrue("factor ${c.kind} for $id above threshold", kotlin.math.abs(c.tilt) >= 0.02)
+                }
+            }
+        }
+    }
+
+    @Test
     fun `over-under and BTTS markets are well-formed`() {
         matches.keys.forEach { id ->
             val r = predict(id)

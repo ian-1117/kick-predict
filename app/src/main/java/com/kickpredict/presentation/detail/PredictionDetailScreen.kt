@@ -57,6 +57,7 @@ import com.kickpredict.domain.model.Match
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.PredictionResult
 import com.kickpredict.presentation.components.ConfidenceBadge
+import com.kickpredict.presentation.components.FactorContributionReport
 import com.kickpredict.presentation.components.PowerComparisonReport
 import com.kickpredict.presentation.components.PredictionDonutChart
 import com.kickpredict.presentation.components.ProbabilityGauges
@@ -221,6 +222,8 @@ private fun ResponsivePredictionContent(
                     }
                     Spacer(Modifier.height(16.dp))
                     ScorelineDistribution(prediction)
+                    Spacer(Modifier.height(16.dp))
+                    FactorContributionReport(prediction.factorContributions, match.homeTeam.shortName, match.awayTeam.shortName)
                     Spacer(Modifier.height(20.dp))
                     ResultEntrySection(match, prediction, actualResult, recordedCount, onSaveResult)
                 }
@@ -244,6 +247,7 @@ private fun ResponsivePredictionContent(
                     MarketOddsCard(prediction, odds, match.homeTeam.shortName, match.awayTeam.shortName)
                 }
                 ScorelineDistribution(prediction)
+                FactorContributionReport(prediction.factorContributions, match.homeTeam.shortName, match.awayTeam.shortName)
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

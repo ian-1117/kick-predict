@@ -220,6 +220,16 @@
     <string name="rationale_expected_score">예상 스코어 %1$s (λ %2$s / %3$s).</string>
     <string name="rationale_market_blend">시장가로 보정 (시장 %1$d%%).</string>
 
+    <!-- Factor contribution breakdown -->
+    <string name="factor_title">무엇이 이 예측을 움직였나</string>
+    <string name="factor_base">홈 이점·득점력</string>
+    <string name="factor_quality">레이팅·순위·폼</string>
+    <string name="factor_rules">리그 규칙·휴식</string>
+    <string name="factor_matchup">상성</string>
+    <string name="factor_elo">Elo(학습)</string>
+    <string name="factor_learned">공수 모델(Dixon-Coles)</string>
+    <string name="factor_context">결장·날씨</string>
+
     <!-- Power comparison report -->
     <string name="power_title">전력 비교 리포트</string>
     <string name="power_why">예측 근거</string>

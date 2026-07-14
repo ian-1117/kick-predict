@@ -55,6 +55,8 @@ data class PredictionResult(
     val bttsProbabilityPercent: Int = 0,
     /** Most-likely exact scorelines, highest probability first. */
     val topScorelines: List<ScoreLine> = emptyList(),
+    /** Per-factor tilt on the goal ratio, for the "what moved this prediction" breakdown. */
+    val factorContributions: List<FactorContribution> = emptyList(),
 ) {
     val underProbabilityPercent: Int get() = 100 - overProbabilityPercent
     val noBttsProbabilityPercent: Int get() = 100 - bttsProbabilityPercent

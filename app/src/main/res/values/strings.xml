@@ -220,6 +220,16 @@
     <string name="rationale_expected_score">Expected score %1$s (λ %2$s / %3$s).</string>
     <string name="rationale_market_blend">Tempered toward the market price (%1$d%% market).</string>
 
+    <!-- Factor contribution breakdown -->
+    <string name="factor_title">What moved this prediction</string>
+    <string name="factor_base">Home edge &amp; scoring</string>
+    <string name="factor_quality">Rating · position · form</string>
+    <string name="factor_rules">League rules &amp; rest</string>
+    <string name="factor_matchup">Head-to-head (상성)</string>
+    <string name="factor_elo">Elo (learned)</string>
+    <string name="factor_learned">Goal model (Dixon-Coles)</string>
+    <string name="factor_context">Injuries &amp; weather</string>
+
     <!-- Power comparison report -->
     <string name="power_title">Power comparison</string>
     <string name="power_why">Why this prediction</string>

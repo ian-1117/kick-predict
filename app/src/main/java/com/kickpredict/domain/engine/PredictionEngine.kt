@@ -4,6 +4,8 @@ import com.kickpredict.domain.calibration.CalibrationDefaults
 import com.kickpredict.domain.calibration.ConfidenceCalibration
 import com.kickpredict.domain.calibration.IdentityConfidenceCalibration
 import com.kickpredict.domain.model.CalibrationProvider
+import com.kickpredict.domain.model.FactorContribution
+import com.kickpredict.domain.model.FactorKind
 import com.kickpredict.domain.model.RationaleNote
 import com.kickpredict.domain.model.HeadToHead
 import com.kickpredict.domain.model.LeagueType
@@ -16,6 +18,7 @@ import com.kickpredict.domain.rating.MutablePoissonProvider
 import com.kickpredict.domain.simulation.ScoreGrid
 import kotlin.math.abs
 import kotlin.math.exp
+import kotlin.math.ln
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.tanh
@@ -64,6 +67,7 @@ class PredictionEngine(
         const val LAMBDA_MIN = 0.2
         const val LAMBDA_MAX = 3.2
         const val TOP_SCORELINES = 6
+        const val FACTOR_MIN_TILT = 0.02 // ignore negligible factor moves in the breakdown
 
         // Quality index weights (rating/position/form), sums to 1.0.
         const val Q_RATING = 0.45
@@ -96,6 +100,19 @@ class PredictionEngine(
             (home.goalsConcededAvg / mean).pow(GOAL_RATIO_EXPONENT)
         rationale += RationaleNote.Calibration(league, cal.homeGoalsAvg, cal.awayGoalsAvg)
 
+        // Track how much each stage tilts ln(λ_home / λ_away), for the contribution breakdown.
+        val contributions = mutableListOf<FactorContribution>()
+        // Base is always shown as the starting point (home edge + team scoring); later factors are
+        // added only when they move the ratio meaningfully.
+        var prevLn = ln(lambdaHome / lambdaAway)
+        contributions += FactorContribution(FactorKind.BASE, prevLn)
+        fun snap(kind: FactorKind) {
+            val cur = ln(lambdaHome / lambdaAway)
+            val delta = cur - prevLn
+            if (abs(delta) >= FACTOR_MIN_TILT) contributions += FactorContribution(kind, delta)
+            prevLn = cur
+        }
+
         // --- 2. Quality (rating/position/form) skews the goal ratio -----------------------------
         var qualityGap = qualityIndex(home) - qualityIndex(away)
         if (league == LeagueType.LALIGA) {
@@ -104,6 +121,7 @@ class PredictionEngine(
         }
         lambdaHome *= (1.0 + QUALITY_STRENGTH * qualityGap)
         lambdaAway *= (1.0 - QUALITY_STRENGTH * qualityGap)
+        snap(FactorKind.QUALITY)
 
         // --- 3. League + schedule modifiers -----------------------------------------------------
         if (league == LeagueType.BUNDESLIGA) {
@@ -120,6 +138,7 @@ class PredictionEngine(
                 rationale += RationaleNote.Fatigue(away.shortName, away.daysSinceLastMatch)
             }
         }
+        snap(FactorKind.RULES)
 
         // --- 4. Matchup / 상성 (venue- & recency-weighted) --------------------------------------
         val matchupBias = matchupBias(h2h)
@@ -128,6 +147,7 @@ class PredictionEngine(
             lambdaAway *= (1.0 - MATCHUP_STRENGTH * matchupBias)
             rationale += matchupNote(home, away, matchupBias)
         }
+        snap(FactorKind.MATCHUP)
 
         // --- 4a. Learned Elo (from accumulated real results) ------------------------------------
         val eloDiff = eloProvider.ratingDiff(home.id, away.id)
@@ -137,6 +157,7 @@ class PredictionEngine(
             lambdaAway *= (1.0 - ELO_STRENGTH * eloSkew)
             rationale += RationaleNote.Elo(eloDiff.roundToInt())
         }
+        snap(FactorKind.ELO)
 
         // --- 4a-2. Learned Dixon-Coles attack/defence goal model (from real results) ------------
         poissonProvider.lambdas(home.id, away.id)?.let { (poissonHome, poissonAway) ->
@@ -144,6 +165,7 @@ class PredictionEngine(
             lambdaAway = (1.0 - POISSON_STRENGTH) * lambdaAway + POISSON_STRENGTH * poissonAway
             rationale += RationaleNote.Poisson(poissonHome, poissonAway)
         }
+        snap(FactorKind.LEARNED)
 
         // --- 4b. Context variables: injuries / lineup strength / weather ------------------------
         val context = match.context
@@ -160,6 +182,7 @@ class PredictionEngine(
             lambdaAway *= context.weather.goalFactor
             rationale += RationaleNote.Weather(context.weather)
         }
+        snap(FactorKind.CONTEXT)
 
         lambdaHome = lambdaHome.coerceIn(LAMBDA_MIN, LAMBDA_MAX)
         lambdaAway = lambdaAway.coerceIn(LAMBDA_MIN, LAMBDA_MAX)
@@ -231,6 +254,7 @@ class PredictionEngine(
             overProbabilityPercent = overPercent,
             bttsProbabilityPercent = bttsPercent,
             topScorelines = topScorelines,
+            factorContributions = contributions,
         )
     }
 

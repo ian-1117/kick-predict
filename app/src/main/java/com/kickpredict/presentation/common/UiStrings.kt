@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.kickpredict.R
 import com.kickpredict.domain.model.ConfidenceTier
+import com.kickpredict.domain.model.FactorKind
 import com.kickpredict.domain.model.PredictedOutcome
 import com.kickpredict.domain.model.RationaleNote
 import com.kickpredict.domain.model.Weather
@@ -15,6 +16,18 @@ fun outcomeName(outcome: PredictedOutcome): String = when (outcome) {
     PredictedOutcome.HOME_WIN -> stringResource(R.string.outcome_home)
     PredictedOutcome.AWAY_WIN -> stringResource(R.string.outcome_away)
     PredictedOutcome.DRAW -> stringResource(R.string.outcome_draw)
+}
+
+/** Localised label for a prediction factor in the contribution breakdown. */
+@Composable
+fun factorLabel(kind: FactorKind): String = when (kind) {
+    FactorKind.BASE -> stringResource(R.string.factor_base)
+    FactorKind.QUALITY -> stringResource(R.string.factor_quality)
+    FactorKind.RULES -> stringResource(R.string.factor_rules)
+    FactorKind.MATCHUP -> stringResource(R.string.factor_matchup)
+    FactorKind.ELO -> stringResource(R.string.factor_elo)
+    FactorKind.LEARNED -> stringResource(R.string.factor_learned)
+    FactorKind.CONTEXT -> stringResource(R.string.factor_context)
 }
 
 /** Localised weather label. */
