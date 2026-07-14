@@ -10,6 +10,7 @@ import com.kickpredict.data.real.RealDataProvider
 import com.kickpredict.domain.model.Match
 import com.kickpredict.data.repository.CalibrationRepositoryImpl
 import com.kickpredict.data.repository.MatchRepositoryImpl
+import com.kickpredict.data.repository.ParlayRepositoryImpl
 import com.kickpredict.data.repository.ValuePickRepositoryImpl
 import com.kickpredict.domain.calibration.MutableCalibrationProvider
 import com.kickpredict.domain.calibration.MutableConfidenceCalibration
@@ -25,6 +26,7 @@ import com.kickpredict.domain.usecase.GetStandingsUseCase
 import com.kickpredict.domain.usecase.GetTeamUseCase
 import com.kickpredict.domain.usecase.GetPendingNotificationsUseCase
 import com.kickpredict.domain.usecase.GetPredictedMatchesUseCase
+import com.kickpredict.domain.usecase.GetParlaysUseCase
 import com.kickpredict.domain.usecase.GetValuePicksUseCase
 import com.kickpredict.domain.usecase.RecalibrateUseCase
 import com.kickpredict.notifications.FollowPreference
@@ -131,6 +133,11 @@ class AppContainer(context: Context) {
 
     /** Value-pick ledger + ROI: logs flagged picks at their flag-time price and settles them. */
     val getValuePicks = GetValuePicksUseCase(valuePickRepository, calibrationRepository)
+
+    private val parlayRepository = ParlayRepositoryImpl(database.savedParlayDao())
+
+    /** Saved-parlay ledger: persists accumulators and settles them (won only if every leg wins). */
+    val getParlays = GetParlaysUseCase(parlayRepository, calibrationRepository)
 
     // --- Follows ----------------------------------------------------------------------------
     /** Teams the user follows — drives the "Followed" filter and scopes notifications. */

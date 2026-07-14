@@ -105,6 +105,11 @@
     <string name="acca_joint_prob">결합 확률</string>
     <string name="acca_edge">엣지</string>
     <string name="acca_kelly">켈리 스테이크</string>
+    <string name="acca_save">파레이 저장</string>
+    <string name="acca_delete">파레이 삭제</string>
+    <string name="acca_saved_header">저장한 파레이</string>
+    <string name="acca_saved_roi">ROI %1$s%% · %2$d건 정산</string>
+    <string name="acca_picks_header">밸류 픽</string>
 
     <!-- Home-screen widget -->
     <string name="widget_description">다가오는 픽과 밸류 엣지를 한눈에</string>

@@ -10,11 +10,13 @@ import com.kickpredict.KickPredictApplication
 import com.kickpredict.domain.model.AccumulatorSummary
 import com.kickpredict.domain.model.LeagueType
 import com.kickpredict.domain.model.MarketOdds
+import com.kickpredict.domain.model.ParlaysReport
 import com.kickpredict.domain.model.ValuePick
 import com.kickpredict.domain.model.ValuePickStatus
 import com.kickpredict.domain.model.ValuePicksReport
 import com.kickpredict.domain.model.buildAccumulator
 import com.kickpredict.domain.model.buildValuePicksReport
+import com.kickpredict.domain.usecase.GetParlaysUseCase
 import com.kickpredict.domain.usecase.GetPredictedMatchesUseCase
 import com.kickpredict.domain.usecase.GetValuePicksUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,11 +35,14 @@ data class ValuePicksUiState(
     val selectedLegIds: Set<String> = emptySet(),
     /** The parlay summary for the selected legs, or null when fewer than two are selected. */
     val accumulator: AccumulatorSummary? = null,
+    /** Saved parlays, settled against results — newest first, with ROI. */
+    val parlays: ParlaysReport = ParlaysReport(),
 )
 
 class ValuePicksViewModel(
     private val getPredictedMatches: GetPredictedMatchesUseCase,
     private val getValuePicks: GetValuePicksUseCase,
+    private val getParlays: GetParlaysUseCase,
     private val oddsProvider: () -> Map<String, MarketOdds>,
 ) : ViewModel() {
 
@@ -63,14 +68,39 @@ class ValuePicksViewModel(
             // Drop any selected legs that are no longer pending (or gone) after the refresh.
             val stillPending = allPicks.filter { it.status == ValuePickStatus.PENDING }.map { it.matchId }.toSet()
             val keptLegs = _uiState.value.selectedLegIds intersect stillPending
+            val parlays = runCatching { getParlays.report() }.getOrDefault(ParlaysReport())
             _uiState.value = _uiState.value.copy(
                 isLoading = false,
                 leagues = leagues,
                 report = rollup(),
                 selectedLegIds = keptLegs,
                 accumulator = accumulatorFor(keptLegs),
+                parlays = parlays,
             )
         }
+    }
+
+    /** Save the current accumulator as a parlay, then clear the selection and reload the ledger. */
+    fun saveAccumulator() {
+        val summary = _uiState.value.accumulator ?: return
+        val legs = allPicks.filter { it.matchId in _uiState.value.selectedLegIds }
+        viewModelScope.launch {
+            runCatching { getParlays.save(summary, legs, System.currentTimeMillis()) }
+            _uiState.value = _uiState.value.copy(selectedLegIds = emptySet(), accumulator = null)
+            reloadParlays()
+        }
+    }
+
+    fun deleteParlay(id: String) {
+        viewModelScope.launch {
+            runCatching { getParlays.delete(id) }
+            reloadParlays()
+        }
+    }
+
+    private suspend fun reloadParlays() {
+        val parlays = runCatching { getParlays.report() }.getOrDefault(ParlaysReport())
+        _uiState.value = _uiState.value.copy(parlays = parlays)
     }
 
     fun setLeague(league: LeagueType?) {
@@ -103,6 +133,7 @@ class ValuePicksViewModel(
                 ValuePicksViewModel(
                     app.container.getPredictedMatches,
                     app.container.getValuePicks,
+                    app.container.getParlays,
                     app.container.odds,
                 )
             }

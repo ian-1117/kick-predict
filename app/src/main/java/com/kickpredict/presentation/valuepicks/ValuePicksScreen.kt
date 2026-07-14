@@ -24,7 +24,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -57,7 +60,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kickpredict.R
 import com.kickpredict.domain.model.AccumulatorSummary
+import com.kickpredict.domain.model.ParlayStatus
+import com.kickpredict.domain.model.ParlaysReport
 import com.kickpredict.domain.model.PredictedOutcome
+import com.kickpredict.domain.model.SettledParlay
 import com.kickpredict.domain.model.ValuePick
 import com.kickpredict.domain.model.ValuePickStatus
 import com.kickpredict.domain.model.ValuePicksReport
@@ -119,6 +125,13 @@ fun ValuePicksScreen(
                             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = bottomPad),
                             verticalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
+                            if (state.parlays.totalCount > 0) {
+                                item { ParlaysHeader(state.parlays) }
+                                items(state.parlays.parlays, key = { it.parlay.id }) { settled ->
+                                    SavedParlayCard(settled, onDelete = { viewModel.deleteParlay(settled.parlay.id) })
+                                }
+                                item { SectionLabel(stringResource(R.string.acca_picks_header)) }
+                            }
                             items(state.report.picks, key = { it.matchId }) { pick ->
                                 ValuePickRow(
                                     pick = pick,
@@ -132,6 +145,7 @@ fun ValuePicksScreen(
                             AccumulatorBar(
                                 acca = acca,
                                 onClear = viewModel::clearAccumulator,
+                                onSave = viewModel::saveAccumulator,
                                 modifier = Modifier.align(Alignment.BottomCenter),
                             )
                         }
@@ -309,12 +323,110 @@ private fun LeagueFilterRow(
     }
 }
 
+@Composable
+private fun SectionLabel(text: String) {
+    Text(
+        text,
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onBackground,
+        modifier = Modifier.padding(top = 8.dp),
+    )
+}
+
+/** Header over the saved-parlay list: title plus the ROI across the settled parlays. */
+@Composable
+private fun ParlaysHeader(report: ParlaysReport) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            stringResource(R.string.acca_saved_header),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground,
+        )
+        if (report.settledCount > 0) {
+            val roiColor = if (report.roiPercent >= 0) WinColor else LossColor
+            Text(
+                stringResource(R.string.acca_saved_roi, String.format("%+d", report.roiPercent), report.settledCount),
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+                color = roiColor,
+            )
+        }
+    }
+}
+
+/** A saved parlay: its legs, the frozen combined price, and its settlement (won / lost / pending). */
+@Composable
+private fun SavedParlayCard(settled: SettledParlay, onDelete: () -> Unit) {
+    val (statusLabel, statusColor) = when (settled.status) {
+        ParlayStatus.WON -> stringResource(R.string.result_hit) to WinColor
+        ParlayStatus.LOST -> stringResource(R.string.result_miss) to LossColor
+        ParlayStatus.PENDING -> stringResource(R.string.value_pending_count) to AccentPrimary
+    }
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                stringResource(R.string.acca_title_legs, settled.parlay.legs.size),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                val pillText = if (settled.status == ParlayStatus.PENDING) statusLabel
+                else "$statusLabel · ${String.format("%+.2f", settled.profit)}"
+                Box(Modifier.clip(RoundedCornerShape(50)).background(statusColor.copy(alpha = 0.16f)).padding(horizontal = 10.dp, vertical = 4.dp)) {
+                    Text(pillText, style = MaterialTheme.typography.labelSmall, color = statusColor, fontWeight = FontWeight.Bold)
+                }
+                IconButton(onClick = onDelete, modifier = Modifier.size(28.dp)) {
+                    Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.acca_delete), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+        }
+        // Each leg, coloured by whether it has come in.
+        settled.legs.forEach { sl ->
+            val legColor = when (sl.status) {
+                ValuePickStatus.WON -> WinColor
+                ValuePickStatus.LOST -> LossColor
+                ValuePickStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+            }
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(legPickLabel(sl.leg.pickedOutcome, sl.leg.homeTeam, sl.leg.awayTeam), style = MaterialTheme.typography.bodyMedium, color = legColor)
+                Text("@${String.format("%.2f", sl.leg.odds)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+            Text(stringResource(R.string.acca_combo_odds) + " @${String.format("%.2f", settled.parlay.comboOdds)}", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(String.format("%+d%% ", settled.parlay.edgePercent) + stringResource(R.string.acca_edge), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+    }
+}
+
+@Composable
+private fun legPickLabel(outcome: PredictedOutcome, home: String, away: String): String = when (outcome) {
+    PredictedOutcome.HOME_WIN -> stringResource(R.string.outcome_win, home)
+    PredictedOutcome.AWAY_WIN -> stringResource(R.string.outcome_win, away)
+    PredictedOutcome.DRAW -> "$home vs $away · ${stringResource(R.string.outcome_draw)}"
+}
+
 /**
  * Sticky "bet slip" for the accumulator being built: combined odds, joint probability, the parlay
  * edge, and the half-Kelly stake. Appears once two or more legs are selected.
  */
 @Composable
-private fun AccumulatorBar(acca: AccumulatorSummary, onClear: () -> Unit, modifier: Modifier = Modifier) {
+private fun AccumulatorBar(
+    acca: AccumulatorSummary,
+    onClear: () -> Unit,
+    onSave: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val edgeColor = if (acca.edgePercent >= 0) WinColor else LossColor
     Column(
         modifier = modifier
@@ -340,6 +452,13 @@ private fun AccumulatorBar(acca: AccumulatorSummary, onClear: () -> Unit, modifi
             AccaStat(stringResource(R.string.acca_joint_prob), "${acca.jointModelPercent}%", MaterialTheme.colorScheme.onSurface)
             AccaStat(stringResource(R.string.acca_edge), String.format("%+d%%", acca.edgePercent), edgeColor)
             AccaStat(stringResource(R.string.acca_kelly), "${acca.kellyStakePercent}%", AccentPrimary)
+        }
+        Button(
+            onClick = onSave,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = AccentPrimary, contentColor = MaterialTheme.colorScheme.background),
+        ) {
+            Text(stringResource(R.string.acca_save), fontWeight = FontWeight.Bold)
         }
     }
 }

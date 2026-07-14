@@ -105,6 +105,11 @@
     <string name="acca_joint_prob">Joint prob</string>
     <string name="acca_edge">Edge</string>
     <string name="acca_kelly">Kelly stake</string>
+    <string name="acca_save">Save parlay</string>
+    <string name="acca_delete">Delete parlay</string>
+    <string name="acca_saved_header">Saved parlays</string>
+    <string name="acca_saved_roi">%1$s%% ROI · %2$d settled</string>
+    <string name="acca_picks_header">Value picks</string>
 
     <!-- Home-screen widget -->
     <string name="widget_description">Upcoming picks and value edges at a glance</string>

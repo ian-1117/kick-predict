@@ -21,4 +21,11 @@ class Converters {
     fun stringToForm(value: String): List<MatchOutcome> =
         if (value.isBlank()) emptyList()
         else value.split(",").map { MatchOutcome.valueOf(it) }
+
+    @TypeConverter
+    fun stringListToString(value: List<String>): String = value.joinToString(separator = ",")
+
+    @TypeConverter
+    fun stringToStringList(value: String): List<String> =
+        if (value.isBlank()) emptyList() else value.split(",")
 }
