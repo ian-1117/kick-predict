@@ -1,6 +1,9 @@
 package com.kickpredict.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -44,6 +47,15 @@ fun KickPredictNavHost(
     onSelectLanguage: (AppLanguage) -> Unit,
 ) {
     val navController = rememberNavController()
+    val context = LocalContext.current
+    // The Activity for showing the interstitial. LocalContext is replaced by a non-Activity config
+    // context under the in-app language switch, so resolve the Activity from the hosting View instead.
+    val view = LocalView.current
+    // Keep an interstitial preloaded (once the SDK is ready) so it shows instantly at the next break.
+    val adsReady = com.kickpredict.presentation.ads.AdsState.initialized
+    LaunchedEffect(adsReady) {
+        if (com.kickpredict.Features.ADS && adsReady) com.kickpredict.presentation.ads.InterstitialAds.preload(context)
+    }
     NavHost(navController = navController, startDestination = Routes.MATCH_LIST) {
         composable(Routes.MATCH_LIST) {
             MatchListScreen(
@@ -111,7 +123,15 @@ fun KickPredictNavHost(
             val matchId = backStackEntry.arguments?.getString(Routes.ARG_MATCH_ID).orEmpty()
             PredictionDetailScreen(
                 matchId = matchId,
-                onBack = { navController.popBackStack() },
+                onBack = {
+                    val leaving = navController.popBackStack()
+                    // Only when we actually returned to the list (staying in the app), never on exit.
+                    if (leaving && com.kickpredict.Features.ADS) {
+                        with(com.kickpredict.presentation.ads.InterstitialAds) {
+                            view.context.findActivity()?.let { onDetailClosed(it) }
+                        }
+                    }
+                },
             )
         }
     }

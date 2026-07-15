@@ -111,7 +111,7 @@ fun MatchListScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
-            if (com.kickpredict.Features.ADS) {
+            if (com.kickpredict.Features.ADS && com.kickpredict.presentation.ads.AdsState.initialized) {
                 com.kickpredict.presentation.ads.BannerAd()
             }
         },
