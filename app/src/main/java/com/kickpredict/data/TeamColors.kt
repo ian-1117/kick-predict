@@ -32,7 +32,7 @@ object TeamColors {
         "Pohang" col 0xFF000000,          // Black
         "Gimcheon Sangmu" col 0xFF827717, // Khaki
         "Seoul" col 0xFFCE0E2D,           // Red
-        "Gwangju FC" col 0xFFD7192A,      // Red
+        "Gwangju FC" col 0xFFF37021,      // Orange
         "Daegu FC" col 0xFF00A0E9,        // Sky blue
         "Suwon FC" col 0xFFD7192A,        // Red
         "Gangwon" col 0xFFF15A22,         // Orange
@@ -55,8 +55,8 @@ object TeamColors {
         "Yongin" col 0xFF6D214F,          // Purple-red
         "Hwaseong" col 0xFFF37021,        // Orange
         "Gimhae" col 0xFFC8102E,          // Red
-        "Paju Frontier" col 0xFF0057B8,   // Blue
-        "Paju" col 0xFF0057B8,
+        "Paju Frontier" col 0xFFE6007E,   // Pink
+        "Paju" col 0xFFE6007E,
         "Suwon Samsung" col 0xFF1E4EA1,   // Blue
         "Suwon Bluewings" col 0xFF1E4EA1,
         "Suwon Samsung Bluewings" col 0xFF1E4EA1,
