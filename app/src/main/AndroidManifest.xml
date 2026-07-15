@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KickPredict">
 
+        <!-- AdMob app id. This is Google's official SAMPLE/TEST id — replace with your real
+             ca-app-pub-XXXXXXXX~YYYYYYYY from the AdMob console before publishing. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
+
         <activity
             android:name=".presentation.MainActivity"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"

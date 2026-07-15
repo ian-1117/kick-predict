@@ -216,7 +216,7 @@ private fun ResponsivePredictionContent(
                     ProbabilityGauges(prediction, match.homeTeam.shortName, match.awayTeam.shortName)
                     Spacer(Modifier.height(16.dp))
                     MarketSummary(prediction)
-                    if (odds != null) {
+                    if (com.kickpredict.Features.BETTING && odds != null) {
                         Spacer(Modifier.height(16.dp))
                         MarketOddsCard(prediction, odds, match.homeTeam.shortName, match.awayTeam.shortName)
                     }
@@ -243,7 +243,7 @@ private fun ResponsivePredictionContent(
                 PredictionDonutChart(prediction, modifier = Modifier.fillMaxWidth(0.7f))
                 ProbabilityGauges(prediction, match.homeTeam.shortName, match.awayTeam.shortName)
                 MarketSummary(prediction)
-                if (odds != null) {
+                if (com.kickpredict.Features.BETTING && odds != null) {
                     MarketOddsCard(prediction, odds, match.homeTeam.shortName, match.awayTeam.shortName)
                 }
                 ScorelineDistribution(prediction)

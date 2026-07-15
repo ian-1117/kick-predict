@@ -101,6 +101,9 @@ dependencies {
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
 
+    // AdMob (in-app ads). Uses Google's official *test* App ID / ad units until real ones are set.
+    implementation("com.google.android.gms:play-services-ads:23.6.0")
+
     // Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

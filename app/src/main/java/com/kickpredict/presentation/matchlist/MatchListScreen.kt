@@ -110,6 +110,11 @@ fun MatchListScreen(
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = {
+            if (com.kickpredict.Features.ADS) {
+                com.kickpredict.presentation.ads.BannerAd()
+            }
+        },
         topBar = {
             TopAppBar(
                 title = {
@@ -122,8 +127,10 @@ fun MatchListScreen(
                     IconButton(onClick = { viewModel.jumpToCurrentRound() }) {
                         Icon(Icons.Filled.Today, contentDescription = stringResource(R.string.jump_current_round), tint = AccentPrimary)
                     }
-                    IconButton(onClick = onValuePicks) {
-                        Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = stringResource(R.string.nav_value_picks), tint = AccentPrimary)
+                    if (com.kickpredict.Features.BETTING) {
+                        IconButton(onClick = onValuePicks) {
+                            Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = stringResource(R.string.nav_value_picks), tint = AccentPrimary)
+                        }
                     }
                     IconButton(onClick = onStandings) {
                         Icon(Icons.Filled.Leaderboard, contentDescription = stringResource(R.string.nav_standings), tint = AccentPrimary)
@@ -468,7 +475,9 @@ private fun MatchCard(
                     } else if (result != null) {
                         HitMissBadge(result.wasCorrect)
                     } else {
-                        val edge = odds?.let { modelPercent(prediction) - it.percentFor(prediction.predictedOutcome) }
+                        val edge = if (com.kickpredict.Features.BETTING) {
+                            odds?.let { modelPercent(prediction) - it.percentFor(prediction.predictedOutcome) }
+                        } else null
                         if (edge != null && edge >= VALUE_EDGE_THRESHOLD) ValueChip(edge)
                         else if (prediction.matchupEdge != MatchupEdge.NONE) MatchupChip(prediction.matchupEdge == MatchupEdge.HOME)
                         ConfidencePill(prediction.confidenceScore, prediction.confidenceTier)
