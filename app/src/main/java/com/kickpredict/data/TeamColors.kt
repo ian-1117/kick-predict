@@ -27,34 +27,37 @@ object TeamColors {
 
     private val entries: List<Pair<String, Long>> = listOf(
         // --- K League 1 ---
-        "Ulsan HD" col 0xFF0067AC,
-        "Jeonbuk" col 0xFF006437,
-        "Pohang" col 0xFFB50021,
-        "Gimcheon Sangmu" col 0xFFE4032E,
-        "Seoul" col 0xFFCE0E2D,
-        "Gwangju FC" col 0xFFFFD200,
-        "Daegu FC" col 0xFF00A0E9,
-        "Suwon FC" col 0xFF000000,
-        "Gangwon" col 0xFFF15A22,
-        "Jeju SK" col 0xFFEE7523,
-        "Incheon" col 0xFF004097,
-        "Daejeon Hana Citizen" col 0xFF582C83,
+        "Ulsan HD" col 0xFF0067AC,        // Blue
+        "Jeonbuk" col 0xFF76FF03,         // Neon Green
+        "Pohang" col 0xFF000000,          // Black
+        "Gimcheon Sangmu" col 0xFF827717, // Khaki
+        "Seoul" col 0xFFCE0E2D,           // Red
+        "Gwangju FC" col 0xFFD7192A,      // Red
+        "Daegu FC" col 0xFF00A0E9,        // Sky blue
+        "Suwon FC" col 0xFFD7192A,        // Red
+        "Gangwon" col 0xFFF15A22,         // Orange
+        "Jeju SK" col 0xFFEE7523,         // Orange
+        "Incheon" col 0xFF004097,         // Blue
+        "Daejeon Hana Citizen" col 0xFFD6006E, // Magenta
         // --- K League 2 ---
-        "Anyang" col 0xFF6A1B9A,
-        "Bucheon FC 1995" col 0xFFC8102E,
-        "Busan" col 0xFFE4002B,
-        "Seoul E-Land" col 0xFF1D2951,
-        "Gyeongnam" col 0xFFB4131E,
-        "Chungnam Asan" col 0xFF00539B,
-        "Jeonnam" col 0xFFFFD200,
-        "Gimpo" col 0xFF00A651,
-        "Cheonan" col 0xFF0072BC,
-        "Ansan" col 0xFF1AAE4E,
-        "Seongnam" col 0xFF000000,
-        "Chungbuk Cheongju" col 0xFF16264A,
-        "Yongin" col 0xFF6D214F,
-        "Hwaseong" col 0xFFF37021,
-        "Suwon Samsung" col 0xFF1E4EA1,
+        "Anyang" col 0xFF6A1B9A,          // Purple
+        "Bucheon FC 1995" col 0xFFC8102E, // Red
+        "Busan" col 0xFFE4002B,           // Red
+        "Seoul E-Land" col 0xFF1D2951,    // Navy
+        "Gyeongnam" col 0xFFB4131E,       // Red
+        "Chungnam Asan" col 0xFF00539B,   // Blue
+        "Jeonnam" col 0xFFFFD200,         // Yellow
+        "Gimpo" col 0xFF00A651,           // Green
+        "Cheonan" col 0xFF34AADC,         // Sky blue
+        "Ansan" col 0xFF19C39C,           // Mint green
+        "Seongnam" col 0xFF000000,        // Black
+        "Chungbuk Cheongju" col 0xFF16264A, // Navy/blue
+        "Yongin" col 0xFF6D214F,          // Purple-red
+        "Hwaseong" col 0xFFF37021,        // Orange
+        "Gimhae" col 0xFFC8102E,          // Red
+        "Paju Frontier" col 0xFF0057B8,   // Blue
+        "Paju" col 0xFF0057B8,
+        "Suwon Samsung" col 0xFF1E4EA1,   // Blue
         "Suwon Bluewings" col 0xFF1E4EA1,
         "Suwon Samsung Bluewings" col 0xFF1E4EA1,
         // --- Premier League ---
