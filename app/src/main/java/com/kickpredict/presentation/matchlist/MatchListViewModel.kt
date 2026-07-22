@@ -145,13 +145,12 @@ class MatchListViewModel(
         val isFirstLoad = !loadedOnce
         allMatches = matches
         loadedOnce = true
-        val dates = matches.map { it.kickoff.toLocalDate() }
-        val earliest = dates.minOrNull()
-        val latest = dates.maxOrNull()
+        val current = _uiState.value
+        // Scope the range bounds to the league in view (each league's season runs a different window).
+        val (earliest, latest) = boundsFor(current.leagueFilter)
         // Open on the current round: on the first load, default the range to "today → end of the
         // loaded fixtures" so already-played rounds are hidden and the list starts on what's coming.
         val today = LocalDate.now()
-        val current = _uiState.value
         val (from, to) = if (isFirstLoad && current.fromDate == null &&
             latest != null && !latest.isBefore(today)
         ) {
@@ -180,8 +179,28 @@ class MatchListViewModel(
     }
 
     fun setLeague(league: LeagueType?) {
-        _uiState.value = _uiState.value.copy(leagueFilter = league)
+        // Each league's season starts and ends at different times, so snap the visible date range (and
+        // the picker's bounds) to the selected league's own fixtures — today → that league's last game
+        // — instead of keeping the range spanning every league at once.
+        val (earliest, latest) = boundsFor(league)
+        val today = LocalDate.now()
+        val from = if (latest != null && !latest.isBefore(today)) maxOf(today, earliest ?: today) else earliest
+        _uiState.value = _uiState.value.copy(
+            leagueFilter = league,
+            earliestDate = earliest,
+            latestDate = latest,
+            fromDate = from,
+            toDate = latest,
+        )
         rebuild()
+    }
+
+    /** Earliest/latest fixture dates for a league (or all leagues when [league] is null). */
+    private fun boundsFor(league: LeagueType?): Pair<LocalDate?, LocalDate?> {
+        val dates = allMatches
+            .filter { league == null || it.league == league }
+            .map { it.kickoff.toLocalDate() }
+        return dates.minOrNull() to dates.maxOrNull()
     }
 
     fun setSearchQuery(query: String) {
