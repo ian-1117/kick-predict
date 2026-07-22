@@ -161,6 +161,7 @@
     <string name="standings_simulate">Season simulation</string>
     <string name="standings_empty">No results yet. Enter results or fill samples from the dashboard to build the table.</string>
     <string name="standings_col_team">Team</string>
+    <string name="standings_previous_season">Last season\'s final table · the new season hasn\'t started</string>
     <string name="standings_col_played">P</string>
     <string name="standings_col_points">Pts</string>
     <string name="standings_record">%1$dW %2$dD %3$dL · GD %4$s</string>

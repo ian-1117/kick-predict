@@ -35,7 +35,7 @@ class GetTeamUseCase(
         val sample = teamMatches.firstOrNull() ?: return null
         val team = if (sample.homeTeam.id == teamId) sample.homeTeam else sample.awayTeam
 
-        val table = getStandings()[sample.league].orEmpty()
+        val table = getStandings().tables[sample.league].orEmpty()
         val standing = table.firstOrNull { it.teamId == teamId }
         val rank = table.indexOfFirst { it.teamId == teamId }.takeIf { it >= 0 }?.plus(1)
         val recent = calibrationRepository.recordedResults()

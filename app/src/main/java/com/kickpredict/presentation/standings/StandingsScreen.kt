@@ -104,6 +104,14 @@ fun StandingsScreen(
                             )
                         }
                     }
+                    if (state.selectedIsPreviousSeason) {
+                        Text(
+                            stringResource(R.string.standings_previous_season),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = AccentPrimary,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                        )
+                    }
                     HeaderRow()
                     LazyColumn(contentPadding = PaddingValues(bottom = 16.dp)) {
                         itemsIndexed(state.table, key = { _, s -> s.teamId }) { index, s ->

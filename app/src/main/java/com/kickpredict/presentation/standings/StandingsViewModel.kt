@@ -18,11 +18,14 @@ import kotlinx.coroutines.launch
 data class StandingsUiState(
     val isLoading: Boolean = true,
     val tables: Map<LeagueType, List<Standing>> = emptyMap(),
+    /** Leagues whose table is last season's final one (their current season hasn't started). */
+    val previousSeasonLeagues: Set<LeagueType> = emptySet(),
     val selected: LeagueType = LeagueType.K_LEAGUE,
     val error: String? = null,
 ) {
     val leaguesWithData: List<LeagueType> get() = LeagueType.entries.filter { tables[it]?.isNotEmpty() == true }
     val table: List<Standing> get() = tables[selected].orEmpty()
+    val selectedIsPreviousSeason: Boolean get() = selected in previousSeasonLeagues
 }
 
 class StandingsViewModel(
@@ -40,11 +43,12 @@ class StandingsViewModel(
         _uiState.value = _uiState.value.copy(isLoading = true)
         viewModelScope.launch {
             runCatching { getStandings() }
-                .onSuccess { tables ->
-                    val firstWithData = LeagueType.entries.firstOrNull { tables[it]?.isNotEmpty() == true }
+                .onSuccess { result ->
+                    val firstWithData = LeagueType.entries.firstOrNull { result.tables[it]?.isNotEmpty() == true }
                     _uiState.value = StandingsUiState(
                         isLoading = false,
-                        tables = tables,
+                        tables = result.tables,
+                        previousSeasonLeagues = result.previousSeasonLeagues,
                         selected = firstWithData ?: LeagueType.K_LEAGUE,
                     )
                 }

@@ -161,6 +161,7 @@
     <string name="standings_simulate">시즌 시뮬레이션</string>
     <string name="standings_empty">아직 결과가 없습니다. 결과를 입력하거나 대시보드에서 샘플을 채우면 순위표가 만들어집니다.</string>
     <string name="standings_col_team">팀</string>
+    <string name="standings_previous_season">지난 시즌 최종 순위 · 새 시즌 개막 전</string>
     <string name="standings_col_played">경기</string>
     <string name="standings_col_points">승점</string>
     <string name="standings_record">%1$d승 %2$d무 %3$d패 · 득실 %4$s</string>

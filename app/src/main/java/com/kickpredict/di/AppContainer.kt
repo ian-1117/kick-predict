@@ -205,7 +205,26 @@ class AppContainer(context: Context) {
     val backtest = com.kickpredict.domain.usecase.BacktestUseCase(
         games = { if (realData.hasData) realData.backtestGames() else emptyList() },
     )
-    val getStandings = GetStandingsUseCase(repository, calibrationRepository)
+    // Last season's final tables from the bundled data, shown for leagues whose current season hasn't
+    // kicked off yet (e.g. the European leagues over the summer, before their August start).
+    private val previousSeasonStandings: Map<com.kickpredict.domain.model.LeagueType, List<com.kickpredict.domain.model.Standing>> by lazy {
+        if (!realData.hasData) return@lazy emptyMap()
+        val scores = realData.displayResults()
+        realData.matches()
+            .mapNotNull { m -> scores[m.id]?.let { m to it } }
+            .groupBy { it.first.league }
+            .mapValues { (_, list) ->
+                com.kickpredict.domain.standings.LeagueTable.build(
+                    list.map { (m, s) ->
+                        com.kickpredict.domain.standings.TableEntry(
+                            m.homeTeam.id, m.homeTeam.displayName, m.awayTeam.id, m.awayTeam.displayName, s.first, s.second,
+                        )
+                    },
+                )
+            }
+    }
+
+    val getStandings = GetStandingsUseCase(repository, calibrationRepository, { previousSeasonStandings })
     val getTeam = GetTeamUseCase(getPredictedMatches, getStandings, calibrationRepository, eloProvider)
     val compareTeams = com.kickpredict.domain.usecase.CompareTeamsUseCase(getPredictedMatches)
     // Seeds the current season's real scores into the results store (live where available, else bundled).

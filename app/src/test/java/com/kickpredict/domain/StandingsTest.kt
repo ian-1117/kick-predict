@@ -68,7 +68,7 @@ class StandingsTest {
             ),
         )
         val matchRepo = FakeMatchRepo(listOf("m1", "m2", "m3"))
-        val table = GetStandingsUseCase(matchRepo, repo)().getValue(LeagueType.EPL)
+        val table = GetStandingsUseCase(matchRepo, repo)().tables.getValue(LeagueType.EPL)
 
         assertEquals(3, table.size)
         // A: W1 D1 -> 4 pts; B: W1 L1 -> 3 pts; C: D1 L1 -> 1 pt.
@@ -90,8 +90,23 @@ class StandingsTest {
             ),
         )
         // Only m1 is a current fixture; the stale result must not affect the table.
-        val table = GetStandingsUseCase(FakeMatchRepo(listOf("m1")), repo)().getValue(LeagueType.EPL)
+        val table = GetStandingsUseCase(FakeMatchRepo(listOf("m1")), repo)().tables.getValue(LeagueType.EPL)
         assertEquals(1, table.first { it.teamId == "A" }.played)
         assertEquals(3, table.first { it.teamId == "A" }.points) // just the 2-0 win
+    }
+
+    @Test
+    fun `a league with no current results falls back to last season, flagged`() = runBlocking {
+        // No current-season results at all, but a previous-season table exists for LaLiga.
+        val repo = FakeRepo(emptyList())
+        val prevTable = com.kickpredict.domain.standings.LeagueTable.build(
+            listOf(com.kickpredict.domain.standings.TableEntry("X", "X", "Y", "Y", 3, 0)),
+        )
+        val result = GetStandingsUseCase(
+            FakeMatchRepo(emptyList()), repo,
+            previousSeasonStandings = { mapOf(LeagueType.LALIGA to prevTable) },
+        )()
+        assertEquals(prevTable, result.tables[LeagueType.LALIGA])
+        assertEquals(setOf(LeagueType.LALIGA), result.previousSeasonLeagues)
     }
 }
