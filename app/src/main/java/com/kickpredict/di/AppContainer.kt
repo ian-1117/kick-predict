@@ -205,7 +205,7 @@ class AppContainer(context: Context) {
     val backtest = com.kickpredict.domain.usecase.BacktestUseCase(
         games = { if (realData.hasData) realData.backtestGames() else emptyList() },
     )
-    val getStandings = GetStandingsUseCase(calibrationRepository)
+    val getStandings = GetStandingsUseCase(repository, calibrationRepository)
     val getTeam = GetTeamUseCase(getPredictedMatches, getStandings, calibrationRepository, eloProvider)
     val compareTeams = com.kickpredict.domain.usecase.CompareTeamsUseCase(getPredictedMatches)
     // Seeds the current season's real scores into the results store (live where available, else bundled).
