@@ -144,8 +144,8 @@
     <string name="onboarding_tagline">Football predictions you can hold to account.</string>
     <string name="onboarding_feat1_title">Live predictions</string>
     <string name="onboarding_feat1_body">Every fixture across six leagues, calibrated on real results.</string>
-    <string name="onboarding_feat2_title">Value picks</string>
-    <string name="onboarding_feat2_body">Where the model beats the market — with ROI, CLV and a Kelly bankroll.</string>
+    <string name="onboarding_feat2_title">Explainable</string>
+    <string name="onboarding_feat2_body">See which factors moved each prediction, with accuracy tracked on real results.</string>
     <string name="onboarding_feat3_title">Honest by design</string>
     <string name="onboarding_feat3_body">Proper scores and a walk-forward backtest keep it accountable.</string>
     <string name="onboarding_enable_notifs">Enable match notifications</string>

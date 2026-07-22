@@ -17,10 +17,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Science
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -82,7 +82,7 @@ fun OnboardingScreen(onFinish: () -> Unit) {
 
         Feature(Icons.Filled.Insights, R.string.onboarding_feat1_title, R.string.onboarding_feat1_body)
         Spacer(Modifier.size(18.dp))
-        Feature(Icons.AutoMirrored.Filled.TrendingUp, R.string.onboarding_feat2_title, R.string.onboarding_feat2_body)
+        Feature(Icons.Filled.Tune, R.string.onboarding_feat2_title, R.string.onboarding_feat2_body)
         Spacer(Modifier.size(18.dp))
         Feature(Icons.Filled.Science, R.string.onboarding_feat3_title, R.string.onboarding_feat3_body)
 

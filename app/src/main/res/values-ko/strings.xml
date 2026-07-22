@@ -144,8 +144,8 @@
     <string name="onboarding_tagline">책임질 수 있는 축구 예측.</string>
     <string name="onboarding_feat1_title">라이브 예측</string>
     <string name="onboarding_feat1_body">6개 리그 전 경기, 실제 결과로 보정됩니다.</string>
-    <string name="onboarding_feat2_title">밸류 픽</string>
-    <string name="onboarding_feat2_body">모델이 시장을 이기는 지점 — ROI·CLV·켈리 뱅크롤까지.</string>
+    <string name="onboarding_feat2_title">설명 가능한 예측</string>
+    <string name="onboarding_feat2_body">각 예측을 움직인 요인을 보여주고, 실제 결과로 정확도를 추적합니다.</string>
     <string name="onboarding_feat3_title">설계부터 정직하게</string>
     <string name="onboarding_feat3_body">정식 채점과 walk-forward 백테스트로 책임집니다.</string>
     <string name="onboarding_enable_notifs">경기 알림 켜기</string>
