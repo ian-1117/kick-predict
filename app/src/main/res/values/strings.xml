@@ -1,4 +1,314 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Kick Predict</string>
+
+    <!-- Match list -->
+    <string name="search_hint">Search teams (name or code)</string>
+    <string name="filter_all">All</string>
+    <string name="group_by_round">By round</string>
+    <string name="group_by_week">By week</string>
+    <string name="date_range">Dates</string>
+    <string name="date_range_picker_title">Select dates</string>
+    <string name="action_apply">Apply</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_close">Close</string>
+    <string name="clear_search">Clear search</string>
+    <string name="empty_matches">No matches for these filters.</string>
+    <string name="nav_standings">Standings</string>
+    <string name="nav_dashboard">Accuracy dashboard</string>
+    <string name="nav_value_picks">Value picks</string>
+    <string name="nav_theme">Theme</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Section headers -->
+    <string name="section_round">Round %1$d</string>
+    <string name="section_week">%1$s – %2$s</string>
+
+    <!-- Prediction -->
+    <string name="prediction_label">Prediction: %1$s</string>
+    <string name="outcome_win">%1$s win</string>
+    <string name="outcome_draw">Draw</string>
+    <string name="a11y_prediction">Prediction: home win %1$d%%, draw %2$d%%, away win %3$d%%</string>
+    <string name="hit_rate">Hit rate %1$d%%</string>
+    <string name="matchup_edge">Edge</string>
+    <string name="jump_current_round">Current round</string>
+    <string name="filter_followed">Followed</string>
+    <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
+    <string name="following">Following</string>
+    <string name="live">LIVE</string>
+    <string name="value_pick">Value</string>
+    <string name="tier_very_high">Very high</string>
+    <string name="tier_high">High</string>
+    <string name="tier_moderate">Moderate</string>
+    <string name="tier_low">Low</string>
+    <string name="tier_very_low">Very low</string>
+
+    <!-- Calibration status bar -->
+    <string name="calib_prefix">AI calibration</string>
+    <string name="calib_results">%1$d results</string>
+    <string name="calib_accuracy">accuracy %1$d%%</string>
+    <string name="calib_confidence_applied">confidence calibration on</string>
+    <string name="calib_confidence_pending">confidence calibration pending</string>
+    <string name="calib_leagues">%1$d leagues</string>
+    <string name="calib_accumulating">collecting samples</string>
+
+    <!-- Outcomes (generic home/away/draw) -->
+    <string name="outcome_home">Home win</string>
+    <string name="outcome_away">Away win</string>
+    <string name="result_hit">Hit</string>
+    <string name="result_miss">Miss</string>
+
+    <!-- Detail screen -->
+    <string name="detail_expected_score">Expected score</string>
+    <string name="detail_enter_result">Enter actual result</string>
+    <string name="detail_recorded_count">%1$d results recorded</string>
+    <string name="detail_prediction_hit">Prediction hit</string>
+    <string name="detail_prediction_miss">Prediction miss</string>
+    <string name="detail_save_result">Save result</string>
+    <string name="detail_edit_result">Edit result</string>
+    <string name="detail_decrease">Decrease</string>
+    <string name="detail_increase">Increase</string>
+    <string name="detail_extra_markets">Extra markets</string>
+    <string name="detail_over25">Over 2.5</string>
+    <string name="detail_under25">Under 2.5</string>
+    <string name="detail_btts">Both teams to score</string>
+    <string name="detail_no_goal">No goal</string>
+    <string name="detail_score_prob">Scoreline probability</string>
+    <string name="score_totals_note">Each score is coloured by its result. The pick is the result whose scores add up highest — not the single most-likely score (a draw often has the tallest single bar).</string>
+    <string name="share_prediction">Share prediction</string>
+    <string name="share_confidence">AI confidence %1$d%% · %2$s</string>
+    <string name="share_footer">Predicted by Kick Predict</string>
+    <string name="detail_value_title">Model vs market</string>
+    <string name="detail_value_note">Model probability against the odds\' implied probability. A green edge means the model rates the pick higher than the bookmaker.</string>
+    <string name="detail_value_col_odds">Odds</string>
+    <string name="detail_value_col_market">Market</string>
+    <string name="detail_value_col_model">Model</string>
+    <string name="detail_value_edge">Value edge · %1$s %2$+d%%</string>
+    <string name="detail_value_none">No value edge — the market agrees with the model.</string>
+
+    <!-- Value picks hub -->
+    <string name="value_empty">No value picks yet. When the model rates a pick higher than the market, it shows up here with the price it was flagged at.</string>
+    <string name="value_roi_caption">Cumulative ROI · %1$d settled picks (flat 1-unit stake)</string>
+    <string name="value_won">won</string>
+    <string name="value_lost">lost</string>
+    <string name="value_pending_count">pending</string>
+    <string name="value_clv_label">CLV %1$s%%</string>
+    <string name="value_clv_caption">vs the closing line</string>
+    <string name="value_bankroll_caption">bankroll · half-Kelly staking</string>
+    <string name="value_roi_chart">Cumulative ROI</string>
+    <string name="value_bankroll_chart">Bankroll growth</string>
+    <string name="acca_add_leg">Add to accumulator</string>
+    <string name="acca_remove_leg">Remove from accumulator</string>
+    <string name="acca_title_legs">Accumulator · %1$d legs</string>
+    <string name="acca_clear">Clear</string>
+    <string name="acca_combo_odds">Combo odds</string>
+    <string name="acca_joint_prob">Joint prob</string>
+    <string name="acca_edge">Edge</string>
+    <string name="acca_kelly">Kelly stake</string>
+    <string name="acca_save">Save parlay</string>
+    <string name="acca_delete">Delete parlay</string>
+    <string name="acca_share">Share parlay</string>
+    <string name="acca_saved_header">Saved parlays</string>
+    <string name="acca_saved_roi">%1$s%% ROI · %2$d settled</string>
+    <string name="acca_picks_header">Value picks</string>
+    <string name="value_by_league">Value by league</string>
+    <string name="value_by_league_note">ROI where the edge actually paid. Bars grow right for profit, left for loss; the most profitable settled league is highlighted.</string>
+    <string name="value_league_meta">%1$d bets · %2$d settled</string>
+    <string name="value_league_meta_clv">%1$d bets · CLV %2$s%%</string>
+
+    <!-- Home-screen widget -->
+    <string name="widget_description">Upcoming picks and value edges at a glance</string>
+    <string name="widget_empty">No upcoming picks yet — open the app to load fixtures.</string>
+    <string name="widget_config_title">Show in widget</string>
+
+    <!-- Backtest -->
+    <string name="backtest_title">Backtest</string>
+    <string name="nav_backtest">Run historical backtest</string>
+    <string name="backtest_subtitle">%1$d matches · walk-forward (predict, then learn)</string>
+    <string name="backtest_note">Honest out-of-sample: each match is predicted from only earlier games, then the model learns it. ROI &amp; CLV are flat-stake value bets vs the market average price, over leagues that ship odds.</string>
+    <string name="backtest_roi">Value ROI</string>
+    <string name="backtest_bets">%1$d bets</string>
+    <string name="backtest_clv">CLV</string>
+    <string name="backtest_by_league">By league</string>
+    <string name="backtest_empty">No bundled historical data to backtest.</string>
+    <string name="backtest_league_stats">%1$d games · %2$d%% accuracy</string>
+    <string name="backtest_league_value">ROI %1$+d%% · %2$d bets · CLV %3$s%%</string>
+    <string name="backtest_models">Elo vs market vs blend</string>
+    <string name="backtest_models_note">Same odds-bearing games. Blending the model with the market\'s price sharpens the proper scores — the market is a strong prior worth learning from.</string>
+    <string name="backtest_model_elo">Elo</string>
+    <string name="backtest_model_market">Market</string>
+    <string name="backtest_model_blend">Blend</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_tagline">Football predictions you can hold to account.</string>
+    <string name="onboarding_feat1_title">Live predictions</string>
+    <string name="onboarding_feat1_body">Every fixture across six leagues, calibrated on real results.</string>
+    <string name="onboarding_feat2_title">Explainable</string>
+    <string name="onboarding_feat2_body">See which factors moved each prediction, with accuracy tracked on real results.</string>
+    <string name="onboarding_feat3_title">Honest by design</string>
+    <string name="onboarding_feat3_body">Proper scores and a walk-forward backtest keep it accountable.</string>
+    <string name="onboarding_enable_notifs">Enable match notifications</string>
+    <string name="onboarding_notifs_on">Notifications on</string>
+    <string name="onboarding_start">Get started</string>
+
+    <!-- Team comparison -->
+    <string name="compare_title">Compare teams</string>
+    <string name="nav_compare">Compare teams</string>
+    <string name="compare_no_matchup">These two teams have no fixture this season to compare.</string>
+
+    <!-- Standings screen -->
+    <string name="standings_simulate">Season simulation</string>
+    <string name="standings_empty">No results yet. Enter results or fill samples from the dashboard to build the table.</string>
+    <string name="standings_col_team">Team</string>
+    <string name="standings_previous_season">Last season\'s final table · the new season hasn\'t started</string>
+    <string name="standings_col_played">P</string>
+    <string name="standings_col_points">Pts</string>
+    <string name="standings_record">%1$dW %2$dD %3$dL · GD %4$s</string>
+
+    <!-- Team screen -->
+    <string name="team_recent_form">Recent form</string>
+    <string name="team_fixtures">Fixtures · predictions</string>
+    <string name="team_rank">Rank</string>
+    <string name="team_points">Pts</string>
+    <string name="team_home">Home</string>
+    <string name="team_away">Away</string>
+    <string name="team_season">Season record</string>
+    <string name="team_wdl">%1$dW · %2$dD · %3$dL</string>
+    <string name="team_goals">GF %1$d · GA %2$d · GD %3$s</string>
+    <string name="team_form_detail">%1$s GF · %2$s GA per game · model %3$d%% correct</string>
+    <string name="team_h2h">H2H %1$dW %2$dD %3$dL</string>
+
+    <!-- Dashboard -->
+    <string name="dash_title">Accuracy · calibration dashboard</string>
+    <string name="dash_fill_samples">Fill sample results</string>
+    <string name="dash_empty_title">No results recorded yet</string>
+    <string name="dash_empty_body">Enter actual results from a match, or fill 5 leagues × 5 rounds of sample results to see prediction accuracy and calibration right away.</string>
+    <string name="dash_fill_5rounds">Fill 5-round sample results</string>
+    <string name="dash_accuracy_by_round">Accuracy by round</string>
+    <string name="dash_model_compare">Model comparison</string>
+    <string name="dash_reliability">Actual hit rate by confidence band</string>
+    <string name="dash_scorecard">Model scorecard</string>
+    <string name="dash_scorecard_note">Proper scores over %1$d settled predictions. Lower is better: Brier &amp; log-loss reward sharp, honest probabilities (not lucky calls); calibration error is how far the model\'s confidence sits from its real hit rate.</string>
+    <string name="dash_by_league">By league</string>
+    <string name="dash_by_league_note">Where the model is sharp. Bars show hit rate; the league with the lowest Brier (the sharpest, luck aside) is highlighted.</string>
+    <string name="dash_league_meta">%1$d games · Brier %2$s</string>
+    <string name="dash_drift">Model drift</string>
+    <string name="dash_drift_note">Brier over equal chronological windows — is the model sharpening or drifting? The line is inverted so higher = sharper (lower Brier).</string>
+    <string name="dash_drift_sharper">Sharpening ↑</string>
+    <string name="dash_drift_drifting">Drifting ↓</string>
+    <string name="dash_drift_delta">Brier %1$s → %2$s</string>
+    <string name="dash_drift_oldest">Oldest</string>
+    <string name="dash_drift_newest">Newest</string>
+    <string name="dash_brier">Brier</string>
+    <string name="dash_logloss">Log-loss</string>
+    <string name="dash_calib_err">Calib. error</string>
+    <string name="dash_recent">Recent results</string>
+    <string name="dash_stat_records">Records</string>
+    <string name="dash_records_value">%1$d</string>
+    <string name="dash_stat_accuracy">Accuracy</string>
+    <string name="dash_applied">On</string>
+    <string name="dash_pending">Pending</string>
+    <string name="dash_confidence_line">Confidence calibration %1$s · %2$d leagues calibrated</string>
+    <string name="dash_model_note">Per-model accuracy on the same record · Elo is scored honestly walk-forward (predict, then learn).</string>
+    <string name="dash_round_note">Bar height = accuracy that round (correct predictions ÷ matches).</string>
+    <string name="dash_reliability_note">Bars: actual hit rate / grey line: predicted confidence — hit rate below confidence means over-confidence.</string>
+    <string name="dash_band_value">%1$d%% · %2$d</string>
+    <string name="dash_recent_pred">Predicted %1$s · hit rate %2$d%%</string>
+    <string name="model_engine">AI engine (Poisson)</string>
+    <string name="model_elo">Elo (walk-forward)</string>
+    <string name="model_baseline">Baseline (home win)</string>
+
+    <!-- Season simulation -->
+    <string name="nav_back">Back</string>
+    <string name="sim_no_fixtures">No fixtures to simulate.</string>
+    <string name="sim_start">Run simulation</string>
+    <string name="sim_round">Round %1$d</string>
+    <string name="sim_preseason">Preseason — simulate every match</string>
+    <string name="sim_split">Rounds 1–%1$d actual · %2$d–%3$d simulated</string>
+    <string name="sim_iterations">%1$s iterations · %2$d matches left</string>
+    <string name="sim_metric_prob">%1$s probability</string>
+    <string name="sim_disclaimer">\"Actual\" is where this season really finished. Post-cutoff matches are predicted only from what was known at the cutoff, so the model never sees the results it must call. But the sample is a single season — a few correct calls don\'t prove predictive power.</string>
+    <string name="sim_expected_points">Exp. points %1$s · avg rank %2$s</string>
+    <string name="sim_actual_metric">Actual: %1$s ✓</string>
+    <string name="sim_actual_rank">Actual %1$d</string>
+    <string name="sim_metric_title">Title</string>
+    <string name="sim_metric_top">Top</string>
+    <string name="sim_metric_relegation">Relegation</string>
+
+    <!-- Prediction rationale notes -->
+    <string name="rationale_calibration">λ from %1$s calibration (home %2$s / away %3$s).</string>
+    <string name="rationale_laliga_gap">LaLiga position-gap correction amplifies the quality edge.</string>
+    <string name="rationale_bundesliga_boost">Bundesliga home boost applied to %1$s.</string>
+    <string name="rationale_fatigue">%1$s fatigued (%2$d-day rest).</string>
+    <string name="rationale_matchup_dominates">Edge: %1$s dominates the recent H2H (+%2$d%% λ).</string>
+    <string name="rationale_matchup_bogey">Edge: %1$s is a bogey team (+%2$d%% λ).</string>
+    <string name="rationale_elo">Elo (learned rating): Δ%1$d.</string>
+    <string name="rationale_poisson">Attack/defense rating (Dixon-Coles): λ %1$s / %2$s.</string>
+    <string name="rationale_weakened">%1$s weakened (%2$d out, %3$d%% XI).</string>
+    <string name="rationale_weather">%1$s: fewer goals expected.</string>
+    <string name="rationale_expected_score">Expected score %1$s (λ %2$s / %3$s).</string>
+    <string name="rationale_market_blend">Tempered toward the market price (%1$d%% market).</string>
+
+    <!-- Factor contribution breakdown -->
+    <string name="factor_title">What moved this prediction</string>
+    <string name="factor_base">Home edge &amp; scoring</string>
+    <string name="factor_quality">Rating · position · form</string>
+    <string name="factor_rules">League rules &amp; rest</string>
+    <string name="factor_matchup">Head-to-head (상성)</string>
+    <string name="factor_elo">Elo (learned)</string>
+    <string name="factor_learned">Goal model (Dixon-Coles)</string>
+    <string name="factor_context">Injuries &amp; weather</string>
+
+    <!-- Power comparison report -->
+    <string name="power_title">Power comparison</string>
+    <string name="power_why">Why this prediction</string>
+    <string name="power_bogey">Clear bogey team</string>
+    <string name="power_edge">Matchup edge</string>
+    <string name="power_slight_edge">Slight matchup edge</string>
+    <string name="power_record">Record %1$dW %2$dD %3$dL</string>
+    <string name="power_matchup">%1$s · %2$s</string>
+    <string name="power_recent">Recent</string>
+    <string name="power_factors">Match factors</string>
+    <string name="power_weather">Weather · %1$s</string>
+    <string name="power_availability">%1$s %2$d out · %3$d%%</string>
+
+    <!-- Weather -->
+    <string name="weather_clear">Clear</string>
+    <string name="weather_rain">Rain</string>
+    <string name="weather_wind">Wind</string>
+    <string name="weather_snow">Snow</string>
+    <string name="weather_heat">Heat</string>
+
+    <!-- Match notifications -->
+    <string name="settings_blend">Market blend</string>
+    <string name="settings_blend_desc">How much predictions temper toward the market price</string>
+    <string name="settings_followed">Followed teams</string>
+    <string name="settings_followed_desc">Follow teams from their page to prioritise them and scope alerts</string>
+    <string name="settings_followed_count">%1$d followed</string>
+    <string name="blend_model">Model</string>
+    <string name="blend_balanced">Balanced</string>
+    <string name="blend_market">Market-led</string>
+    <string name="settings_notifications">Match notifications</string>
+    <string name="settings_notifications_desc">Kickoff alerts for strong picks, live starts, and results</string>
+    <string name="notif_channel_name">Match alerts</string>
+    <string name="notif_channel_desc">Kickoff, live and result alerts for your predictions</string>
+    <string name="notif_kickoff_title">Kick-off in %1$d min</string>
+    <string name="notif_live_title">Match is live</string>
+    <string name="notif_result_hit">Prediction hit ✅</string>
+    <string name="notif_result_miss">Prediction miss ❌</string>
+    <string name="notif_value_suffix">Value +%1$d%%</string>
+
+    <!-- Settings / picker dialog -->
+    <string name="settings_theme">Theme</string>
+    <string name="settings_language">Language</string>
+    <string name="language_system">System</string>
+    <string name="language_korean">한국어</string>
+    <string name="language_english">English</string>
+
+    <!-- Theme descriptions -->
+    <string name="theme_floodlight_desc">Floodlit · colour-blind safe</string>
+    <string name="theme_card_desc">Pitch &amp; referee cards</string>
+    <string name="theme_broadsheet_desc">Sports pages · light</string>
+    <string name="theme_ember_desc">Warm dark · copper</string>
 </resources>

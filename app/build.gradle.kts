@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,13 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
+
+// Live-data API keys are read from local.properties (git-ignored) or the environment, so no secret
+// is committed. Absent keys compile to "" and the app falls back to the bundled historical data.
+val localProps = Properties().apply {
+    rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
+}
+fun secret(name: String): String = localProps.getProperty(name) ?: System.getenv(name) ?: ""
 
 android {
     namespace = "com.kickpredict"
@@ -18,6 +27,10 @@ android {
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // football-data.org (Europe) and APIFootball / apiv3.apifootball.com (K League) access tokens.
+        buildConfigField("String", "FOOTBALL_DATA_KEY", "\"${secret("FOOTBALL_DATA_KEY")}\"")
+        buildConfigField("String", "APIFOOTBALL_KEY", "\"${secret("APIFOOTBALL_KEY")}\"")
     }
 
     buildTypes {
@@ -37,6 +50,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     packaging {
@@ -79,6 +93,16 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+    // WorkManager (background match-notification sync)
+    implementation(libs.androidx.work.runtime.ktx)
+
+    // Glance (Compose-based home-screen widget)
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
+
+    // AdMob (in-app ads). Uses Google's official *test* App ID / ad units until real ones are set.
+    implementation("com.google.android.gms:play-services-ads:23.6.0")
 
     // Test
     testImplementation(libs.junit)

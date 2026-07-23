@@ -1,0 +1,223 @@
+Date,Time,HomeTeam,AwayTeam,FTHG,FTAG
+19/02/2022,05:30,Gwangju,Gimpo Citizen,1,2
+19/02/2022,08:00,Anyang,Jeonnam Dragons,1,0
+20/02/2022,05:30,Ansan Greeners,Busan IPark,1,1
+20/02/2022,08:00,Gyeongnam,Seoul E-Land,0,1
+20/02/2022,08:00,Bucheon 1995,Chungnam Asan,0,0
+26/02/2022,05:30,Jeonnam Dragons,Gimpo Citizen,0,2
+26/02/2022,08:00,Bucheon 1995,Ansan Greeners,2,1
+27/02/2022,05:30,Anyang,Chungnam Asan,2,0
+27/02/2022,08:00,Gwangju,Daejeon Hana Citizen,2,0
+27/02/2022,08:00,Gyeongnam,Busan IPark,3,2
+05/03/2022,05:30,Ansan Greeners,Seoul E-Land,0,1
+05/03/2022,08:00,Busan IPark,Daejeon Hana Citizen,1,1
+06/03/2022,05:30,Anyang,Gyeongnam,2,3
+06/03/2022,08:00,Jeonnam Dragons,Chungnam Asan,0,0
+06/03/2022,10:30,Bucheon 1995,Gimpo Citizen,1,0
+12/03/2022,05:30,Ansan Greeners,Gwangju,0,2
+12/03/2022,05:30,Gimpo Citizen,Seoul E-Land,2,2
+12/03/2022,08:00,Daejeon Hana Citizen,Anyang,1,1
+13/03/2022,05:30,Gyeongnam,Jeonnam Dragons,1,2
+13/03/2022,08:00,Busan IPark,Bucheon 1995,0,1
+15/03/2022,11:00,Daejeon Hana Citizen,Ansan Greeners,0,0
+15/03/2022,11:30,Gimpo Citizen,Chungnam Asan,0,4
+16/03/2022,11:00,Gwangju,Seoul E-Land,2,1
+16/03/2022,11:00,Jeonnam Dragons,Bucheon 1995,2,1
+16/03/2022,11:30,Anyang,Busan IPark,1,0
+19/03/2022,05:30,Seoul E-Land,Chungnam Asan,0,0
+19/03/2022,08:00,Busan IPark,Jeonnam Dragons,0,2
+20/03/2022,05:30,Bucheon 1995,Gwangju,2,0
+20/03/2022,08:00,Gimpo Citizen,Daejeon Hana Citizen,1,2
+20/03/2022,10:30,Ansan Greeners,Gyeongnam,2,2
+26/03/2022,05:30,Gwangju,Chungnam Asan,2,1
+26/03/2022,08:00,Daejeon Hana Citizen,Gyeongnam,4,1
+26/03/2022,10:30,Jeonnam Dragons,Ansan Greeners,1,1
+27/03/2022,06:00,Seoul E-Land,Anyang,0,0
+27/03/2022,09:00,Busan IPark,Gimpo Citizen,2,0
+02/04/2022,06:30,Jeonnam Dragons,Seoul E-Land,1,1
+02/04/2022,09:00,Anyang,Gimpo Citizen,3,2
+02/04/2022,11:30,Bucheon 1995,Daejeon Hana Citizen,2,1
+03/04/2022,06:30,Gyeongnam,Gwangju,1,2
+03/04/2022,09:00,Chungnam Asan,Busan IPark,1,0
+05/04/2022,12:00,Jeonnam Dragons,Daejeon Hana Citizen,0,1
+05/04/2022,12:30,Bucheon 1995,Seoul E-Land,0,0
+06/04/2022,12:00,Gwangju,Busan IPark,1,0
+06/04/2022,12:00,Ansan Greeners,Anyang,1,2
+06/04/2022,12:30,Chungnam Asan,Gyeongnam,2,2
+09/04/2022,09:00,Daejeon Hana Citizen,Seoul E-Land,2,1
+09/04/2022,11:30,Chungnam Asan,Ansan Greeners,0,0
+10/04/2022,06:30,Bucheon 1995,Anyang,2,0
+10/04/2022,09:00,Gwangju,Jeonnam Dragons,1,0
+11/04/2022,12:30,Gimpo Citizen,Gyeongnam,2,1
+16/04/2022,09:00,Gimpo Citizen,Ansan Greeners,1,1
+16/04/2022,11:30,Gyeongnam,Bucheon 1995,2,3
+17/04/2022,09:00,Busan IPark,Seoul E-Land,1,2
+18/04/2022,12:00,Anyang,Gwangju,2,2
+18/04/2022,12:30,Chungnam Asan,Daejeon Hana Citizen,0,3
+23/04/2022,09:00,Gwangju,Bucheon 1995,1,0
+23/04/2022,11:30,Gyeongnam,Seoul E-Land,3,1
+24/04/2022,06:30,Ansan Greeners,Daejeon Hana Citizen,1,2
+24/04/2022,09:00,Busan IPark,Anyang,1,1
+24/04/2022,11:30,Chungnam Asan,Gimpo Citizen,2,1
+03/05/2022,12:00,Ansan Greeners,Gyeongnam,2,3
+03/05/2022,12:30,Chungnam Asan,Anyang,2,0
+04/05/2022,12:00,Bucheon 1995,Busan IPark,3,1
+04/05/2022,12:30,Gimpo Citizen,Gwangju,1,2
+07/05/2022,06:30,Anyang,Ansan Greeners,1,1
+07/05/2022,09:00,Gwangju,Seoul E-Land,1,0
+07/05/2022,11:30,Bucheon 1995,Jeonnam Dragons,2,1
+09/05/2022,12:00,Daejeon Hana Citizen,Gimpo Citizen,4,4
+09/05/2022,12:30,Busan IPark,Chungnam Asan,3,1
+14/05/2022,09:00,Busan IPark,Jeonnam Dragons,1,1
+14/05/2022,11:30,Gyeongnam,Daejeon Hana Citizen,1,1
+14/05/2022,11:30,Gimpo Citizen,Anyang,0,1
+15/05/2022,09:00,Gwangju,Ansan Greeners,2,0
+15/05/2022,11:30,Chungnam Asan,Bucheon 1995,0,0
+17/05/2022,12:00,Daejeon Hana Citizen,Busan IPark,4,3
+17/05/2022,12:00,Jeonnam Dragons,Anyang,2,0
+17/05/2022,12:30,Seoul E-Land,Gimpo Citizen,3,1
+18/05/2022,12:30,Ansan Greeners,Chungnam Asan,0,1
+18/05/2022,12:30,Bucheon 1995,Gyeongnam,0,1
+21/05/2022,09:00,Daejeon Hana Citizen,Bucheon 1995,1,0
+21/05/2022,11:30,Jeonnam Dragons,Ansan Greeners,2,3
+22/05/2022,09:00,Gyeongnam,Gwangju,2,2
+22/05/2022,09:00,Gimpo Citizen,Busan IPark,1,0
+22/05/2022,11:30,Anyang,Seoul E-Land,0,0
+28/05/2022,09:00,Busan IPark,Gwangju,0,3
+28/05/2022,11:30,Anyang,Gyeongnam,1,0
+28/05/2022,11:30,Seoul E-Land,Daejeon Hana Citizen,0,1
+29/05/2022,09:00,Ansan Greeners,Gimpo Citizen,1,1
+29/05/2022,11:30,Chungnam Asan,Jeonnam Dragons,1,0
+04/06/2022,11:00,Daejeon Hana Citizen,Jeonnam Dragons,3,2
+04/06/2022,11:00,Gyeongnam,Gimpo Citizen,6,1
+04/06/2022,13:00,Seoul E-Land,Bucheon 1995,1,1
+05/06/2022,11:00,Gwangju,Chungnam Asan,3,2
+05/06/2022,13:00,Busan IPark,Ansan Greeners,2,0
+08/06/2022,12:00,Seoul E-Land,Jeonnam Dragons,1,1
+11/06/2022,11:00,Gwangju,Anyang,4,0
+12/06/2022,11:00,Seoul E-Land,Busan IPark,2,2
+12/06/2022,13:00,Jeonnam Dragons,Gyeongnam,2,2
+13/06/2022,12:00,Chungnam Asan,Daejeon Hana Citizen,1,0
+13/06/2022,12:30,Ansan Greeners,Bucheon 1995,3,0
+18/06/2022,11:00,Anyang,Daejeon Hana Citizen,2,2
+18/06/2022,13:00,Jeonnam Dragons,Gwangju,1,1
+18/06/2022,13:00,Gimpo Citizen,Bucheon 1995,2,1
+19/06/2022,11:00,Chungnam Asan,Seoul E-Land,0,0
+19/06/2022,13:00,Busan IPark,Gyeongnam,1,1
+21/06/2022,12:00,Daejeon Hana Citizen,Gwangju,1,1
+21/06/2022,12:30,Gimpo Citizen,Jeonnam Dragons,2,2
+22/06/2022,12:00,Gyeongnam,Chungnam Asan,0,0
+22/06/2022,12:30,Seoul E-Land,Ansan Greeners,2,3
+22/06/2022,12:30,Bucheon 1995,Anyang,0,1
+25/06/2022,11:00,Chungnam Asan,Ansan Greeners,3,1
+25/06/2022,13:00,Anyang,Seoul E-Land,1,0
+26/06/2022,11:00,Busan IPark,Bucheon 1995,0,2
+26/06/2022,13:00,Gwangju,Gyeongnam,1,4
+26/06/2022,13:00,Daejeon Hana Citizen,Gimpo Citizen,1,1
+02/07/2022,11:00,Ansan Greeners,Anyang,1,4
+02/07/2022,11:00,Bucheon 1995,Daejeon Hana Citizen,2,0
+02/07/2022,13:00,Gimpo Citizen,Gwangju,0,0
+03/07/2022,11:00,Chungnam Asan,Busan IPark,0,2
+03/07/2022,13:00,Seoul E-Land,Jeonnam Dragons,1,1
+05/07/2022,12:00,Gwangju,Bucheon 1995,2,1
+05/07/2022,12:30,Daejeon Hana Citizen,Ansan Greeners,2,0
+06/07/2022,12:00,Jeonnam Dragons,Gyeongnam,1,1
+06/07/2022,12:30,Anyang,Chungnam Asan,1,1
+06/07/2022,12:30,Busan IPark,Gimpo Citizen,0,3
+09/07/2022,11:00,Gyeongnam,Busan IPark,1,0
+09/07/2022,11:00,Ansan Greeners,Bucheon 1995,1,2
+10/07/2022,12:30,Chungnam Asan,Jeonnam Dragons,4,0
+11/07/2022,12:00,Seoul E-Land,Gwangju,2,2
+11/07/2022,12:30,Gimpo Citizen,Anyang,0,2
+15/07/2022,12:00,Gwangju,Anyang,0,0
+15/07/2022,12:30,Gyeongnam,Chungnam Asan,0,1
+17/07/2022,11:00,Jeonnam Dragons,Gimpo Citizen,0,1
+18/07/2022,12:00,Busan IPark,Ansan Greeners,0,1
+18/07/2022,12:30,Daejeon Hana Citizen,Seoul E-Land,3,1
+23/07/2022,13:00,Ansan Greeners,Gimpo Citizen,3,1
+23/07/2022,13:00,Bucheon 1995,Chungnam Asan,2,1
+24/07/2022,11:00,Jeonnam Dragons,Busan IPark,0,0
+26/07/2022,12:00,Gyeongnam,Ansan Greeners,2,1
+26/07/2022,12:30,Gimpo Citizen,Bucheon 1995,1,1
+27/07/2022,12:00,Busan IPark,Gwangju,0,2
+30/07/2022,12:00,Gwangju,Daejeon Hana Citizen,1,0
+31/07/2022,12:30,Anyang,Busan IPark,1,0
+31/07/2022,13:00,Ansan Greeners,Jeonnam Dragons,3,0
+01/08/2022,12:30,Seoul E-Land,Gimpo Citizen,3,0
+01/08/2022,12:30,Bucheon 1995,Gyeongnam,3,1
+06/08/2022,12:00,Seoul E-Land,Ansan Greeners,2,2
+07/08/2022,12:00,Chungnam Asan,Gwangju,0,2
+07/08/2022,12:30,Daejeon Hana Citizen,Busan IPark,3,0
+08/08/2022,12:00,Jeonnam Dragons,Bucheon 1995,1,1
+08/08/2022,12:00,Gyeongnam,Anyang,2,3
+13/08/2022,11:00,Jeonnam Dragons,Anyang,2,2
+13/08/2022,13:00,Ansan Greeners,Gwangju,0,0
+13/08/2022,13:00,Bucheon 1995,Seoul E-Land,0,0
+14/08/2022,11:00,Daejeon Hana Citizen,Chungnam Asan,2,1
+14/08/2022,13:00,Gimpo Citizen,Gyeongnam,1,3
+16/08/2022,12:00,Anyang,Bucheon 1995,4,2
+16/08/2022,12:00,Busan IPark,Seoul E-Land,1,0
+17/08/2022,12:00,Gwangju,Jeonnam Dragons,1,1
+17/08/2022,12:00,Gyeongnam,Daejeon Hana Citizen,2,1
+17/08/2022,12:30,Chungnam Asan,Gimpo Citizen,0,1
+20/08/2022,12:00,Seoul E-Land,Gwangju,0,4
+21/08/2022,11:00,Daejeon Hana Citizen,Anyang,2,3
+21/08/2022,13:00,Gimpo Citizen,Jeonnam Dragons,1,1
+22/08/2022,12:00,Ansan Greeners,Chungnam Asan,2,2
+22/08/2022,12:30,Bucheon 1995,Busan IPark,1,1
+27/08/2022,09:00,Gwangju,Busan IPark,1,0
+27/08/2022,11:30,Daejeon Hana Citizen,Bucheon 1995,3,1
+27/08/2022,11:30,Anyang,Gimpo Citizen,0,0
+28/08/2022,09:00,Jeonnam Dragons,Chungnam Asan,1,3
+28/08/2022,11:30,Gyeongnam,Ansan Greeners,2,1
+30/08/2022,12:00,Busan IPark,Anyang,0,1
+30/08/2022,12:30,Bucheon 1995,Gwangju,2,1
+31/08/2022,12:00,Chungnam Asan,Gyeongnam,2,1
+31/08/2022,12:30,Seoul E-Land,Daejeon Hana Citizen,2,1
+31/08/2022,12:30,Gimpo Citizen,Ansan Greeners,0,3
+03/09/2022,09:00,Chungnam Asan,Bucheon 1995,0,3
+03/09/2022,11:30,Gwangju,Gimpo Citizen,2,1
+04/09/2022,09:00,Ansan Greeners,Busan IPark,3,1
+05/09/2022,12:00,Seoul E-Land,Gyeongnam,2,1
+05/09/2022,12:30,Anyang,Jeonnam Dragons,3,1
+10/09/2022,06:30,Gimpo Citizen,Seoul E-Land,0,3
+10/09/2022,09:00,Busan IPark,Gyeongnam,1,0
+10/09/2022,11:30,Daejeon Hana Citizen,Chungnam Asan,1,1
+11/09/2022,06:30,Jeonnam Dragons,Gwangju,2,3
+11/09/2022,09:00,Bucheon 1995,Ansan Greeners,3,3
+13/09/2022,12:00,Gyeongnam,Gimpo Citizen,1,0
+13/09/2022,12:30,Busan IPark,Daejeon Hana Citizen,1,3
+14/09/2022,12:00,Ansan Greeners,Jeonnam Dragons,1,7
+14/09/2022,12:30,Anyang,Gwangju,1,2
+14/09/2022,12:30,Seoul E-Land,Chungnam Asan,3,0
+17/09/2022,06:30,Jeonnam Dragons,Daejeon Hana Citizen,1,1
+17/09/2022,09:00,Gyeongnam,Bucheon 1995,0,3
+17/09/2022,09:00,Gimpo Citizen,Busan IPark,0,0
+17/09/2022,11:30,Ansan Greeners,Seoul E-Land,1,1
+17/09/2022,11:30,Chungnam Asan,Anyang,0,0
+21/09/2022,12:00,Anyang,Daejeon Hana Citizen,0,1
+21/09/2022,12:30,Seoul E-Land,Gyeongnam,0,1
+24/09/2022,09:00,Bucheon 1995,Gimpo Citizen,0,1
+25/09/2022,06:30,Daejeon Hana Citizen,Gyeongnam,3,0
+25/09/2022,09:00,Seoul E-Land,Anyang,3,2
+26/09/2022,12:00,Jeonnam Dragons,Busan IPark,0,1
+26/09/2022,12:30,Gwangju,Ansan Greeners,3,0
+01/10/2022,06:30,Gimpo Citizen,Chungnam Asan,1,0
+01/10/2022,09:00,Seoul E-Land,Bucheon 1995,3,0
+01/10/2022,11:30,Anyang,Ansan Greeners,2,0
+02/10/2022,06:30,Daejeon Hana Citizen,Gwangju,2,2
+02/10/2022,09:00,Gyeongnam,Jeonnam Dragons,2,0
+05/10/2022,12:00,Daejeon Hana Citizen,Jeonnam Dragons,2,1
+05/10/2022,12:30,Chungnam Asan,Seoul E-Land,2,1
+08/10/2022,06:30,Anyang,Bucheon 1995,1,0
+08/10/2022,09:00,Jeonnam Dragons,Seoul E-Land,3,0
+08/10/2022,11:30,Gimpo Citizen,Daejeon Hana Citizen,0,3
+09/10/2022,06:30,Busan IPark,Chungnam Asan,4,0
+09/10/2022,09:00,Gwangju,Gyeongnam,4,0
+15/10/2022,08:00,Gyeongnam,Anyang,1,0
+15/10/2022,08:00,Ansan Greeners,Daejeon Hana Citizen,1,2
+15/10/2022,08:00,Chungnam Asan,Gwangju,0,0
+15/10/2022,08:00,Seoul E-Land,Busan IPark,0,1
+15/10/2022,08:00,Bucheon 1995,Jeonnam Dragons,2,2
+19/10/2022,12:00,Bucheon 1995,Gyeongnam,2,3
+23/10/2022,06:00,Anyang,Gyeongnam,0,0

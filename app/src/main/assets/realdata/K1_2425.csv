@@ -1,0 +1,229 @@
+Date,Time,HomeTeam,AwayTeam,FTHG,FTAG
+01/03/2024,06:00,Ulsan,Pohang Steelers,1,0
+01/03/2024,08:30,Jeonbuk Motors,Daejeon Hana Citizen,1,1
+02/03/2024,06:00,Gwangju,Seoul,2,0
+02/03/2024,08:30,Incheon United,Suwon,0,1
+02/03/2024,08:30,Gangwon,Jeju United,1,1
+03/03/2024,06:00,Daegu,Gimcheon Sangmu,0,1
+09/03/2024,06:00,Suwon,Jeonbuk Motors,1,1
+09/03/2024,08:30,Pohang Steelers,Daegu,3,1
+09/03/2024,08:30,Gimcheon Sangmu,Ulsan,2,3
+10/03/2024,06:00,Jeju United,Daejeon Hana Citizen,3,1
+10/03/2024,08:00,Seoul,Incheon United,0,0
+10/03/2024,08:30,Gwangju,Gangwon,4,2
+16/03/2024,06:00,Daejeon Hana Citizen,Gangwon,1,1
+16/03/2024,08:30,Daegu,Suwon,1,1
+16/03/2024,08:30,Seoul,Jeju United,2,0
+17/03/2024,06:00,Pohang Steelers,Gwangju,1,0
+17/03/2024,06:00,Gimcheon Sangmu,Jeonbuk Motors,1,0
+17/03/2024,08:30,Ulsan,Incheon United,3,3
+30/03/2024,06:00,Jeonbuk Motors,Ulsan,2,2
+30/03/2024,06:00,Incheon United,Daejeon Hana Citizen,2,0
+30/03/2024,08:30,Jeju United,Pohang Steelers,0,2
+30/03/2024,08:30,Suwon,Gimcheon Sangmu,1,4
+31/03/2024,07:00,Gangwon,Seoul,1,1
+31/03/2024,09:30,Gwangju,Daegu,1,2
+02/04/2024,12:30,Pohang Steelers,Suwon,1,1
+02/04/2024,12:30,Daejeon Hana Citizen,Ulsan,2,0
+03/04/2024,12:30,Gwangju,Incheon United,2,3
+03/04/2024,12:30,Seoul,Gimcheon Sangmu,5,1
+03/04/2024,12:30,Jeju United,Jeonbuk Motors,2,0
+03/04/2024,12:30,Gangwon,Daegu,3,0
+06/04/2024,07:00,Ulsan,Suwon,3,0
+06/04/2024,09:30,Incheon United,Jeju United,0,1
+06/04/2024,09:30,Gimcheon Sangmu,Gwangju,2,1
+07/04/2024,07:00,Jeonbuk Motors,Gangwon,2,3
+07/04/2024,07:00,Daegu,Seoul,0,0
+07/04/2024,09:30,Daejeon Hana Citizen,Pohang Steelers,1,2
+13/04/2024,07:00,Jeonbuk Motors,Gwangju,2,1
+13/04/2024,07:00,Seoul,Pohang Steelers,2,4
+13/04/2024,09:30,Ulsan,Gangwon,4,0
+13/04/2024,09:30,Jeju United,Gimcheon Sangmu,0,2
+14/04/2024,07:00,Suwon,Daejeon Hana Citizen,1,0
+14/04/2024,09:30,Incheon United,Daegu,1,1
+20/04/2024,07:00,Suwon,Jeju United,2,1
+20/04/2024,09:30,Pohang Steelers,Gimcheon Sangmu,0,0
+20/04/2024,09:30,Seoul,Jeonbuk Motors,2,3
+21/04/2024,07:00,Gangwon,Incheon United,4,1
+21/04/2024,09:30,Daegu,Daejeon Hana Citizen,0,0
+27/04/2024,07:00,Daejeon Hana Citizen,Seoul,3,1
+27/04/2024,09:30,Gwangju,Suwon,1,2
+27/04/2024,09:30,Gimcheon Sangmu,Gangwon,1,0
+28/04/2024,07:00,Pohang Steelers,Incheon United,0,0
+28/04/2024,07:00,Jeonbuk Motors,Daegu,2,2
+28/04/2024,09:30,Ulsan,Jeju United,3,1
+30/04/2024,12:30,Daejeon Hana Citizen,Gimcheon Sangmu,0,0
+30/04/2024,12:30,Suwon,Seoul,0,2
+01/05/2024,12:00,Daegu,Ulsan,1,2
+01/05/2024,12:00,Incheon United,Jeonbuk Motors,3,0
+01/05/2024,12:00,Jeju United,Gwangju,1,3
+01/05/2024,12:00,Gangwon,Pohang Steelers,2,4
+04/05/2024,07:30,Seoul,Ulsan,0,1
+04/05/2024,09:30,Pohang Steelers,Jeonbuk Motors,1,0
+05/05/2024,07:00,Suwon,Gangwon,1,2
+05/05/2024,09:30,Gimcheon Sangmu,Incheon United,2,2
+06/05/2024,07:00,Jeju United,Daegu,1,0
+06/05/2024,09:30,Gwangju,Daejeon Hana Citizen,2,1
+11/05/2024,09:30,Incheon United,Seoul,1,2
+11/05/2024,12:00,Daegu,Gwangju,3,2
+11/05/2024,12:00,Gangwon,Daejeon Hana Citizen,3,3
+12/05/2024,07:00,Jeonbuk Motors,Suwon,2,3
+12/05/2024,09:30,Ulsan,Gimcheon Sangmu,2,2
+12/05/2024,09:30,Pohang Steelers,Jeju United,1,1
+15/05/2024,09:30,Gwangju,Ulsan,2,1
+18/05/2024,09:30,Daejeon Hana Citizen,Incheon United,0,1
+18/05/2024,12:00,Gimcheon Sangmu,Jeju United,1,0
+19/05/2024,09:30,Gwangju,Jeonbuk Motors,0,3
+19/05/2024,09:30,Seoul,Daegu,1,2
+19/05/2024,09:30,Gangwon,Ulsan,1,0
+19/05/2024,12:00,Suwon,Pohang Steelers,1,0
+25/05/2024,07:00,Jeonbuk Motors,Gimcheon Sangmu,0,0
+25/05/2024,09:30,Ulsan,Daejeon Hana Citizen,4,1
+25/05/2024,12:00,Pohang Steelers,Seoul,2,2
+25/05/2024,12:00,Incheon United,Gwangju,1,1
+26/05/2024,09:30,Daegu,Gangwon,1,2
+26/05/2024,12:00,Jeju United,Suwon,1,0
+28/05/2024,12:30,Gwangju,Pohang Steelers,0,1
+28/05/2024,12:30,Gimcheon Sangmu,Seoul,0,0
+29/05/2024,12:30,Incheon United,Ulsan,1,1
+29/05/2024,12:30,Daejeon Hana Citizen,Jeju United,0,1
+29/05/2024,12:30,Suwon,Daegu,2,0
+29/05/2024,12:30,Gangwon,Jeonbuk Motors,2,1
+01/06/2024,09:30,Ulsan,Jeonbuk Motors,1,0
+01/06/2024,12:00,Suwon,Incheon United,3,1
+01/06/2024,12:00,Gimcheon Sangmu,Pohang Steelers,3,1
+02/06/2024,09:30,Daejeon Hana Citizen,Daegu,1,0
+02/06/2024,09:30,Jeju United,Gangwon,1,2
+02/06/2024,12:00,Seoul,Gwangju,1,2
+15/06/2024,11:00,Pohang Steelers,Daejeon Hana Citizen,1,1
+15/06/2024,12:00,Gwangju,Gimcheon Sangmu,2,0
+15/06/2024,13:00,Gangwon,Suwon,3,1
+16/06/2024,11:00,Ulsan,Seoul,2,2
+16/06/2024,11:00,Jeonbuk Motors,Incheon United,2,2
+16/06/2024,12:00,Daegu,Jeju United,1,0
+22/06/2024,11:00,Daegu,Jeonbuk Motors,3,0
+22/06/2024,12:00,Daejeon Hana Citizen,Gwangju,2,1
+22/06/2024,12:00,Gangwon,Gimcheon Sangmu,2,3
+22/06/2024,13:00,Seoul,Suwon,3,0
+23/06/2024,11:00,Incheon United,Pohang Steelers,1,3
+23/06/2024,11:00,Jeju United,Ulsan,2,3
+25/06/2024,12:30,Suwon,Gwangju,1,0
+25/06/2024,12:30,Gimcheon Sangmu,Daejeon Hana Citizen,2,0
+26/06/2024,12:30,Ulsan,Daegu,1,0
+26/06/2024,12:30,Jeonbuk Motors,Pohang Steelers,1,1
+26/06/2024,12:30,Seoul,Gangwon,2,0
+26/06/2024,12:30,Jeju United,Incheon United,1,0
+29/06/2024,11:00,Gimcheon Sangmu,Daegu,2,0
+29/06/2024,12:00,Jeonbuk Motors,Seoul,1,5
+29/06/2024,13:00,Daejeon Hana Citizen,Suwon,0,2
+30/06/2024,11:00,Pohang Steelers,Ulsan,2,1
+30/06/2024,12:00,Gwangju,Jeju United,2,1
+30/06/2024,12:00,Incheon United,Gangwon,0,1
+05/07/2024,12:30,Incheon United,Gimcheon Sangmu,1,1
+05/07/2024,12:30,Suwon,Ulsan,1,1
+06/07/2024,12:00,Jeju United,Seoul,3,2
+06/07/2024,12:30,Daegu,Pohang Steelers,3,3
+07/07/2024,12:00,Daejeon Hana Citizen,Jeonbuk Motors,2,2
+07/07/2024,12:00,Gangwon,Gwangju,2,0
+09/07/2024,12:30,Daegu,Incheon United,0,0
+09/07/2024,12:30,Gimcheon Sangmu,Suwon,2,3
+10/07/2024,12:30,Ulsan,Gwangju,0,1
+10/07/2024,12:30,Pohang Steelers,Gangwon,2,0
+10/07/2024,12:30,Jeonbuk Motors,Jeju United,2,1
+10/07/2024,12:30,Seoul,Daejeon Hana Citizen,2,1
+13/07/2024,12:00,Ulsan,Seoul,1,0
+13/07/2024,12:30,Daejeon Hana Citizen,Gangwon,1,1
+13/07/2024,12:30,Jeju United,Pohang Steelers,2,1
+14/07/2024,12:00,Gwangju,Incheon United,0,2
+14/07/2024,12:00,Suwon,Daegu,2,2
+14/07/2024,12:00,Gimcheon Sangmu,Jeonbuk Motors,4,0
+20/07/2024,12:00,Jeonbuk Motors,Ulsan,2,0
+20/07/2024,12:30,Gangwon,Jeju United,4,0
+21/07/2024,12:00,Incheon United,Suwon,1,4
+21/07/2024,12:00,Daegu,Gwangju,0,1
+21/07/2024,12:00,Seoul,Gimcheon Sangmu,1,0
+21/07/2024,12:00,Daejeon Hana Citizen,Pohang Steelers,1,2
+26/07/2024,12:30,Jeju United,Ulsan,1,0
+26/07/2024,12:30,Gangwon,Jeonbuk Motors,4,2
+27/07/2024,12:00,Gwangju,Suwon,1,0
+27/07/2024,12:30,Daegu,Daejeon Hana Citizen,1,1
+27/07/2024,12:30,Incheon United,Seoul,0,1
+28/07/2024,12:00,Pohang Steelers,Gimcheon Sangmu,1,2
+09/08/2024,12:30,Jeonbuk Motors,Gwangju,0,1
+09/08/2024,12:30,Gimcheon Sangmu,Gangwon,1,2
+10/08/2024,12:00,Ulsan,Daegu,1,0
+10/08/2024,12:30,Jeju United,Incheon United,0,1
+10/08/2024,12:30,Suwon,Daejeon Hana Citizen,1,2
+11/08/2024,12:00,Pohang Steelers,Seoul,1,2
+16/08/2024,12:30,Daegu,Gimcheon Sangmu,3,0
+16/08/2024,12:30,Seoul,Jeju United,1,0
+17/08/2024,12:00,Jeonbuk Motors,Pohang Steelers,2,1
+17/08/2024,12:30,Daejeon Hana Citizen,Incheon United,2,1
+18/08/2024,12:00,Ulsan,Suwon,1,2
+18/08/2024,12:00,Gangwon,Gwangju,3,2
+24/08/2024,12:00,Pohang Steelers,Daegu,1,2
+24/08/2024,12:30,Incheon United,Jeonbuk Motors,0,1
+24/08/2024,12:30,Seoul,Gangwon,2,0
+25/08/2024,12:00,Gwangju,Ulsan,0,1
+25/08/2024,12:00,Suwon,Jeju United,5,0
+25/08/2024,12:00,Gimcheon Sangmu,Daejeon Hana Citizen,2,2
+31/08/2024,12:00,Ulsan,Pohang Steelers,5,4
+31/08/2024,12:30,Daegu,Incheon United,1,2
+01/09/2024,11:00,Jeju United,Gimcheon Sangmu,1,0
+01/09/2024,12:00,Jeonbuk Motors,Seoul,0,0
+01/09/2024,12:00,Daejeon Hana Citizen,Gwangju,2,0
+01/09/2024,12:00,Gangwon,Suwon,2,2
+13/09/2024,12:30,Ulsan,Gangwon,2,0
+13/09/2024,12:30,Gwangju,Pohang Steelers,2,1
+14/09/2024,09:30,Seoul,Daejeon Hana Citizen,2,3
+14/09/2024,12:00,Jeju United,Daegu,0,4
+14/09/2024,12:00,Suwon,Jeonbuk Motors,0,6
+15/09/2024,09:30,Gimcheon Sangmu,Incheon United,2,0
+21/09/2024,09:30,Suwon,Gimcheon Sangmu,2,4
+21/09/2024,12:00,Daegu,Seoul,1,1
+22/09/2024,09:30,Pohang Steelers,Gangwon,2,1
+22/09/2024,09:30,Gwangju,Jeju United,0,2
+22/09/2024,12:00,Incheon United,Ulsan,0,0
+22/09/2024,12:00,Daejeon Hana Citizen,Jeonbuk Motors,0,0
+27/09/2024,12:30,Pohang Steelers,Incheon United,1,0
+27/09/2024,12:30,Daejeon Hana Citizen,Ulsan,0,1
+28/09/2024,09:30,Gangwon,Daegu,1,1
+28/09/2024,12:00,Jeonbuk Motors,Jeju United,2,1
+28/09/2024,12:00,Gimcheon Sangmu,Gwangju,2,0
+29/09/2024,09:30,Seoul,Suwon,1,0
+06/10/2024,08:00,Ulsan,Gimcheon Sangmu,2,1
+06/10/2024,08:00,Gwangju,Seoul,3,1
+06/10/2024,08:00,Daegu,Jeonbuk Motors,4,3
+06/10/2024,08:00,Incheon United,Gangwon,1,3
+06/10/2024,08:00,Jeju United,Daejeon Hana Citizen,2,1
+06/10/2024,08:00,Pohang Steelers,Suwon,1,1
+18/10/2024,12:30,Gwangju,Daegu,1,1
+18/10/2024,12:30,Pohang Steelers,Suwon,1,1
+19/10/2024,07:00,Jeonbuk Motors,Daejeon Hana Citizen,0,2
+19/10/2024,09:30,Incheon United,Jeju United,1,2
+19/10/2024,09:30,Gimcheon Sangmu,Ulsan,0,0
+20/10/2024,08:00,Gangwon,Seoul,1,0
+26/10/2024,07:00,Gangwon,Gimcheon Sangmu,1,0
+26/10/2024,09:30,Suwon,Seoul,0,1
+27/10/2024,06:00,Daejeon Hana Citizen,Daegu,1,0
+27/10/2024,06:00,Pohang Steelers,Ulsan,0,2
+27/10/2024,08:30,Incheon United,Gwangju,1,0
+27/10/2024,08:30,Jeju United,Jeonbuk Motors,1,0
+01/11/2024,11:30,Ulsan,Gangwon,2,1
+02/11/2024,06:00,Jeonbuk Motors,Incheon United,0,0
+02/11/2024,08:30,Gwangju,Daejeon Hana Citizen,0,0
+02/11/2024,08:30,Seoul,Pohang Steelers,1,1
+02/11/2024,08:30,Gimcheon Sangmu,Suwon,1,0
+03/11/2024,06:00,Daegu,Jeju United,2,2
+09/11/2024,08:30,Suwon,Gangwon,4,0
+10/11/2024,06:00,Seoul,Ulsan,1,1
+10/11/2024,06:00,Pohang Steelers,Gimcheon Sangmu,0,3
+10/11/2024,08:30,Incheon United,Daejeon Hana Citizen,1,2
+10/11/2024,08:30,Jeju United,Gwangju,0,0
+10/11/2024,08:30,Jeonbuk Motors,Daegu,3,1
+23/11/2024,06:00,Ulsan,Suwon,4,2
+23/11/2024,06:00,Gimcheon Sangmu,Seoul,1,3
+23/11/2024,06:00,Gangwon,Pohang Steelers,1,0
+24/11/2024,06:00,Gwangju,Jeonbuk Motors,1,1
+24/11/2024,06:00,Daegu,Incheon United,1,3
+24/11/2024,06:00,Daejeon Hana Citizen,Jeju United,2,1

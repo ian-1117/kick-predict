@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kick Predict</string>
+
+    <!-- Match list -->
+    <string name="search_hint">팀 검색 (한글·영문·약칭)</string>
+    <string name="filter_all">전체</string>
+    <string name="group_by_round">라운드별</string>
+    <string name="group_by_week">주별</string>
+    <string name="date_range">기간</string>
+    <string name="date_range_picker_title">기간 선택</string>
+    <string name="action_apply">적용</string>
+    <string name="action_cancel">취소</string>
+    <string name="action_close">닫기</string>
+    <string name="clear_search">검색 지우기</string>
+    <string name="empty_matches">해당 조건의 경기가 없습니다.</string>
+    <string name="nav_standings">리그 순위</string>
+    <string name="nav_dashboard">적중·보정 대시보드</string>
+    <string name="nav_value_picks">밸류 픽</string>
+    <string name="nav_theme">테마</string>
+    <string name="nav_settings">설정</string>
+
+    <!-- Section headers -->
+    <string name="section_round">라운드 %1$d</string>
+    <string name="section_week">%1$s – %2$s 주</string>
+
+    <!-- Prediction -->
+    <string name="prediction_label">예측: %1$s</string>
+    <string name="outcome_win">%1$s 승</string>
+    <string name="outcome_draw">무승부</string>
+    <string name="a11y_prediction">예측: 홈 승 %1$d%%, 무 %2$d%%, 원정 승 %3$d%%</string>
+    <string name="hit_rate">적중률 %1$d%%</string>
+    <string name="matchup_edge">상성</string>
+    <string name="jump_current_round">현재 라운드</string>
+    <string name="filter_followed">팔로우</string>
+    <string name="follow">팔로우</string>
+    <string name="unfollow">팔로우 해제</string>
+    <string name="following">팔로우 중</string>
+    <string name="live">LIVE</string>
+    <string name="value_pick">밸류</string>
+    <string name="tier_very_high">매우 높음</string>
+    <string name="tier_high">높음</string>
+    <string name="tier_moderate">보통</string>
+    <string name="tier_low">낮음</string>
+    <string name="tier_very_low">매우 낮음</string>
+
+    <!-- Calibration status bar -->
+    <string name="calib_prefix">AI 보정</string>
+    <string name="calib_results">결과 %1$d건</string>
+    <string name="calib_accuracy">예측 정확도 %1$d%%</string>
+    <string name="calib_confidence_applied">신뢰도 보정 적용</string>
+    <string name="calib_confidence_pending">신뢰도 보정 대기</string>
+    <string name="calib_leagues">리그 %1$d개</string>
+    <string name="calib_accumulating">표본 축적 중</string>
+
+    <!-- Outcomes (generic home/away/draw) -->
+    <string name="outcome_home">홈 승</string>
+    <string name="outcome_away">원정 승</string>
+    <string name="result_hit">적중</string>
+    <string name="result_miss">실패</string>
+
+    <!-- Detail screen -->
+    <string name="detail_expected_score">예상 스코어</string>
+    <string name="detail_enter_result">실제 결과 입력</string>
+    <string name="detail_recorded_count">기록된 결과 %1$d건</string>
+    <string name="detail_prediction_hit">예측 적중</string>
+    <string name="detail_prediction_miss">예측 실패</string>
+    <string name="detail_save_result">결과 저장</string>
+    <string name="detail_edit_result">결과 수정</string>
+    <string name="detail_decrease">감소</string>
+    <string name="detail_increase">증가</string>
+    <string name="detail_extra_markets">추가 마켓</string>
+    <string name="detail_over25">오버 2.5</string>
+    <string name="detail_under25">언더 2.5</string>
+    <string name="detail_btts">양팀 득점</string>
+    <string name="detail_no_goal">노골</string>
+    <string name="detail_score_prob">스코어 확률</string>
+    <string name="score_totals_note">각 스코어는 결과별 색으로 표시됩니다. 픽은 스코어들을 합쳤을 때 가장 높은 결과입니다 — 단일 최다 스코어가 아니라(무승부가 단일 막대로는 가장 큰 경우가 많습니다).</string>
+    <string name="share_prediction">예측 공유</string>
+    <string name="share_confidence">AI 적중 확률 %1$d%% · %2$s</string>
+    <string name="share_footer">Kick Predict 예측</string>
+    <string name="detail_value_title">모델 vs 시장</string>
+    <string name="detail_value_note">모델 확률과 배당에 내재된 시장 확률 비교. 초록색 우위는 모델이 북메이커보다 높게 본다는 뜻입니다.</string>
+    <string name="detail_value_col_odds">배당</string>
+    <string name="detail_value_col_market">시장</string>
+    <string name="detail_value_col_model">모델</string>
+    <string name="detail_value_edge">밸류 · %1$s %2$+d%%</string>
+    <string name="detail_value_none">밸류 없음 — 시장과 모델이 일치합니다.</string>
+
+    <!-- Value picks hub -->
+    <string name="value_empty">아직 밸류 픽이 없습니다. 모델이 시장보다 높게 보는 픽이 나오면, 플래그된 시점의 배당과 함께 여기 표시됩니다.</string>
+    <string name="value_roi_caption">누적 ROI · 정산 %1$d픽 (1유닛 균등 베팅)</string>
+    <string name="value_won">적중</string>
+    <string name="value_lost">실패</string>
+    <string name="value_pending_count">대기</string>
+    <string name="value_clv_label">CLV %1$s%%</string>
+    <string name="value_clv_caption">마감 배당 대비</string>
+    <string name="value_bankroll_caption">뱅크롤 · 하프켈리 베팅</string>
+    <string name="value_roi_chart">누적 ROI</string>
+    <string name="value_bankroll_chart">뱅크롤 성장</string>
+    <string name="acca_add_leg">누적 베팅에 추가</string>
+    <string name="acca_remove_leg">누적 베팅에서 제거</string>
+    <string name="acca_title_legs">누적 베팅 · %1$d경기</string>
+    <string name="acca_clear">비우기</string>
+    <string name="acca_combo_odds">결합 배당</string>
+    <string name="acca_joint_prob">결합 확률</string>
+    <string name="acca_edge">엣지</string>
+    <string name="acca_kelly">켈리 스테이크</string>
+    <string name="acca_save">파레이 저장</string>
+    <string name="acca_delete">파레이 삭제</string>
+    <string name="acca_share">파레이 공유</string>
+    <string name="acca_saved_header">저장한 파레이</string>
+    <string name="acca_saved_roi">ROI %1$s%% · %2$d건 정산</string>
+    <string name="acca_picks_header">밸류 픽</string>
+    <string name="value_by_league">리그별 밸류 수익성</string>
+    <string name="value_by_league_note">엣지가 실제로 수익을 낸 곳. 막대는 수익이면 오른쪽, 손실이면 왼쪽으로 자라고, 가장 수익이 좋은(정산된) 리그를 강조합니다.</string>
+    <string name="value_league_meta">%1$d베팅 · %2$d정산</string>
+    <string name="value_league_meta_clv">%1$d베팅 · CLV %2$s%%</string>
+
+    <!-- Home-screen widget -->
+    <string name="widget_description">다가오는 픽과 밸류 엣지를 한눈에</string>
+    <string name="widget_empty">아직 예정된 픽이 없습니다 — 앱을 열어 일정을 불러오세요.</string>
+    <string name="widget_config_title">위젯에 표시</string>
+
+    <!-- Backtest -->
+    <string name="backtest_title">백테스트</string>
+    <string name="nav_backtest">과거 백테스트 실행</string>
+    <string name="backtest_subtitle">%1$d경기 · walk-forward(예측 후 학습)</string>
+    <string name="backtest_note">정직한 out-of-sample: 각 경기를 이전 경기만으로 예측한 뒤 학습합니다. ROI·CLV는 배당이 있는 리그에서 시장 평균가 대비 균등 베팅한 밸류 베팅 기준입니다.</string>
+    <string name="backtest_roi">밸류 ROI</string>
+    <string name="backtest_bets">%1$d베팅</string>
+    <string name="backtest_clv">CLV</string>
+    <string name="backtest_by_league">리그별</string>
+    <string name="backtest_empty">백테스트할 번들 데이터가 없습니다.</string>
+    <string name="backtest_league_stats">%1$d경기 · 정확도 %2$d%%</string>
+    <string name="backtest_league_value">ROI %1$+d%% · %2$d베팅 · CLV %3$s%%</string>
+    <string name="backtest_models">Elo vs 시장 vs 블렌드</string>
+    <string name="backtest_models_note">동일한 배당 보유 경기 기준. 모델과 시장가를 섞으면 정식 채점이 더 날카로워집니다 — 시장은 배울 가치가 있는 강력한 사전확률입니다.</string>
+    <string name="backtest_model_elo">Elo</string>
+    <string name="backtest_model_market">시장</string>
+    <string name="backtest_model_blend">블렌드</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_tagline">책임질 수 있는 축구 예측.</string>
+    <string name="onboarding_feat1_title">라이브 예측</string>
+    <string name="onboarding_feat1_body">6개 리그 전 경기, 실제 결과로 보정됩니다.</string>
+    <string name="onboarding_feat2_title">설명 가능한 예측</string>
+    <string name="onboarding_feat2_body">각 예측을 움직인 요인을 보여주고, 실제 결과로 정확도를 추적합니다.</string>
+    <string name="onboarding_feat3_title">설계부터 정직하게</string>
+    <string name="onboarding_feat3_body">정식 채점과 walk-forward 백테스트로 책임집니다.</string>
+    <string name="onboarding_enable_notifs">경기 알림 켜기</string>
+    <string name="onboarding_notifs_on">알림 켜짐</string>
+    <string name="onboarding_start">시작하기</string>
+
+    <!-- Team comparison -->
+    <string name="compare_title">팀 비교</string>
+    <string name="nav_compare">팀 비교</string>
+    <string name="compare_no_matchup">이 두 팀은 이번 시즌 비교할 경기가 없습니다.</string>
+
+    <!-- Standings screen -->
+    <string name="standings_simulate">시즌 시뮬레이션</string>
+    <string name="standings_empty">아직 결과가 없습니다. 결과를 입력하거나 대시보드에서 샘플을 채우면 순위표가 만들어집니다.</string>
+    <string name="standings_col_team">팀</string>
+    <string name="standings_previous_season">지난 시즌 최종 순위 · 새 시즌 개막 전</string>
+    <string name="standings_col_played">경기</string>
+    <string name="standings_col_points">승점</string>
+    <string name="standings_record">%1$d승 %2$d무 %3$d패 · 득실 %4$s</string>
+
+    <!-- Team screen -->
+    <string name="team_recent_form">최근 폼</string>
+    <string name="team_fixtures">경기 일정 · 예측</string>
+    <string name="team_rank">순위</string>
+    <string name="team_points">승점</string>
+    <string name="team_home">홈</string>
+    <string name="team_away">원정</string>
+    <string name="team_season">시즌 기록</string>
+    <string name="team_wdl">%1$d승 · %2$d무 · %3$d패</string>
+    <string name="team_goals">득점 %1$d · 실점 %2$d · 득실 %3$s</string>
+    <string name="team_form_detail">경기당 득점 %1$s · 실점 %2$s · 모델 적중 %3$d%%</string>
+    <string name="team_h2h">상성 %1$d승 %2$d무 %3$d패</string>
+
+    <!-- Dashboard -->
+    <string name="dash_title">적중 · 보정 대시보드</string>
+    <string name="dash_fill_samples">샘플 결과 채우기</string>
+    <string name="dash_empty_title">아직 기록된 결과가 없습니다</string>
+    <string name="dash_empty_body">경기 상세에서 실제 결과를 입력하거나, 5개 리그·5라운드 샘플 결과를 채워 예측 정확도와 보정을 바로 확인해 보세요.</string>
+    <string name="dash_fill_5rounds">5라운드 샘플 결과 채우기</string>
+    <string name="dash_accuracy_by_round">라운드별 예측 정확도</string>
+    <string name="dash_model_compare">모델 비교</string>
+    <string name="dash_reliability">신뢰도 구간별 실제 적중률</string>
+    <string name="dash_scorecard">모델 성적표</string>
+    <string name="dash_scorecard_note">정산 %1$d건 기준 정식 채점. 낮을수록 좋음: Brier·log-loss는 운이 아닌 날카롭고 정직한 확률에 보상하고, 보정오차는 모델 신뢰도가 실제 적중률에서 얼마나 벗어났는지입니다.</string>
+    <string name="dash_by_league">리그별 성적</string>
+    <string name="dash_by_league_note">모델이 어디서 날카로운지. 막대는 적중률이고, Brier가 가장 낮은(운을 걷어낸 가장 날카로운) 리그를 강조합니다.</string>
+    <string name="dash_league_meta">%1$d경기 · Brier %2$s</string>
+    <string name="dash_drift">모델 드리프트</string>
+    <string name="dash_drift_note">동일한 시간순 창별 Brier — 모델이 날카로워지는지 무뎌지는지. 선은 반전되어 위로 갈수록 날카로움(낮은 Brier)입니다.</string>
+    <string name="dash_drift_sharper">날카로워짐 ↑</string>
+    <string name="dash_drift_drifting">무뎌짐 ↓</string>
+    <string name="dash_drift_delta">Brier %1$s → %2$s</string>
+    <string name="dash_drift_oldest">과거</string>
+    <string name="dash_drift_newest">최근</string>
+    <string name="dash_brier">Brier</string>
+    <string name="dash_logloss">Log-loss</string>
+    <string name="dash_calib_err">보정오차</string>
+    <string name="dash_recent">최근 기록</string>
+    <string name="dash_stat_records">기록</string>
+    <string name="dash_records_value">%1$d건</string>
+    <string name="dash_stat_accuracy">예측 정확도</string>
+    <string name="dash_applied">적용</string>
+    <string name="dash_pending">대기</string>
+    <string name="dash_confidence_line">신뢰도 보정 %1$s · 리그 %2$d개 보정</string>
+    <string name="dash_model_note">동일한 기록에 대한 모델별 정확도 · Elo는 walk-forward(예측 후 학습)로 정직하게 평가</string>
+    <string name="dash_round_note">막대 높이 = 라운드별 예측 정확도 (맞힌 예측 ÷ 경기 수)</string>
+    <string name="dash_reliability_note">막대: 실제 적중률 / 회색선: 예측 신뢰도 — 적중률이 신뢰도보다 낮으면 과신뢰</string>
+    <string name="dash_band_value">%1$d%% · %2$d건</string>
+    <string name="dash_recent_pred">예측 %1$s · 적중률 %2$d%%</string>
+    <string name="model_engine">AI 엔진 (Poisson)</string>
+    <string name="model_elo">Elo 학습 (walk-forward)</string>
+    <string name="model_baseline">베이스라인 (홈 승)</string>
+
+    <!-- Season simulation -->
+    <string name="nav_back">뒤로</string>
+    <string name="sim_no_fixtures">시뮬레이션할 일정이 없습니다.</string>
+    <string name="sim_start">시뮬레이션 시작</string>
+    <string name="sim_round">%1$d라운드</string>
+    <string name="sim_preseason">프리시즌 — 전 경기 시뮬레이션</string>
+    <string name="sim_split">1~%1$dR 실제 결과 · %2$d~%3$dR 시뮬레이션</string>
+    <string name="sim_iterations">%1$s회 반복 · 잔여 %2$d경기</string>
+    <string name="sim_metric_prob">%1$s 확률</string>
+    <string name="sim_disclaimer">\'실제\'는 이 시즌이 실제로 끝난 순위입니다. 컷오프 이후 경기는 그 시점까지 알 수 있었던 기록만으로 예측하므로, 모델은 자신이 맞혀야 할 결과를 미리 보지 않습니다. 다만 표본은 한 시즌뿐입니다 — 몇 개 맞혔다고 예측력이 검증된 것은 아닙니다.</string>
+    <string name="sim_expected_points">예상 승점 %1$s · 평균 %2$s위</string>
+    <string name="sim_actual_metric">실제: %1$s ✓</string>
+    <string name="sim_actual_rank">실제 %1$d위</string>
+    <string name="sim_metric_title">우승</string>
+    <string name="sim_metric_top">상위권</string>
+    <string name="sim_metric_relegation">강등</string>
+
+    <!-- Prediction rationale notes -->
+    <string name="rationale_calibration">%1$s 보정 λ (홈 %2$s / 원정 %3$s).</string>
+    <string name="rationale_laliga_gap">라리가 순위차 보정으로 전력 우위 강화.</string>
+    <string name="rationale_bundesliga_boost">분데스리가 홈 부스트 적용: %1$s.</string>
+    <string name="rationale_fatigue">%1$s 피로 (휴식 %2$d일).</string>
+    <string name="rationale_matchup_dominates">상성 우위: %1$s가 최근 상대전적 우세 (+%2$d%% λ).</string>
+    <string name="rationale_matchup_bogey">상성 우위: %1$s가 천적 (+%2$d%% λ).</string>
+    <string name="rationale_elo">Elo(학습 레이팅) 반영: Δ%1$d.</string>
+    <string name="rationale_poisson">실데이터 공수 레이팅(Dixon-Coles) 반영: λ %1$s / %2$s.</string>
+    <string name="rationale_weakened">%1$s 전력 약화 (%2$d명 결장, %3$d%% 라인업).</string>
+    <string name="rationale_weather">%1$s: 득점 감소 예상.</string>
+    <string name="rationale_expected_score">예상 스코어 %1$s (λ %2$s / %3$s).</string>
+    <string name="rationale_market_blend">시장가로 보정 (시장 %1$d%%).</string>
+
+    <!-- Factor contribution breakdown -->
+    <string name="factor_title">무엇이 이 예측을 움직였나</string>
+    <string name="factor_base">홈 이점·득점력</string>
+    <string name="factor_quality">레이팅·순위·폼</string>
+    <string name="factor_rules">리그 규칙·휴식</string>
+    <string name="factor_matchup">상성</string>
+    <string name="factor_elo">Elo(학습)</string>
+    <string name="factor_learned">공수 모델(Dixon-Coles)</string>
+    <string name="factor_context">결장·날씨</string>
+
+    <!-- Power comparison report -->
+    <string name="power_title">전력 비교 리포트</string>
+    <string name="power_why">예측 근거</string>
+    <string name="power_bogey">뚜렷한 천적 관계</string>
+    <string name="power_edge">상성 우위</string>
+    <string name="power_slight_edge">근소한 상성 우위</string>
+    <string name="power_record">역대 전적 %1$d승 %2$d무 %3$d패</string>
+    <string name="power_matchup">%1$s · %2$s</string>
+    <string name="power_recent">최근</string>
+    <string name="power_factors">경기 변수</string>
+    <string name="power_weather">날씨 · %1$s</string>
+    <string name="power_availability">%1$s %2$d명 결장 · %3$d%%</string>
+
+    <!-- Weather -->
+    <string name="weather_clear">맑음</string>
+    <string name="weather_rain">비</string>
+    <string name="weather_wind">강풍</string>
+    <string name="weather_snow">눈</string>
+    <string name="weather_heat">폭염</string>
+
+    <!-- Match notifications -->
+    <string name="settings_blend">시장 블렌드</string>
+    <string name="settings_blend_desc">예측을 시장가로 얼마나 보정할지</string>
+    <string name="settings_followed">팔로우한 팀</string>
+    <string name="settings_followed_desc">팀 페이지에서 팔로우하면 우선 표시되고 알림 범위가 좁혀집니다</string>
+    <string name="settings_followed_count">%1$d팀 팔로우</string>
+    <string name="blend_model">모델</string>
+    <string name="blend_balanced">균형</string>
+    <string name="blend_market">시장 중심</string>
+    <string name="settings_notifications">경기 알림</string>
+    <string name="settings_notifications_desc">강한 픽 킥오프·라이브 시작·결과 알림</string>
+    <string name="notif_channel_name">경기 알림</string>
+    <string name="notif_channel_desc">예측 경기의 킥오프·라이브·결과 알림</string>
+    <string name="notif_kickoff_title">%1$d분 후 킥오프</string>
+    <string name="notif_live_title">경기 진행 중</string>
+    <string name="notif_result_hit">예측 적중 ✅</string>
+    <string name="notif_result_miss">예측 실패 ❌</string>
+    <string name="notif_value_suffix">밸류 +%1$d%%</string>
+
+    <!-- Settings / picker dialog -->
+    <string name="settings_theme">테마</string>
+    <string name="settings_language">언어</string>
+    <string name="language_system">시스템 기본</string>
+    <string name="language_korean">한국어</string>
+    <string name="language_english">English</string>
+
+    <!-- Theme descriptions -->
+    <string name="theme_floodlight_desc">야간 조명 · 색각이상 안전</string>
+    <string name="theme_card_desc">잔디와 심판 카드</string>
+    <string name="theme_broadsheet_desc">스포츠 지면 · 라이트</string>
+    <string name="theme_ember_desc">따뜻한 어둠 · 구릿빛</string>
+</resources>

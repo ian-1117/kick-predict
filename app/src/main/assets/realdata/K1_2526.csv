@@ -1,0 +1,229 @@
+Date,Time,HomeTeam,AwayTeam,FTHG,FTAG
+15/02/2025,05:00,Pohang Steelers,Daejeon Hana Citizen,0,3
+15/02/2025,07:30,Jeju United,Seoul,2,0
+15/02/2025,08:30,Gwangju,Suwon,0,0
+16/02/2025,06:00,Ulsan,Anyang,0,1
+16/02/2025,08:30,Jeonbuk Motors,Gimcheon Sangmu,2,1
+16/02/2025,08:30,Daegu,Gangwon,2,1
+22/02/2025,06:00,Jeju United,Gimcheon Sangmu,2,3
+22/02/2025,08:30,Seoul,Anyang,2,1
+22/02/2025,08:30,Daegu,Suwon,3,1
+23/02/2025,06:00,Daejeon Hana Citizen,Ulsan,0,2
+23/02/2025,08:30,Jeonbuk Motors,Gwangju,2,2
+23/02/2025,08:30,Gangwon,Pohang Steelers,2,1
+01/03/2025,06:00,Ulsan,Jeonbuk Motors,1,0
+01/03/2025,08:30,Pohang Steelers,Daegu,0,0
+01/03/2025,08:30,Gwangju,Anyang,2,1
+02/03/2025,06:00,Daejeon Hana Citizen,Suwon,1,0
+02/03/2025,08:30,Gangwon,Jeju United,0,0
+03/03/2025,06:00,Seoul,Gimcheon Sangmu,0,0
+08/03/2025,06:00,Suwon,Seoul,0,0
+08/03/2025,08:30,Daegu,Daejeon Hana Citizen,1,2
+08/03/2025,08:30,Anyang,Gimcheon Sangmu,1,3
+09/03/2025,06:00,Ulsan,Jeju United,2,0
+09/03/2025,08:30,Jeonbuk Motors,Gangwon,0,1
+15/03/2025,06:00,Jeju United,Daejeon Hana Citizen,1,3
+15/03/2025,08:30,Gangwon,Seoul,0,1
+15/03/2025,08:30,Daegu,Anyang,0,1
+16/03/2025,06:00,Suwon,Ulsan,1,1
+16/03/2025,08:30,Gimcheon Sangmu,Gwangju,0,0
+16/03/2025,08:30,Jeonbuk Motors,Pohang Steelers,2,2
+22/03/2025,08:30,Gwangju,Pohang Steelers,2,3
+29/03/2025,06:00,Seoul,Daegu,3,2
+29/03/2025,08:30,Pohang Steelers,Ulsan,1,0
+29/03/2025,08:30,Daejeon Hana Citizen,Gwangju,1,1
+30/03/2025,07:00,Jeju United,Suwon,1,0
+30/03/2025,09:30,Gimcheon Sangmu,Gangwon,1,0
+30/03/2025,09:30,Anyang,Jeonbuk Motors,0,1
+01/04/2025,12:30,Ulsan,Daejeon Hana Citizen,2,3
+05/04/2025,07:00,Ulsan,Seoul,0,0
+05/04/2025,09:30,Gimcheon Sangmu,Daegu,2,0
+05/04/2025,09:30,Daejeon Hana Citizen,Jeonbuk Motors,0,2
+05/04/2025,12:00,Suwon,Pohang Steelers,1,1
+06/04/2025,09:30,Anyang,Gangwon,2,0
+06/04/2025,09:30,Gwangju,Jeju United,1,0
+09/04/2025,12:30,Gwangju,Daegu,2,1
+12/04/2025,07:00,Suwon,Gimcheon Sangmu,3,2
+12/04/2025,09:30,Seoul,Daejeon Hana Citizen,2,2
+12/04/2025,09:30,Pohang Steelers,Anyang,2,1
+13/04/2025,07:00,Gangwon,Gwangju,1,0
+13/04/2025,09:30,Jeonbuk Motors,Jeju United,1,1
+13/04/2025,09:30,Daegu,Ulsan,0,1
+19/04/2025,07:00,Ulsan,Gangwon,1,2
+19/04/2025,09:30,Gimcheon Sangmu,Daejeon Hana Citizen,0,2
+19/04/2025,09:30,Anyang,Suwon,3,1
+19/04/2025,12:00,Seoul,Gwangju,1,2
+20/04/2025,09:30,Jeju United,Pohang Steelers,2,0
+20/04/2025,09:30,Jeonbuk Motors,Daegu,3,1
+23/04/2025,12:30,Anyang,Ulsan,0,1
+26/04/2025,07:00,Suwon,Jeonbuk Motors,1,2
+26/04/2025,09:30,Anyang,Jeju United,2,1
+27/04/2025,07:00,Pohang Steelers,Seoul,1,0
+27/04/2025,09:30,Gimcheon Sangmu,Ulsan,2,0
+27/04/2025,09:30,Daejeon Hana Citizen,Gangwon,1,0
+02/05/2025,12:30,Ulsan,Gwangju,3,0
+02/05/2025,12:30,Pohang Steelers,Gimcheon Sangmu,1,2
+03/05/2025,09:30,Daejeon Hana Citizen,Anyang,2,1
+03/05/2025,09:30,Daegu,Jeju United,3,1
+03/05/2025,12:00,Seoul,Jeonbuk Motors,0,1
+03/05/2025,12:00,Gangwon,Suwon,0,0
+05/05/2025,09:30,Gwangju,Gimcheon Sangmu,1,0
+05/05/2025,09:30,Ulsan,Pohang Steelers,1,1
+06/05/2025,07:00,Jeonbuk Motors,Daejeon Hana Citizen,1,1
+06/05/2025,09:30,Jeju United,Gangwon,0,3
+06/05/2025,12:00,Anyang,Seoul,1,1
+06/05/2025,12:00,Suwon,Daegu,2,1
+10/05/2025,09:30,Pohang Steelers,Suwon,2,0
+10/05/2025,12:00,Daejeon Hana Citizen,Seoul,0,0
+10/05/2025,12:00,Anyang,Daegu,2,2
+11/05/2025,09:30,Jeju United,Ulsan,1,2
+11/05/2025,12:00,Gangwon,Gimcheon Sangmu,0,4
+11/05/2025,12:00,Gwangju,Jeonbuk Motors,0,1
+17/05/2025,09:30,Jeonbuk Motors,Anyang,2,0
+17/05/2025,12:00,Gangwon,Ulsan,1,1
+17/05/2025,12:00,Gimcheon Sangmu,Jeju United,1,1
+18/05/2025,09:30,Pohang Steelers,Gwangju,0,1
+18/05/2025,09:30,Daegu,Seoul,0,1
+18/05/2025,12:00,Suwon,Daejeon Hana Citizen,3,0
+23/05/2025,12:30,Jeju United,Jeonbuk Motors,0,0
+23/05/2025,12:30,Anyang,Pohang Steelers,0,2
+24/05/2025,09:30,Seoul,Suwon,1,1
+24/05/2025,12:00,Ulsan,Gimcheon Sangmu,3,2
+24/05/2025,12:00,Daejeon Hana Citizen,Daegu,2,1
+25/05/2025,09:30,Gwangju,Gangwon,0,1
+27/05/2025,12:30,Suwon,Jeju United,0,1
+27/05/2025,12:30,Daejeon Hana Citizen,Pohang Steelers,1,3
+27/05/2025,12:30,Daegu,Jeonbuk Motors,0,4
+28/05/2025,12:30,Gimcheon Sangmu,Seoul,0,1
+28/05/2025,12:30,Gangwon,Anyang,1,3
+28/05/2025,12:30,Gwangju,Ulsan,1,1
+31/05/2025,12:00,Seoul,Jeju United,1,3
+31/05/2025,12:00,Jeonbuk Motors,Ulsan,3,1
+31/05/2025,12:00,Anyang,Daejeon Hana Citizen,1,1
+01/06/2025,12:00,Gimcheon Sangmu,Suwon,1,1
+01/06/2025,12:00,Pohang Steelers,Gangwon,2,1
+01/06/2025,12:00,Daegu,Gwangju,1,1
+13/06/2025,12:30,Gangwon,Jeonbuk Motors,0,3
+13/06/2025,12:30,Gwangju,Seoul,1,3
+14/06/2025,12:00,Gimcheon Sangmu,Pohang Steelers,1,0
+14/06/2025,12:00,Suwon,Anyang,1,2
+14/06/2025,12:00,Jeju United,Daegu,2,1
+17/06/2025,12:30,Seoul,Gangwon,1,1
+17/06/2025,12:30,Jeonbuk Motors,Suwon,3,2
+17/06/2025,12:30,Daegu,Pohang Steelers,1,1
+18/06/2025,12:30,Jeju United,Gwangju,0,1
+18/06/2025,12:30,Daejeon Hana Citizen,Gimcheon Sangmu,0,0
+21/06/2025,12:00,Gangwon,Daegu,3,0
+21/06/2025,12:00,Pohang Steelers,Jeju United,2,1
+21/06/2025,12:00,Jeonbuk Motors,Seoul,1,1
+22/06/2025,12:00,Gimcheon Sangmu,Anyang,1,0
+22/06/2025,12:00,Gwangju,Daejeon Hana Citizen,2,2
+27/06/2025,12:30,Gimcheon Sangmu,Jeonbuk Motors,1,2
+27/06/2025,12:30,Daejeon Hana Citizen,Jeju United,1,1
+28/06/2025,12:00,Suwon,Gangwon,1,2
+28/06/2025,12:00,Anyang,Gwangju,1,2
+29/06/2025,12:00,Seoul,Pohang Steelers,4,1
+12/07/2025,12:00,Ulsan,Daegu,2,2
+18/07/2025,12:30,Suwon,Gwangju,2,1
+18/07/2025,12:30,Daegu,Gimcheon Sangmu,2,3
+19/07/2025,12:00,Pohang Steelers,Jeonbuk Motors,2,3
+19/07/2025,12:00,Jeju United,Anyang,2,0
+19/07/2025,12:00,Gangwon,Daejeon Hana Citizen,2,2
+20/07/2025,12:00,Seoul,Ulsan,1,0
+22/07/2025,12:30,Anyang,Daegu,4,0
+22/07/2025,12:30,Gwangju,Gimcheon Sangmu,1,1
+22/07/2025,12:30,Pohang Steelers,Suwon,1,5
+23/07/2025,12:30,Jeju United,Seoul,3,2
+23/07/2025,12:30,Jeonbuk Motors,Gangwon,2,0
+23/07/2025,12:30,Ulsan,Daejeon Hana Citizen,1,2
+26/07/2025,12:00,Gimcheon Sangmu,Jeju United,3,1
+26/07/2025,12:00,Gwangju,Jeonbuk Motors,1,2
+26/07/2025,12:00,Suwon,Anyang,2,1
+27/07/2025,12:00,Daegu,Pohang Steelers,0,1
+27/07/2025,12:00,Daejeon Hana Citizen,Seoul,0,1
+27/07/2025,12:00,Gangwon,Ulsan,2,2
+02/08/2025,12:00,Ulsan,Suwon,2,3
+08/08/2025,12:30,Seoul,Daegu,2,2
+08/08/2025,12:30,Jeonbuk Motors,Anyang,2,1
+09/08/2025,12:30,Ulsan,Jeju United,1,0
+09/08/2025,12:30,Gangwon,Gimcheon Sangmu,0,0
+10/08/2025,12:00,Pohang Steelers,Gwangju,1,0
+10/08/2025,12:00,Daejeon Hana Citizen,Suwon,3,2
+15/08/2025,12:00,Jeju United,Gangwon,0,0
+15/08/2025,12:00,Anyang,Pohang Steelers,0,1
+16/08/2025,12:00,Jeonbuk Motors,Daegu,3,0
+16/08/2025,13:00,Suwon,Ulsan,4,2
+17/08/2025,12:00,Gwangju,Daejeon Hana Citizen,2,0
+17/08/2025,12:00,Gimcheon Sangmu,Seoul,6,2
+23/08/2025,12:00,Daegu,Jeju United,2,2
+23/08/2025,12:00,Gimcheon Sangmu,Suwon,3,2
+23/08/2025,12:30,Gwangju,Gangwon,0,1
+24/08/2025,12:00,Pohang Steelers,Jeonbuk Motors,3,1
+24/08/2025,12:00,Anyang,Daejeon Hana Citizen,3,2
+24/08/2025,12:00,Seoul,Ulsan,3,2
+30/08/2025,12:00,Jeju United,Gwangju,0,1
+30/08/2025,12:00,Daegu,Suwon,3,1
+30/08/2025,12:00,Ulsan,Jeonbuk Motors,0,2
+31/08/2025,12:00,Seoul,Anyang,1,2
+31/08/2025,12:00,Daejeon Hana Citizen,Gimcheon Sangmu,2,1
+31/08/2025,12:00,Gangwon,Pohang Steelers,1,0
+13/09/2025,12:00,Gangwon,Seoul,3,2
+13/09/2025,12:00,Pohang Steelers,Ulsan,1,1
+13/09/2025,12:00,Jeonbuk Motors,Daejeon Hana Citizen,1,0
+14/09/2025,12:00,Gimcheon Sangmu,Daegu,1,2
+14/09/2025,12:00,Anyang,Jeju United,2,1
+14/09/2025,12:00,Suwon,Gwangju,2,4
+20/09/2025,09:30,Jeonbuk Motors,Gimcheon Sangmu,1,2
+20/09/2025,12:00,Daejeon Hana Citizen,Daegu,3,2
+21/09/2025,09:30,Suwon,Gangwon,1,0
+21/09/2025,09:30,Ulsan,Anyang,0,0
+21/09/2025,12:00,Seoul,Gwangju,3,0
+21/09/2025,12:00,Pohang Steelers,Jeju United,1,0
+27/09/2025,07:00,Gangwon,Daejeon Hana Citizen,0,0
+27/09/2025,09:30,Gimcheon Sangmu,Pohang Steelers,2,0
+27/09/2025,09:30,Daegu,Ulsan,1,1
+27/09/2025,12:00,Seoul,Jeonbuk Motors,1,1
+28/09/2025,09:30,Anyang,Gwangju,0,0
+28/09/2025,09:30,Jeju United,Suwon,3,4
+03/10/2025,07:00,Jeju United,Jeonbuk Motors,1,1
+04/10/2025,07:00,Gwangju,Daegu,2,3
+05/10/2025,07:00,Gimcheon Sangmu,Ulsan,3,0
+05/10/2025,07:00,Pohang Steelers,Daejeon Hana Citizen,1,3
+05/10/2025,09:30,Suwon,Seoul,1,1
+05/10/2025,09:30,Gangwon,Anyang,1,1
+18/10/2025,07:00,Ulsan,Gwangju,2,0
+18/10/2025,07:00,Jeonbuk Motors,Suwon,2,0
+18/10/2025,07:00,Anyang,Gimcheon Sangmu,4,1
+18/10/2025,07:00,Daegu,Gangwon,2,2
+18/10/2025,07:00,Daejeon Hana Citizen,Jeju United,3,1
+18/10/2025,07:00,Seoul,Pohang Steelers,1,2
+25/10/2025,07:00,Jeonbuk Motors,Gimcheon Sangmu,2,3
+25/10/2025,07:00,Gwangju,Anyang,1,0
+25/10/2025,09:30,Suwon,Jeju United,1,2
+26/10/2025,06:00,Seoul,Gangwon,4,2
+26/10/2025,06:00,Ulsan,Daegu,1,1
+26/10/2025,08:30,Daejeon Hana Citizen,Pohang Steelers,2,0
+01/11/2025,06:00,Daejeon Hana Citizen,Seoul,3,1
+01/11/2025,06:00,Gangwon,Jeonbuk Motors,0,0
+01/11/2025,08:30,Anyang,Ulsan,3,1
+01/11/2025,08:30,Gimcheon Sangmu,Pohang Steelers,0,1
+02/11/2025,06:00,Gwangju,Jeju United,2,0
+02/11/2025,08:30,Suwon,Daegu,1,1
+08/11/2025,06:00,Daegu,Gwangju,1,0
+08/11/2025,06:00,Jeju United,Anyang,1,2
+08/11/2025,08:30,Gimcheon Sangmu,Gangwon,0,1
+08/11/2025,08:30,Jeonbuk Motors,Daejeon Hana Citizen,3,1
+09/11/2025,06:00,Pohang Steelers,Seoul,0,0
+09/11/2025,08:30,Ulsan,Suwon,1,0
+22/11/2025,06:00,Anyang,Suwon,0,1
+22/11/2025,06:00,Daejeon Hana Citizen,Gangwon,1,1
+22/11/2025,06:00,Seoul,Gimcheon Sangmu,1,3
+22/11/2025,08:30,Gwangju,Ulsan,2,0
+22/11/2025,08:30,Pohang Steelers,Jeonbuk Motors,0,0
+23/11/2025,06:00,Jeju United,Daegu,1,1
+30/11/2025,06:00,Daegu,Anyang,2,2
+30/11/2025,06:00,Suwon,Gwangju,0,1
+30/11/2025,06:00,Ulsan,Jeju United,0,1
+30/11/2025,08:30,Gangwon,Pohang Steelers,1,0
+30/11/2025,08:30,Gimcheon Sangmu,Daejeon Hana Citizen,0,3
+30/11/2025,08:30,Jeonbuk Motors,Seoul,2,1
