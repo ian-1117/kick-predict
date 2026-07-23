@@ -1,7 +1,7 @@
 package com.kickpredict.data.remote
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.kickpredict.data.remote.apifootball.ApiFootballApi
+import com.kickpredict.data.remote.apisports.ApiSportsApi
 import com.kickpredict.data.remote.football.FootballDataApi
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
@@ -40,17 +40,6 @@ object NetworkModule {
         chain.proceed(request)
     }
 
-    /** Auth via a query parameter (APIFootball's `APIkey`). */
-    private fun queryAuth(param: String, key: String) = Interceptor { chain ->
-        val request = chain.request()
-        val authed = if (key.isNotBlank()) {
-            request.newBuilder().url(request.url.newBuilder().addQueryParameter(param, key).build()).build()
-        } else {
-            request
-        }
-        chain.proceed(authed)
-    }
-
     private inline fun <reified T> api(baseUrl: String, auth: Interceptor): T =
         Retrofit.Builder()
             .baseUrl(baseUrl)
@@ -62,6 +51,6 @@ object NetworkModule {
     fun footballDataApi(key: String): FootballDataApi =
         api(FootballDataApi.BASE_URL, headerAuth("X-Auth-Token", key))
 
-    fun apiFootballApi(key: String): ApiFootballApi =
-        api(ApiFootballApi.BASE_URL, queryAuth("APIkey", key))
+    fun apiSportsApi(key: String): ApiSportsApi =
+        api(ApiSportsApi.BASE_URL, headerAuth("x-apisports-key", key))
 }

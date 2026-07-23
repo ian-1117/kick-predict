@@ -28,9 +28,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // football-data.org (Europe) and APIFootball / apiv3.apifootball.com (K League) access tokens.
+        // football-data.org (Europe) and API-Sports / v3.football.api-sports.io (K League) access tokens.
         buildConfigField("String", "FOOTBALL_DATA_KEY", "\"${secret("FOOTBALL_DATA_KEY")}\"")
-        buildConfigField("String", "APIFOOTBALL_KEY", "\"${secret("APIFOOTBALL_KEY")}\"")
+        buildConfigField("String", "API_SPORTS_KEY", "\"${secret("API_SPORTS_KEY")}\"")
     }
 
     buildTypes {
