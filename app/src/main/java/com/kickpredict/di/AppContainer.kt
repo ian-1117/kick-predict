@@ -100,9 +100,9 @@ class AppContainer(context: Context) {
     // back to the bundled historical data, so the app works with zero, one, or both keys set.
     private val liveSource = LiveFixtureRemoteSource(
         footballData = NetworkModule.footballDataApi(BuildConfig.FOOTBALL_DATA_KEY),
-        apiSports = NetworkModule.apiSportsApi(BuildConfig.API_SPORTS_KEY),
+        apiFootball = NetworkModule.apiFootballApi(BuildConfig.APIFOOTBALL_KEY),
         footballDataKey = BuildConfig.FOOTBALL_DATA_KEY,
-        apiSportsKey = BuildConfig.API_SPORTS_KEY,
+        apiFootballKey = BuildConfig.APIFOOTBALL_KEY,
         bundledByLeague = { league -> bundledMatches.filter { it.league == league } },
     )
 
