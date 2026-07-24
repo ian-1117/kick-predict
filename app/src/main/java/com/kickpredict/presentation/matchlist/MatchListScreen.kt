@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Leaderboard
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Today
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Search
@@ -50,7 +51,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalView
+import com.kickpredict.presentation.ads.findActivity
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -108,6 +112,25 @@ fun MatchListScreen(
     // results and any recalibration they triggered are reflected.
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.onResume() }
 
+    // Rewarded ad that unlocks the European leagues; preloaded so the "unlock" tap shows instantly.
+    val view = LocalView.current
+    val adsReady = com.kickpredict.presentation.ads.AdsState.initialized
+    LaunchedEffect(adsReady) {
+        if (com.kickpredict.Features.ADS && adsReady) com.kickpredict.presentation.ads.RewardedAds.preload(view.context)
+    }
+    val onUnlockEurope: () -> Unit = {
+        val activity = view.context.findActivity()
+        if (activity != null) {
+            com.kickpredict.presentation.ads.RewardedAds.show(
+                activity,
+                onReward = { viewModel.unlockEurope() },
+                onUnavailable = {
+                    android.widget.Toast.makeText(view.context, view.context.getString(R.string.league_unlock_loading), android.widget.Toast.LENGTH_SHORT).show()
+                },
+            )
+        }
+    }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
@@ -159,6 +182,7 @@ fun MatchListScreen(
                         onOpenDatePicker = { showDatePicker = true },
                         onClearDate = viewModel::clearDateRange,
                         onFollowedOnly = viewModel::setFollowedOnly,
+                        onUnlockEurope = onUnlockEurope,
                     )
                     CalibrationStatusBar(state)
                     PullToRefreshBox(
@@ -233,6 +257,7 @@ private fun FilterBar(
     onOpenDatePicker: () -> Unit,
     onClearDate: () -> Unit,
     onFollowedOnly: (Boolean) -> Unit,
+    onUnlockEurope: () -> Unit,
 ) {
     Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         // Team search.
@@ -280,7 +305,14 @@ private fun FilterBar(
             }
             LeagueChipFilter(stringResource(R.string.filter_all), state.leagueFilter == null) { onLeague(null) }
             LeagueType.entries.forEach { league ->
-                LeagueChipFilter(league.displayName, state.leagueFilter == league) { onLeague(league) }
+                val locked = !state.europeUnlocked &&
+                    com.kickpredict.presentation.ads.LeagueAccessPreference.run { !league.isFree() }
+                LeagueChipFilter(
+                    label = league.displayName,
+                    selected = state.leagueFilter == league,
+                    locked = locked,
+                    onClick = { if (locked) onUnlockEurope() else onLeague(league) },
+                )
             }
         }
         // Group toggle + period.
@@ -315,11 +347,14 @@ private fun FilterBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LeagueChipFilter(label: String, selected: Boolean, onClick: () -> Unit) {
+private fun LeagueChipFilter(label: String, selected: Boolean, locked: Boolean = false, onClick: () -> Unit) {
     FilterChip(
         selected = selected,
         onClick = onClick,
         label = { Text(label) },
+        leadingIcon = if (locked) {
+            { Icon(Icons.Filled.Lock, contentDescription = stringResource(R.string.league_locked), modifier = Modifier.size(14.dp)) }
+        } else null,
         colors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = AccentPrimary.copy(alpha = 0.22f),
             selectedLabelColor = AccentPrimary,

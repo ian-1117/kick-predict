@@ -19,6 +19,8 @@
     <string name="nav_value_picks">Value picks</string>
     <string name="nav_theme">Theme</string>
     <string name="nav_settings">Settings</string>
+    <string name="league_locked">Locked — watch an ad to unlock for 24h</string>
+    <string name="league_unlock_loading">Ad not ready yet — try again in a moment</string>
 
     <!-- Section headers -->
     <string name="section_round">Round %1$d</string>

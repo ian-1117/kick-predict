@@ -70,6 +70,8 @@ data class MatchListUiState(
     val followedTeamIds: Set<String> = emptySet(),
     // When on, the list is restricted to matches involving a followed team.
     val followedOnly: Boolean = false,
+    // Whether the European leagues are unlocked (rewarded ad); when false they're hidden/locked.
+    val europeUnlocked: Boolean = false,
 )
 
 class MatchListViewModel(
@@ -80,6 +82,7 @@ class MatchListViewModel(
     private val liveScoresProvider: () -> Map<String, LiveScore>,
     private val oddsProvider: () -> Map<String, MarketOdds>,
     private val followPreference: FollowPreference,
+    private val leagueAccess: com.kickpredict.presentation.ads.LeagueAccessPreference,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MatchListUiState())
@@ -93,6 +96,13 @@ class MatchListViewModel(
         viewModelScope.launch {
             followPreference.followed.collect { followed ->
                 _uiState.value = _uiState.value.copy(followedTeamIds = followed)
+                rebuild()
+            }
+        }
+        // Unlocking the European leagues (rewarded ad) re-filters the list live.
+        viewModelScope.launch {
+            leagueAccess.europeUnlockedUntil.collect {
+                _uiState.value = _uiState.value.copy(europeUnlocked = leagueAccess.isEuropeUnlocked(System.currentTimeMillis()))
                 rebuild()
             }
         }
@@ -220,6 +230,11 @@ class MatchListViewModel(
 
     fun clearDateRange() = setDateRange(null, null)
 
+    /** Unlock the European leagues (called after a rewarded ad completes). */
+    fun unlockEurope() {
+        leagueAccess.unlockEurope(System.currentTimeMillis())
+    }
+
     fun setFollowedOnly(enabled: Boolean) {
         _uiState.value = _uiState.value.copy(followedOnly = enabled)
         rebuild()
@@ -239,6 +254,8 @@ class MatchListViewModel(
         val state = _uiState.value
         val query = state.searchQuery.trim()
         val filtered = allMatches
+            // Free tier: hide the European leagues until unlocked with a rewarded ad.
+            .filter { com.kickpredict.presentation.ads.LeagueAccessPreference.run { it.league.isFree() } || state.europeUnlocked }
             .filter { state.leagueFilter == null || it.league == state.leagueFilter }
             .filter { m ->
                 val date = m.kickoff.toLocalDate()
@@ -279,6 +296,7 @@ class MatchListViewModel(
                     app.container.liveScores,
                     app.container.odds,
                     app.container.followPreference,
+                    app.container.leagueAccessPreference,
                 )
             }
         }

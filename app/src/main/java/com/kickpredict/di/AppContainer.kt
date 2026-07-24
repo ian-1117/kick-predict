@@ -143,6 +143,9 @@ class AppContainer(context: Context) {
     /** Teams the user follows — drives the "Followed" filter and scopes notifications. */
     val followPreference = FollowPreference(appContext)
 
+    /** Which leagues are unlocked — K League is free, European leagues need a rewarded-ad unlock. */
+    val leagueAccessPreference = com.kickpredict.presentation.ads.LeagueAccessPreference(appContext)
+
     // --- Match notifications ----------------------------------------------------------------
     /** Opt-in toggle for background match notifications (default off). */
     val notificationPreference = NotificationPreference(appContext)
